@@ -575,13 +575,6 @@ ul.cli-list li::before { content: '\25B8'; position: absolute; left: 0; color: v
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="flag">--worktree</span> <span class="val">controller</span> \<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="flag">--dangerously-skip-permissions</span>
       </div>
-      <h3 style="margin-top: 0.8rem;">WHY THIS PATTERN?</h3>
-      <ul class="cli-list">
-        <li>Controller has its own worktree -- never conflicts with agents</li>
-        <li>Each sub-agent gets worktree isolation -- no file collisions</li>
-        <li>Merge-manager handles the messy git work so coders stay focused</li>
-        <li>Results flow back to controller -- you review in one place</li>
-      </ul>
     </div>
     <div class="fade-in fade-in-4">
       <h3>2. SPAWN THE TEAM VIA PROMPT</h3>
@@ -614,7 +607,16 @@ ul.cli-list li::before { content: '\25B8'; position: absolute; left: 0; color: v
       </div>
     </div>
   </div>
-  <p class="fade-in fade-in-5" style="font-size: 0.88rem; margin-top: 0.4rem;">
+  <div class="fade-in fade-in-5" style="margin-top: 0.6rem;">
+    <h3 style="margin-bottom: 0.4rem;">WHY THIS PATTERN?</h3>
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; font-size: 0.88rem; color: var(--text-secondary);">
+      <span>• Controller worktree -- no conflicts</span>
+      <span>• Agent worktrees -- no file collisions</span>
+      <span>• Merge-manager handles git</span>
+      <span>• Results flow to controller</span>
+    </div>
+  </div>
+  <p class="fade-in fade-in-6" style="font-size: 0.88rem; margin-top: 0.4rem;">
     <span class="tag tip">KEY DIFFERENCE FROM TEAMS</span>
     These four agents cannot message each other. The controller orchestrates everything: dispatches work, collects results, decides when to call merge-manager. Simpler, cheaper, and you keep full control of the flow.
   </p>
@@ -633,14 +635,14 @@ ul.cli-list li::before { content: '\25B8'; position: absolute; left: 0; color: v
       <!-- Connecting lines via SVG overlay -->
       <svg style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;" preserveAspectRatio="none">
         <!-- Horizontal lines -->
-        <line x1="30%" y1="28%" x2="70%" y2="28%" stroke="#3b3755" stroke-width="1.5" stroke-dasharray="6,4"/>
-        <line x1="30%" y1="72%" x2="70%" y2="72%" stroke="#3b3755" stroke-width="1.5" stroke-dasharray="6,4"/>
+        <line x1="30%" y1="28%" x2="70%" y2="28%" stroke="#a6e3a1" stroke-width="2" stroke-dasharray="6,4" opacity="0.7"/>
+        <line x1="30%" y1="72%" x2="70%" y2="72%" stroke="#a6e3a1" stroke-width="2" stroke-dasharray="6,4" opacity="0.7"/>
         <!-- Vertical lines -->
-        <line x1="28%" y1="35%" x2="28%" y2="65%" stroke="#3b3755" stroke-width="1.5" stroke-dasharray="6,4"/>
-        <line x1="72%" y1="35%" x2="72%" y2="65%" stroke="#3b3755" stroke-width="1.5" stroke-dasharray="6,4"/>
+        <line x1="28%" y1="35%" x2="28%" y2="65%" stroke="#a6e3a1" stroke-width="2" stroke-dasharray="6,4" opacity="0.7"/>
+        <line x1="72%" y1="35%" x2="72%" y2="65%" stroke="#a6e3a1" stroke-width="2" stroke-dasharray="6,4" opacity="0.7"/>
         <!-- Diagonal lines -->
-        <line x1="33%" y1="35%" x2="67%" y2="65%" stroke="#3b3755" stroke-width="1" stroke-dasharray="4,4"/>
-        <line x1="67%" y1="35%" x2="33%" y2="65%" stroke="#3b3755" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="33%" y1="35%" x2="67%" y2="65%" stroke="#a6e3a1" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.6"/>
+        <line x1="67%" y1="35%" x2="33%" y2="65%" stroke="#a6e3a1" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.6"/>
       </svg>
       <div class="box accent-green" style="position: relative; z-index: 2; text-align: center;">
         <div class="box-title g">[TEAM LEAD]</div>
@@ -744,15 +746,12 @@ ul.cli-list li::before { content: '\25B8'; position: absolute; left: 0; color: v
 <span class="string">conflicts. Run tests post-merge.</span>
 <span class="string">Open a PR with a summary of changes.</span>
       </div>
-      <h3 style="margin-top: 0.8rem;">2. LAUNCH IN TMUX</h3>
-      <div class="code-block" style="font-size: clamp(0.72rem, 1.1vw, 0.92rem);">
-<span class="flag">$</span> <span class="cmd">tmux new</span> <span class="flag">-s</span> <span class="val">build-team</span>
-<span class="flag">$</span> <span class="cmd">claude</span>
-<span class="string">"Create an agent team. Use the</span>
-<span class="string"> controller, coder, tester, and</span>
-<span class="string"> merger agents. Build the payment</span>
-<span class="string"> integration feature from SPEC.md."</span>
-      </div>
+    </div>
+  </div>
+  <div class="fade-in fade-in-5" style="margin-top: 0.6rem;">
+    <h3 style="margin-bottom: 0.4rem;">2. LAUNCH IN TMUX</h3>
+    <div class="code-block" style="font-size: clamp(0.72rem, 1.1vw, 0.92rem); display: inline-block;">
+<span class="flag">$</span> <span class="cmd">tmux new</span> <span class="flag">-s</span> <span class="val">build-team</span> && <span class="cmd">claude</span> <span class="string">"Create an agent team. Use the controller, coder, tester, and merger agents. Build the payment integration feature from SPEC.md."</span>
     </div>
   </div>
 </div>
@@ -866,7 +865,7 @@ ul.cli-list li::before { content: '\25B8'; position: absolute; left: 0; color: v
       </div>
     </div>
   </div>
-  <p class="fade-in fade-in-4" style="font-size: 0.88rem; margin-top: 0.3rem;"><span class="tag warn">COST</span> Each teammate is a full context window with its own CLAUDE.md read, codebase indexing, and message history. 3 teammates = 3 complete sessions running in parallel. ~5x tokens.</p>
+  <p class="fade-in fade-in-4" style="font-size: 0.88rem; margin-top: 0.3rem;"><span class="tag warn">COST</span> Each teammate is a full context window with its own CLAUDE.md read, codebase indexing, and message history. 3 teammates = 3 complete sessions running in parallel. ~5x tokens. Agents can be chatty.</p>
 </div>
 
 <!-- ══════ SLIDE 6: COMPARISON ══════ -->
