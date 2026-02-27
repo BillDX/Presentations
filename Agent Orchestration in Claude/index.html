@@ -391,7 +391,7 @@ ul.cli-list li::before { content: '\25B8'; position: absolute; left: 0; color: v
 
 <!-- ══════ SLIDE 2: SUB-AGENTS INTRO ══════ -->
 <div class="slide" data-slide="2">
-  <div class="section-label">PART I -- SUB-AGENTS</div>
+  <div class="prompt"><span class="arrow">></span> <span class="path">sub-agents</span></div>
   <h2 class="fade-in fade-in-1"><span class="b">Sub-Agents</span> -- Task Oriented</h2>
   <p class="fade-in fade-in-2" style="max-width: 56ch; margin-bottom: 1.2rem;">
     Specialized workers spawned within your session. Each gets its own
@@ -622,7 +622,7 @@ ul.cli-list li::before { content: '\25B8'; position: absolute; left: 0; color: v
 
 <!-- ══════ SLIDE 4: AGENT TEAMS INTRO ══════ -->
 <div class="slide" data-slide="4">
-  <div class="section-label">PART II -- AGENT TEAMS</div>
+  <div class="prompt"><span class="arrow">></span> <span class="path">agent-teams</span></div>
   <h2 class="fade-in fade-in-1"><span class="g">Agent Teams</span> -- Collaboration <span class="tag exp">EXPERIMENTAL</span></h2>
   <p class="fade-in fade-in-2" style="max-width: 56ch; margin-bottom: 1.2rem;">
     Multiple Claude Code <em>sessions</em> that coordinate as peers.
@@ -908,7 +908,7 @@ ul.cli-list li::before { content: '\25B8'; position: absolute; left: 0; color: v
 
 <!-- ══════ SLIDE 7: GIT WORKTREES ══════ -->
 <div class="slide" data-slide="7">
-  <div class="section-label">PART III -- ISOLATION</div>
+  <div class="prompt"><span class="arrow">></span> <span class="path">isolation</span></div>
   <h2 class="fade-in fade-in-1"><span class="p">Git Worktrees</span> -- Filesystem Isolation</h2>
   <p class="fade-in fade-in-2" style="max-width: 56ch; margin-bottom: 1rem;">
     Multiple agents editing the same files = disaster. Worktrees give each agent its own checkout, branch, and working directory -- sharing the same repo.
@@ -968,7 +968,7 @@ ul.cli-list li::before { content: '\25B8'; position: absolute; left: 0; color: v
 
 <!-- ══════ SLIDE 8: BUG TRIBUNAL ══════ -->
 <div class="slide" data-slide="8">
-  <div class="section-label">EXAMPLES</div>
+  <div class="prompt"><span class="arrow">></span> <span class="path">examples</span></div>
   <h2 class="fade-in fade-in-1"><span class="m">[BUG TRIBUNAL]</span> <span class="tag exp">AGENT TEAMS</span></h2>
   <p class="fade-in fade-in-2" style="max-width: 56ch; margin-bottom: 1rem;">
     Five agents investigate a bug. They <em>debate competing theories</em> and challenge each other. The team lead synthesizes the verdict.
@@ -992,6 +992,7 @@ ul.cli-list li::before { content: '\25B8'; position: absolute; left: 0; color: v
 
 <!-- ══════ SLIDE 9: FULL-STACK BUILD ══════ -->
 <div class="slide" data-slide="9">
+  <div class="prompt"><span class="arrow">></span> <span class="path">examples</span></div>
   <h2 class="fade-in fade-in-1"><span class="b">[FULL-STACK BUILD]</span> <span class="tag tip">SUB-AGENTS + WORKTREES</span></h2>
   <p class="fade-in fade-in-2" style="max-width: 56ch; margin-bottom: 1rem;">
     Three sub-agents in isolated worktrees, each owning a layer. The parent merges when all report back.
@@ -1023,6 +1024,7 @@ ul.cli-list li::before { content: '\25B8'; position: absolute; left: 0; color: v
 
 <!-- ══════ SLIDE 10: QA SWARM ══════ -->
 <div class="slide" data-slide="10">
+  <div class="prompt"><span class="arrow">></span> <span class="path">examples</span></div>
   <h2 class="fade-in fade-in-1"><span class="g">[QA SWARM]</span> <span class="tag exp">AGENT TEAMS</span></h2>
   <p class="fade-in fade-in-2" style="max-width: 56ch; margin-bottom: 1rem;">
     Point a team at your running app. Each teammate tests through a different lens. They find things a single reviewer always misses.
@@ -1047,6 +1049,7 @@ ul.cli-list li::before { content: '\25B8'; position: absolute; left: 0; color: v
 
 <!-- ══════ SLIDE 12: MORE PATTERNS ══════ -->
 <div class="slide" data-slide="12">
+  <div class="prompt"><span class="arrow">></span> <span class="path">examples</span></div>
   <h2 class="fade-in fade-in-1"><span class="pk">[MORE PATTERNS]</span></h2>
   <div class="two-col fade-in fade-in-2">
     <div>
@@ -1197,11 +1200,9 @@ ul.cli-list li::before { content: '\25B8'; position: absolute; left: 0; color: v
       <div class="cheat-section">
         <h3 class="b">[SUB-AGENTS]</h3>
         <div class="code-block">
-<span class="flag">$</span> <span class="cmd">claude</span>
-<span class="string">"Spawn 3 sub-agents to research X, Y, Z"</span>
+<span class="flag">></span> <span class="string">"Spawn 3 sub-agents to research X, Y, Z"</span>
 
-<span class="flag">$</span> <span class="cmd">claude</span>
-<span class="string">"Use the security-reviewer agent on src/"</span>
+<span class="flag">></span> <span class="string">"Use the security-reviewer agent on src/"</span>
 
 <span class="flag">$</span> <span class="cmd">claude</span> <span class="val">/agents</span>
 <span class="comment"># create + manage agents interactively</span>
@@ -1229,7 +1230,6 @@ ul.cli-list li::before { content: '\25B8'; position: absolute; left: 0; color: v
 <span class="flag">$</span> <span class="cmd">claude</span> <span class="flag">--worktree</span> <span class="val">feat</span> <span class="flag">--tmux</span>
 
 <span class="flag">$</span> <span class="cmd">git worktree list</span>
-<span class="comment"># see all active worktrees</span>
         </div>
       </div>
       <div class="cheat-section">
@@ -1249,7 +1249,7 @@ ul.cli-list li::before { content: '\25B8'; position: absolute; left: 0; color: v
 
 <!-- ══════ SLIDE 17: SANDBOXING OVERVIEW ══════ -->
 <div class="slide" data-slide="17">
-  <div class="section-label">PART V -- SANDBOXING AND ISOLATION</div>
+  <div class="prompt"><span class="arrow">></span> <span class="path">sandboxing</span></div>
   <h2 class="fade-in fade-in-1"><span class="s">Built-in Sandbox</span> -- /sandbox</h2>
   <p class="fade-in fade-in-2" style="max-width: 58ch; margin-bottom: 1rem;">
     Claude Code ships with OS-level sandboxing. On macOS it uses <span class="s">Apple Seatbelt</span> (sandbox-exec). It enforces two boundaries: filesystem isolation and network isolation.
