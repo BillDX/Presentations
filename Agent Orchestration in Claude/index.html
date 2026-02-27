@@ -1199,23 +1199,22 @@ ul.cli-list li::before { content: '\25B8'; position: absolute; left: 0; color: v
       <div class="cheat-section">
         <h3 class="b">[SUB-AGENTS]</h3>
         <div class="code-block">
-<span class="flag">></span> <span class="string">"Spawn 3 sub-agents to research X, Y, Z"</span>
-
-<span class="flag">></span> <span class="string">"Use the security-reviewer agent on src/"</span>
-
-<span class="flag">$</span> <span class="cmd">claude</span> <span class="val">/agents</span>
+<span class="flag">></span> <span class="string">"Spawn 3 sub-agents to research X, Y, Z"</span><br>
+<span class="flag">></span> <span class="string">"Use the security-reviewer agent on src/"</span><br>
+<br>
+<span class="flag">$</span> <span class="cmd">claude</span> <span class="val">/agents</span><br>
 <span class="comment"># create + manage agents interactively</span>
         </div>
       </div>
       <div class="cheat-section">
         <h3 class="g">[AGENT TEAMS]</h3>
         <div class="code-block">
-<span class="keyword">export</span> <span class="flag">CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS</span>=<span class="val">1</span>
-
-<span class="flag">$</span> <span class="cmd">claude</span>
-<span class="flag">></span> <span class="string">"Create an agent team with 3 reviewers..."</span>
-
-<span class="comment"># Shift+Up/Down to switch teammates</span>
+<span class="keyword">export</span> <span class="flag">CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS</span>=<span class="val">1</span><br>
+<br>
+<span class="flag">$</span> <span class="cmd">claude</span><br>
+<span class="flag">></span> <span class="string">"Create an agent team with 3 reviewers..."</span><br>
+<br>
+<span class="comment"># Shift+Up/Down to switch teammates</span><br>
 <span class="comment"># use tmux for split panes</span>
         </div>
       </div>
@@ -1224,21 +1223,19 @@ ul.cli-list li::before { content: '\25B8'; position: absolute; left: 0; color: v
       <div class="cheat-section">
         <h3 class="p">[GIT WORKTREES]</h3>
         <div class="code-block">
-<span class="flag">$</span> <span class="cmd">claude</span> <span class="flag">--worktree</span> <span class="val">feature-name</span>
-
-<span class="flag">$</span> <span class="cmd">claude</span> <span class="flag">--worktree</span> <span class="val">feat</span> <span class="flag">--tmux</span>
-
+<span class="flag">$</span> <span class="cmd">claude</span> <span class="flag">--worktree</span> <span class="val">feature-name</span><br>
+<span class="flag">$</span> <span class="cmd">claude</span> <span class="flag">--worktree</span> <span class="val">feat</span> <span class="flag">--tmux</span><br>
 <span class="flag">$</span> <span class="cmd">git worktree list</span>
         </div>
       </div>
       <div class="cheat-section">
         <h3 class="m">[AGENT FRONTMATTER]</h3>
         <div class="code-block">
-<span class="keyword">---</span>
-<span class="flag">name:</span>      <span class="val">my-agent</span>
-<span class="flag">tools:</span>     <span class="val">Read, Grep, Glob</span>
-<span class="flag">model:</span>     <span class="val">haiku</span>
-<span class="flag">isolation:</span> <span class="val">worktree</span>
+<span class="keyword">---</span><br>
+<span class="flag">name:</span>      <span class="val">my-agent</span><br>
+<span class="flag">tools:</span>     <span class="val">Read, Grep, Glob</span><br>
+<span class="flag">model:</span>     <span class="val">haiku</span><br>
+<span class="flag">isolation:</span> <span class="val">worktree</span><br>
 <span class="keyword">---</span>
         </div>
       </div>
