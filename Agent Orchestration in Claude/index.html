@@ -559,79 +559,57 @@ ul.cli-list li::before { content: '\25B8'; position: absolute; left: 0; color: v
 <div class="slide" data-slide="2">
   <div class="prompt"><span class="arrow">></span> <span class="path">sub-agents</span></div>
   <h2 class="fade-in fade-in-1"><span class="b">Sub-Agents</span> -- Task Oriented</h2>
-  <p class="fade-in fade-in-2" style="max-width: 56ch; margin-bottom: 1.2rem;">
-    Specialized workers spawned within your session. Each gets its own
-    context window, runs independently, and <span class="b">reports results back</span> to the parent.
+  <p class="fade-in fade-in-2" style="max-width: 70ch; margin-bottom: 0.8rem;">
+    Specialized workers spawned within your session. Each gets its own context window, runs independently, and <span class="b">reports results back</span> to the parent.
   </p>
-  <div class="diagram fade-in fade-in-3">
-    <div class="diagram-row" style="justify-content: center;">
-      <div class="box accent-blue" style="flex: 0 0 auto; min-width: 260px; max-width: 320px; text-align: center;">
-        <div class="box-title b">MAIN SESSION (YOU)</div>
-        <p>orchestrates + receives results</p>
-      </div>
-    </div>
-    <div class="flow-arrow">|----------+-----------+----------|</div>
-    <div class="diagram-row" style="justify-content: center;">
-      <div class="box accent-mauve">
-        <div class="box-title m">[EXPLORE] agent</div>
-        <p>Read-only. Searches and analyzes the codebase.</p>
-      </div>
-      <div class="box accent-peach">
-        <div class="box-title p">[PLAN] agent</div>
-        <p>Designs architecture and implementation strategy.</p>
-      </div>
-      <div class="box accent-green">
-        <div class="box-title g">[GENERAL] agent</div>
-        <p>Custom prompt, tool access, full autonomy.</p>
-      </div>
-    </div>
-    <div class="flow-arrow">`--- results -->> parent <<-- results ---'</div>
-  </div>
-  <div class="fade-in fade-in-4" style="margin-top: 0.5rem;">
-    <p style="font-size: 0.95rem;"><span class="tag tip">KEY</span> Sub-agents <span class="y">cannot</span> message each other -- they only report back to the parent. The main agent is the sole coordinator.</p>
-  </div>
-</div>
-
-<!-- ══════ SLIDE 3: SUB-AGENT CONFIG ══════ -->
-<div class="slide" data-slide="3">
-  <div class="prompt"><span class="arrow">></span> <span class="path">~/.claude/agents/</span></div>
-  <h2 class="fade-in fade-in-1">Defining <span class="b">Custom Sub-Agents</span></h2>
-  <div class="two-col">
-    <div class="fade-in fade-in-2">
-      <h3 class="b">MARKDOWN + YAML FRONTMATTER</h3>
-      <div class="code-block">
-        <span class="comment"># .claude/agents/security-reviewer.md</span><br>
-        <span class="keyword">---</span><br>
-        <span class="flag">name:</span> <span class="val">security-reviewer</span><br>
-        <span class="flag">description:</span> <span class="val">Reviews code for</span><br>
-        <span class="val">  security vulnerabilities</span><br>
-        <span class="flag">tools:</span> <span class="val">Read, Grep, Glob</span><br>
-        <span class="flag">model:</span> <span class="val">sonnet</span><br>
-        <span class="flag">isolation:</span> <span class="val">worktree</span><br>
-        <span class="keyword">---</span><br><br>
-        <span class="string">You are a security specialist.</span><br>
-        <span class="string">Focus on: injection, auth bypass,</span><br>
-        <span class="string">secrets exposure, SSRF, XSS...</span>
-      </div>
-    </div>
+  <div class="two-col" style="align-items: start;">
     <div class="fade-in fade-in-3">
-      <h3 class="g">WHY SUB-AGENTS?</h3>
-      <ul class="cli-list">
-        <li><span class="g">Context isolation</span> -- exploration stays out of your main conversation</li>
-        <li><span class="g">Tool restrictions</span> -- read-only agents cannot break things</li>
-        <li><span class="g">Cost control</span> -- route to Haiku for cheap tasks</li>
-        <li><span class="g">Parallel execution</span> -- up to ~7 simultaneous tasks</li>
-        <li><span class="g">Reusability</span> -- <span class="b">~/.claude/agents/</span> works across all projects</li>
-      </ul>
-      <div style="margin-top: 1rem;">
-        <div class="code-block">
-          <span class="comment"># invoke explicitly</span><br>
-          <span class="string">"Use the security-reviewer</span><br>
-          <span class="string"> agent on src/auth/"</span><br><br>
-          <span class="comment"># or Claude auto-delegates</span><br>
-          <span class="comment"># based on description match</span>
+      <!-- Diagram -->
+      <div class="diagram" style="margin: 0;">
+        <div class="diagram-row" style="justify-content: center;">
+          <div class="box accent-blue" style="flex: 0 0 auto; min-width: 200px; text-align: center; padding: 0.5rem 0.8rem;">
+            <div class="box-title b">MAIN SESSION (YOU)</div>
+            <p style="font-size: 0.8rem;">orchestrates + receives results</p>
+          </div>
         </div>
+        <div class="flow-arrow" style="font-size: 0.7rem;">|--------+--------+--------|</div>
+        <div class="diagram-row" style="justify-content: center; gap: 0.3rem;">
+          <div class="box accent-mauve" style="padding: 0.4rem 0.6rem;">
+            <div class="box-title m" style="font-size: 0.75rem;">[EXPLORE]</div>
+            <p style="font-size: 0.7rem;">Read-only search</p>
+          </div>
+          <div class="box accent-peach" style="padding: 0.4rem 0.6rem;">
+            <div class="box-title p" style="font-size: 0.75rem;">[PLAN]</div>
+            <p style="font-size: 0.7rem;">Architecture</p>
+          </div>
+          <div class="box accent-green" style="padding: 0.4rem 0.6rem;">
+            <div class="box-title g" style="font-size: 0.75rem;">[GENERAL]</div>
+            <p style="font-size: 0.7rem;">Full autonomy</p>
+          </div>
+        </div>
+        <div class="flow-arrow" style="font-size: 0.65rem;">`-- results --> parent <-- results --'</div>
       </div>
+      <p style="font-size: 0.8rem; margin-top: 0.6rem;"><span class="tag tip">KEY</span> Sub-agents <span class="y">cannot</span> message each other.</p>
+    </div>
+    <div class="fade-in fade-in-4">
+      <h3 class="b" style="font-size: 0.9rem;">DEFINE IN ~/.claude/agents/</h3>
+      <div class="code-block" style="font-size: 0.75rem;">
+<span class="comment"># security-reviewer.md</span><br>
+<span class="keyword">---</span><br>
+<span class="flag">name:</span> <span class="val">security-reviewer</span><br>
+<span class="flag">tools:</span> <span class="val">Read, Grep, Glob</span><br>
+<span class="flag">model:</span> <span class="val">sonnet</span><br>
+<span class="flag">isolation:</span> <span class="val">worktree</span><br>
+<span class="keyword">---</span><br>
+<span class="string">You are a security specialist...</span>
+      </div>
+      <h3 class="g" style="font-size: 0.9rem; margin-top: 0.6rem;">WHY SUB-AGENTS?</h3>
+      <ul class="cli-list" style="font-size: 0.8rem;">
+        <li><span class="g">Context isolation</span> -- clean separation</li>
+        <li><span class="g">Tool restrictions</span> -- read-only agents</li>
+        <li><span class="g">Cost control</span> -- route to Haiku</li>
+        <li><span class="g">Parallel execution</span> -- up to ~7 tasks</li>
+      </ul>
     </div>
   </div>
 </div>
