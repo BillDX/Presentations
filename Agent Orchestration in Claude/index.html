@@ -330,164 +330,116 @@ ul.cli-list li::before { content: '\25B8'; position: absolute; left: 0; color: v
 <div class="slide" data-slide="0b">
   <div class="prompt"><span class="arrow">></span> <span class="path">five-levels</span></div>
   <h2 class="fade-in fade-in-1">The <span class="y">Five Levels</span></h2>
-  <p class="fade-in fade-in-2" style="max-width: 58ch; margin-bottom: 0.8rem; font-size: 0.9rem;">
+  <p class="fade-in fade-in-2" style="max-width: 70ch; margin-bottom: 0.6rem; font-size: 0.85rem;">
     <span class="dim">Dan Shapiro's framework (Jan 2026) — modeled on NHTSA's driving automation levels</span>
   </p>
-  <div class="fade-in fade-in-3" style="display: flex; flex-direction: column; gap: 0.4rem; max-width: 720px;">
-    <div style="display: flex; align-items: center; gap: 0.8rem;">
-      <span class="tag" style="background: var(--surface1); min-width: 2.2rem; text-align: center;">L0</span>
-      <span class="r" style="min-width: 11rem;">Spicy Autocomplete</span>
-      <span class="dim" style="font-size: 0.88rem;">Copy-paste snippets. You approve every character.</span>
-    </div>
-    <div style="display: flex; align-items: center; gap: 0.8rem;">
-      <span class="tag" style="background: var(--surface1); min-width: 2.2rem; text-align: center;">L1</span>
-      <span class="m" style="min-width: 11rem;">The Coding Intern</span>
-      <span class="dim" style="font-size: 0.88rem;">Writes boilerplate with full human review.</span>
-    </div>
-    <div style="display: flex; align-items: center; gap: 0.8rem;">
-      <span class="tag" style="background: var(--surface1); min-width: 2.2rem; text-align: center;">L2</span>
-      <span class="b" style="min-width: 11rem;">The Junior Developer</span>
-      <span class="dim" style="font-size: 0.88rem;">Pair programming, reviewing every line. <span class="y">90% plateau here.</span></span>
-    </div>
-    <div style="display: flex; align-items: center; gap: 0.8rem;">
-      <span class="tag" style="background: var(--peach); color: var(--base); min-width: 2.2rem; text-align: center;">L3</span>
-      <span class="p" style="min-width: 11rem;">The Developer</span>
-      <span class="dim" style="font-size: 0.88rem;">AI writes most code. You become full-time reviewer.</span>
-    </div>
-    <div style="display: flex; align-items: center; gap: 0.8rem;">
-      <span class="tag" style="background: var(--green); color: var(--base); min-width: 2.2rem; text-align: center;">L4</span>
-      <span class="g" style="min-width: 11rem;">The Engineering Team</span>
-      <span class="dim" style="font-size: 0.88rem;">You're the manager. Agents do the work.</span>
-    </div>
-    <div style="display: flex; align-items: center; gap: 0.8rem;">
-      <span class="tag" style="background: var(--lavender); color: var(--base); min-width: 2.2rem; text-align: center;">L5</span>
-      <span class="l" style="min-width: 11rem;">The Dark Factory</span>
-      <span class="dim" style="font-size: 0.88rem;">Lights out. AI turns specs into software autonomously.</span>
-    </div>
-  </div>
-  <p class="fade-in fade-in-4" style="font-size: 0.85rem; margin-top: 1rem; color: var(--text-dim);">
-    <span class="tag tip">THIS TALK</span> Moving from L2/L3 → L4 with sub-agents and agent teams.
-  </p>
-</div>
-
-<!-- ══════ SLIDE 0c: THE FIVE LEVELS (VISUAL) ══════ -->
-<div class="slide" data-slide="0c">
-  <div class="prompt"><span class="arrow">></span> <span class="path">five-levels --visual</span></div>
-  <h2 class="fade-in fade-in-1">The <span class="y">Five Levels</span></h2>
-  <div class="fade-in fade-in-2" style="margin-top: 1rem; max-width: 850px;">
-    <!-- Spectrum bar -->
-    <div style="display: flex; height: 6px; border-radius: 3px; overflow: hidden; margin-bottom: 1rem;">
-      <div style="flex: 1; background: var(--red);"></div>
-      <div style="flex: 1; background: var(--mauve);"></div>
-      <div style="flex: 1; background: var(--blue);"></div>
-      <div style="flex: 1; background: var(--peach);"></div>
-      <div style="flex: 1; background: var(--green);"></div>
-      <div style="flex: 1; background: var(--lavender);"></div>
-    </div>
-    <!-- Levels grid -->
-    <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.4rem; text-align: center;">
-      <!-- L0: Single code screen, you typing -->
+  <div class="fade-in fade-in-3" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem 1rem; max-width: 900px;">
+    <!-- L0 -->
+    <div style="display: flex; align-items: center; gap: 0.6rem;">
+      <svg width="70" height="45" viewBox="0 0 100 60" style="flex-shrink: 0;">
+        <rect x="10" y="5" width="80" height="50" rx="3" fill="var(--crust)" stroke="var(--red)" stroke-width="1.5"/>
+        <rect x="10" y="5" width="80" height="10" rx="3" fill="var(--surface0)"/>
+        <circle cx="18" cy="10" r="2" fill="var(--red)"/>
+        <circle cx="25" cy="10" r="2" fill="var(--yellow)"/>
+        <circle cx="32" cy="10" r="2" fill="var(--green)"/>
+        <text x="18" y="28" fill="var(--text-dim)" font-size="6" font-family="monospace">$ vim app.js</text>
+        <text x="18" y="38" fill="var(--text)" font-size="6" font-family="monospace">const x = _</text>
+        <rect x="54" y="33" width="4" height="7" fill="var(--red)"/>
+      </svg>
       <div>
-        <svg width="100" height="60" viewBox="0 0 100 60">
-          <rect x="10" y="5" width="80" height="50" rx="3" fill="var(--crust)" stroke="var(--red)" stroke-width="1.5"/>
-          <rect x="10" y="5" width="80" height="10" rx="3" fill="var(--surface0)"/>
-          <circle cx="18" cy="10" r="2" fill="var(--red)"/>
-          <circle cx="25" cy="10" r="2" fill="var(--yellow)"/>
-          <circle cx="32" cy="10" r="2" fill="var(--green)"/>
-          <text x="18" y="28" fill="var(--text-dim)" font-size="6" font-family="monospace">$ vim app.js</text>
-          <text x="18" y="38" fill="var(--text)" font-size="6" font-family="monospace">const x = _</text>
-          <rect x="54" y="33" width="4" height="7" fill="var(--red)"/>
-        </svg>
-        <div class="tag" style="background: var(--red); color: var(--base); font-size: 0.65rem;">L0</div>
-        <div style="font-size: 0.72rem; margin-top: 0.3rem;" class="r">Autocomplete</div>
+        <div><span class="tag" style="background: var(--red); color: var(--base); font-size: 0.65rem;">L0</span> <span class="r" style="font-size: 0.85rem;">Spicy Autocomplete</span></div>
+        <div class="dim" style="font-size: 0.75rem;">You approve every character</div>
       </div>
-      <!-- L1: Code screen with y/n approval -->
+    </div>
+    <!-- L1 -->
+    <div style="display: flex; align-items: center; gap: 0.6rem;">
+      <svg width="70" height="45" viewBox="0 0 100 60" style="flex-shrink: 0;">
+        <rect x="10" y="5" width="80" height="50" rx="3" fill="var(--crust)" stroke="var(--mauve)" stroke-width="1.5"/>
+        <rect x="10" y="5" width="80" height="10" rx="3" fill="var(--surface0)"/>
+        <circle cx="18" cy="10" r="2" fill="var(--red)"/>
+        <circle cx="25" cy="10" r="2" fill="var(--yellow)"/>
+        <circle cx="32" cy="10" r="2" fill="var(--green)"/>
+        <text x="18" y="30" fill="var(--text-dim)" font-size="5" font-family="monospace">function add()</text>
+        <text x="18" y="48" fill="var(--mauve)" font-size="6" font-family="monospace">Accept? [y/n]</text>
+      </svg>
       <div>
-        <svg width="100" height="60" viewBox="0 0 100 60">
-          <rect x="10" y="5" width="80" height="50" rx="3" fill="var(--crust)" stroke="var(--mauve)" stroke-width="1.5"/>
-          <rect x="10" y="5" width="80" height="10" rx="3" fill="var(--surface0)"/>
-          <circle cx="18" cy="10" r="2" fill="var(--red)"/>
-          <circle cx="25" cy="10" r="2" fill="var(--yellow)"/>
-          <circle cx="32" cy="10" r="2" fill="var(--green)"/>
-          <text x="18" y="26" fill="var(--text-dim)" font-size="5" font-family="monospace">function add(a,b)</text>
-          <text x="18" y="34" fill="var(--text-dim)" font-size="5" font-family="monospace">  return a + b</text>
-          <text x="18" y="48" fill="var(--mauve)" font-size="6" font-family="monospace">Accept? [y/n]</text>
-        </svg>
-        <div class="tag" style="background: var(--mauve); color: var(--base); font-size: 0.65rem;">L1</div>
-        <div style="font-size: 0.72rem; margin-top: 0.3rem;" class="m">Intern</div>
+        <div><span class="tag" style="background: var(--mauve); color: var(--base); font-size: 0.65rem;">L1</span> <span class="m" style="font-size: 0.85rem;">Coding Intern</span></div>
+        <div class="dim" style="font-size: 0.75rem;">Full human review</div>
       </div>
-      <!-- L2: Code screen with --yolo flag -->
+    </div>
+    <!-- L2 -->
+    <div style="display: flex; align-items: center; gap: 0.6rem;">
+      <svg width="70" height="45" viewBox="0 0 100 60" style="flex-shrink: 0;">
+        <rect x="10" y="5" width="80" height="50" rx="3" fill="var(--crust)" stroke="var(--blue)" stroke-width="1.5"/>
+        <rect x="10" y="5" width="80" height="10" rx="3" fill="var(--surface0)"/>
+        <circle cx="18" cy="10" r="2" fill="var(--red)"/>
+        <circle cx="25" cy="10" r="2" fill="var(--yellow)"/>
+        <circle cx="32" cy="10" r="2" fill="var(--green)"/>
+        <text x="18" y="30" fill="var(--text-dim)" font-size="5" font-family="monospace">$ claude</text>
+        <text x="18" y="42" fill="var(--blue)" font-size="5" font-family="monospace">--dangerously...</text>
+      </svg>
       <div>
-        <svg width="100" height="60" viewBox="0 0 100 60">
-          <rect x="10" y="5" width="80" height="50" rx="3" fill="var(--crust)" stroke="var(--blue)" stroke-width="1.5"/>
-          <rect x="10" y="5" width="80" height="10" rx="3" fill="var(--surface0)"/>
-          <circle cx="18" cy="10" r="2" fill="var(--red)"/>
-          <circle cx="25" cy="10" r="2" fill="var(--yellow)"/>
-          <circle cx="32" cy="10" r="2" fill="var(--green)"/>
-          <text x="18" y="28" fill="var(--text-dim)" font-size="5" font-family="monospace">$ claude</text>
-          <text x="18" y="38" fill="var(--blue)" font-size="6" font-family="monospace">--dangerously</text>
-          <text x="18" y="48" fill="var(--yellow)" font-size="6" font-family="monospace">-skip-perms</text>
-        </svg>
-        <div class="tag" style="background: var(--blue); color: var(--base); font-size: 0.65rem;">L2</div>
-        <div style="font-size: 0.72rem; margin-top: 0.3rem;" class="b">Junior Dev</div>
+        <div><span class="tag" style="background: var(--blue); color: var(--base); font-size: 0.65rem;">L2</span> <span class="b" style="font-size: 0.85rem;">Junior Developer</span></div>
+        <div class="dim" style="font-size: 0.75rem;">Pair programming. <span class="y">90% plateau here.</span></div>
       </div>
-      <!-- L3: Single Claude Code screen -->
+    </div>
+    <!-- L3 -->
+    <div style="display: flex; align-items: center; gap: 0.6rem;">
+      <svg width="70" height="45" viewBox="0 0 100 60" style="flex-shrink: 0;">
+        <rect x="10" y="5" width="80" height="50" rx="3" fill="var(--crust)" stroke="var(--peach)" stroke-width="1.5"/>
+        <rect x="10" y="5" width="80" height="10" rx="3" fill="var(--surface0)"/>
+        <circle cx="18" cy="10" r="2" fill="var(--red)"/>
+        <circle cx="25" cy="10" r="2" fill="var(--yellow)"/>
+        <circle cx="32" cy="10" r="2" fill="var(--green)"/>
+        <text x="18" y="28" fill="var(--peach)" font-size="6" font-family="monospace">> claude</text>
+        <text x="18" y="40" fill="var(--text-dim)" font-size="5" font-family="monospace">Building auth...</text>
+      </svg>
       <div>
-        <svg width="100" height="60" viewBox="0 0 100 60">
-          <rect x="10" y="5" width="80" height="50" rx="3" fill="var(--crust)" stroke="var(--peach)" stroke-width="1.5"/>
-          <rect x="10" y="5" width="80" height="10" rx="3" fill="var(--surface0)"/>
-          <circle cx="18" cy="10" r="2" fill="var(--red)"/>
-          <circle cx="25" cy="10" r="2" fill="var(--yellow)"/>
-          <circle cx="32" cy="10" r="2" fill="var(--green)"/>
-          <text x="18" y="26" fill="var(--peach)" font-size="6" font-family="monospace">> claude</text>
-          <text x="18" y="36" fill="var(--text-dim)" font-size="5" font-family="monospace">Building auth...</text>
-          <text x="18" y="46" fill="var(--text-dim)" font-size="5" font-family="monospace">Running tests...</text>
-        </svg>
-        <div class="tag" style="background: var(--peach); color: var(--base); font-size: 0.65rem;">L3</div>
-        <div style="font-size: 0.72rem; margin-top: 0.3rem;" class="p">Developer</div>
+        <div><span class="tag" style="background: var(--peach); color: var(--base); font-size: 0.65rem;">L3</span> <span class="p" style="font-size: 0.85rem;">The Developer</span></div>
+        <div class="dim" style="font-size: 0.75rem;">AI writes most. You review.</div>
       </div>
-      <!-- L4: Multiple Claude Code screens -->
+    </div>
+    <!-- L4 -->
+    <div style="display: flex; align-items: center; gap: 0.6rem;">
+      <svg width="70" height="45" viewBox="0 0 100 60" style="flex-shrink: 0;">
+        <rect x="25" y="2" width="50" height="30" rx="2" fill="var(--crust)" stroke="var(--green)" stroke-width="1"/>
+        <rect x="25" y="2" width="50" height="6" rx="2" fill="var(--surface0)"/>
+        <text x="30" y="18" fill="var(--green)" font-size="5" font-family="monospace">> tester</text>
+        <rect x="15" y="12" width="50" height="30" rx="2" fill="var(--crust)" stroke="var(--green)" stroke-width="1"/>
+        <rect x="15" y="12" width="50" height="6" rx="2" fill="var(--surface0)"/>
+        <text x="20" y="28" fill="var(--green)" font-size="5" font-family="monospace">> coder</text>
+        <rect x="5" y="22" width="50" height="30" rx="2" fill="var(--crust)" stroke="var(--green)" stroke-width="1.5"/>
+        <rect x="5" y="22" width="50" height="6" rx="2" fill="var(--surface0)"/>
+        <text x="10" y="40" fill="var(--green)" font-size="5" font-family="monospace">> controller</text>
+      </svg>
       <div>
-        <svg width="100" height="60" viewBox="0 0 100 60">
-          <!-- Back window -->
-          <rect x="25" y="2" width="55" height="35" rx="2" fill="var(--crust)" stroke="var(--green)" stroke-width="1"/>
-          <rect x="25" y="2" width="55" height="7" rx="2" fill="var(--surface0)"/>
-          <text x="30" y="20" fill="var(--green)" font-size="5" font-family="monospace">> tester</text>
-          <!-- Middle window -->
-          <rect x="15" y="12" width="55" height="35" rx="2" fill="var(--crust)" stroke="var(--green)" stroke-width="1"/>
-          <rect x="15" y="12" width="55" height="7" rx="2" fill="var(--surface0)"/>
-          <text x="20" y="30" fill="var(--green)" font-size="5" font-family="monospace">> coder</text>
-          <!-- Front window -->
-          <rect x="5" y="22" width="55" height="35" rx="2" fill="var(--crust)" stroke="var(--green)" stroke-width="1.5"/>
-          <rect x="5" y="22" width="55" height="7" rx="2" fill="var(--surface0)"/>
-          <text x="10" y="42" fill="var(--green)" font-size="5" font-family="monospace">> controller</text>
-        </svg>
-        <div class="tag" style="background: var(--green); color: var(--base); font-size: 0.65rem;">L4</div>
-        <div style="font-size: 0.72rem; margin-top: 0.3rem;" class="g">Eng Team</div>
+        <div><span class="tag" style="background: var(--green); color: var(--base); font-size: 0.65rem;">L4</span> <span class="g" style="font-size: 0.85rem;">Engineering Team</span></div>
+        <div class="dim" style="font-size: 0.75rem;">You manage. Agents execute.</div>
       </div>
-      <!-- L5: Orchestrated agent grid -->
+    </div>
+    <!-- L5 -->
+    <div style="display: flex; align-items: center; gap: 0.6rem;">
+      <svg width="70" height="45" viewBox="0 0 100 60" style="flex-shrink: 0;">
+        <rect x="5" y="5" width="28" height="20" rx="2" fill="var(--crust)" stroke="var(--lavender)" stroke-width="1"/>
+        <text x="10" y="18" fill="var(--lavender)" font-size="5" font-family="monospace">a-1</text>
+        <rect x="36" y="5" width="28" height="20" rx="2" fill="var(--crust)" stroke="var(--lavender)" stroke-width="1"/>
+        <text x="41" y="18" fill="var(--lavender)" font-size="5" font-family="monospace">a-2</text>
+        <rect x="67" y="5" width="28" height="20" rx="2" fill="var(--crust)" stroke="var(--lavender)" stroke-width="1"/>
+        <text x="72" y="18" fill="var(--lavender)" font-size="5" font-family="monospace">a-3</text>
+        <rect x="5" y="32" width="28" height="20" rx="2" fill="var(--crust)" stroke="var(--lavender)" stroke-width="1"/>
+        <text x="10" y="45" fill="var(--lavender)" font-size="5" font-family="monospace">a-4</text>
+        <rect x="36" y="32" width="28" height="20" rx="2" fill="var(--crust)" stroke="var(--lavender)" stroke-width="1"/>
+        <text x="41" y="45" fill="var(--lavender)" font-size="5" font-family="monospace">a-5</text>
+        <rect x="67" y="32" width="28" height="20" rx="2" fill="var(--crust)" stroke="var(--lavender)" stroke-width="1"/>
+        <text x="72" y="45" fill="var(--lavender)" font-size="5" font-family="monospace">a-6</text>
+      </svg>
       <div>
-        <svg width="100" height="60" viewBox="0 0 100 60">
-          <!-- Grid of small terminals -->
-          <rect x="5" y="5" width="28" height="22" rx="2" fill="var(--crust)" stroke="var(--lavender)" stroke-width="1"/>
-          <text x="10" y="18" fill="var(--lavender)" font-size="5" font-family="monospace">agent-1</text>
-          <rect x="36" y="5" width="28" height="22" rx="2" fill="var(--crust)" stroke="var(--lavender)" stroke-width="1"/>
-          <text x="41" y="18" fill="var(--lavender)" font-size="5" font-family="monospace">agent-2</text>
-          <rect x="67" y="5" width="28" height="22" rx="2" fill="var(--crust)" stroke="var(--lavender)" stroke-width="1"/>
-          <text x="72" y="18" fill="var(--lavender)" font-size="5" font-family="monospace">agent-3</text>
-          <rect x="5" y="32" width="28" height="22" rx="2" fill="var(--crust)" stroke="var(--lavender)" stroke-width="1"/>
-          <text x="10" y="45" fill="var(--lavender)" font-size="5" font-family="monospace">agent-4</text>
-          <rect x="36" y="32" width="28" height="22" rx="2" fill="var(--crust)" stroke="var(--lavender)" stroke-width="1"/>
-          <text x="41" y="45" fill="var(--lavender)" font-size="5" font-family="monospace">agent-5</text>
-          <rect x="67" y="32" width="28" height="22" rx="2" fill="var(--crust)" stroke="var(--lavender)" stroke-width="1"/>
-          <text x="72" y="45" fill="var(--lavender)" font-size="5" font-family="monospace">agent-6</text>
-        </svg>
-        <div class="tag" style="background: var(--lavender); color: var(--base); font-size: 0.65rem;">L5</div>
-        <div style="font-size: 0.72rem; margin-top: 0.3rem;" class="l">Dark Factory</div>
+        <div><span class="tag" style="background: var(--lavender); color: var(--base); font-size: 0.65rem;">L5</span> <span class="l" style="font-size: 0.85rem;">Dark Factory</span></div>
+        <div class="dim" style="font-size: 0.75rem;">Lights out. Specs → software.</div>
       </div>
     </div>
   </div>
-  <p class="fade-in fade-in-3" style="font-size: 0.85rem; margin-top: 1rem; color: var(--text-dim);">
+  <p class="fade-in fade-in-4" style="font-size: 0.85rem; margin-top: 0.8rem; color: var(--text-dim);">
     <span class="tag tip">THIS TALK</span> Moving from <span class="b">L2</span>/<span class="p">L3</span> → <span class="g">L4</span> with sub-agents and agent teams.
   </p>
 </div>
