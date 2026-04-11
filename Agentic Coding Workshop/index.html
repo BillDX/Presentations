@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agentic Coding Workshop</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #13111c;
+  --bg-panel: #1a1826;
+  --bg-card: #211f2e;
+  --bg-highlight: #2a2740;
+  --border: #3b3755;
+  --border-bright: #524d6b;
+
+  --text: #e2dff0;
+  --text-secondary: #a9a5bb;
+  --text-dim: #6b6785;
+
+  --green: #a6e3a1;
+  --green-bright: #b8f0b4;
+  --teal: #94e2d5;
+  --blue: #89b4fa;
+  --blue-bright: #b4d0fc;
+  --lavender: #b4befe;
+  --mauve: #cba6f7;
+  --pink: #f5c2e7;
+  --red: #f38ba8;
+  --peach: #fab387;
+  --yellow: #f9e2af;
+  --sky: #89dcfe;
+  --sapphire: #74c7ec;
+  --flamingo: #f2cdcd;
+  --rosewater: #f5e0dc;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  overflow: hidden;
+}
+
+.deck { height: 100vh; width: 100vw; position: relative; }
+
+.slide {
+  position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center;
+  padding: 5vh 7vw; opacity: 0; transform: translateY(10px);
+  transition: opacity 0.35s ease, transform 0.35s ease; pointer-events: none; overflow-y: auto;
+}
+.slide.active { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+/* Prompt */
+.prompt {
+  font-size: clamp(0.9rem, 1.4vw, 1.1rem);
+  margin-bottom: 0.6rem;
+  color: var(--text-secondary);
+}
+.prompt .path { color: var(--blue); }
+.prompt .arrow { color: var(--green); font-weight: 700; }
+
+/* Typography */
+h1 {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 800;
+  font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-weight: 700;
+  font-size: clamp(1.6rem, 4vw, 3rem);
+  line-height: 1.12;
+  margin-bottom: 1.2rem;
+  color: var(--text);
+}
+
+h3 {
+  font-weight: 600;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  margin-bottom: 0.6rem;
+}
+
+p, li {
+  font-size: clamp(0.88rem, 1.5vw, 1.15rem);
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.subtitle {
+  font-size: clamp(1rem, 1.8vw, 1.4rem);
+  color: var(--text-secondary);
+  font-weight: 400;
+  margin-bottom: 2rem;
+}
+
+/* Colors */
+.g { color: var(--green); }
+.t { color: var(--teal); }
+.b { color: var(--blue); }
+.bb { color: var(--blue-bright); }
+.l { color: var(--lavender); }
+.m { color: var(--mauve); }
+.pk { color: var(--pink); }
+.r { color: var(--red); }
+.p { color: var(--peach); }
+.y { color: var(--yellow); }
+.s { color: var(--sky); }
+.dim { color: var(--text-dim); }
+
+/* Code blocks */
+.code-block {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.3rem 1.6rem;
+  margin: 0.8rem 0;
+  font-size: clamp(0.78rem, 1.25vw, 1.02rem);
+  line-height: 1.8;
+  overflow-x: auto;
+}
+
+.code-block .comment { color: var(--text-dim); font-style: italic; }
+.code-block .keyword { color: var(--mauve); }
+.code-block .string { color: var(--green); }
+.code-block .flag { color: var(--blue); }
+.code-block .cmd { color: var(--yellow); }
+.code-block .val { color: var(--peach); }
+
+/* Diagrams */
+.diagram { display: flex; flex-direction: column; gap: 0.5rem; margin: 1.2rem 0; }
+.diagram-row { display: flex; gap: 0.8rem; align-items: stretch; flex-wrap: wrap; justify-content: center; }
+
+.box {
+  border: 1px solid var(--border); border-radius: 10px;
+  padding: 0.9rem 1.1rem; background: var(--bg-card);
+  flex: 1 1 0; min-width: 150px; max-width: 290px;
+}
+.box.accent-green { border-color: #4c7a4a; background: rgba(166,227,161,0.06); }
+.box.accent-teal { border-color: #3d7a72; background: rgba(148,226,213,0.06); }
+.box.accent-blue { border-color: #4a6ca0; background: rgba(137,180,250,0.06); }
+.box.accent-mauve { border-color: #6a4f8a; background: rgba(203,166,247,0.06); }
+.box.accent-peach { border-color: #8a6040; background: rgba(250,179,135,0.06); }
+.box.accent-red { border-color: #8a4455; background: rgba(243,139,168,0.06); }
+.box.accent-lavender { border-color: #5a5a8a; background: rgba(180,190,254,0.06); }
+.box.accent-yellow { border-color: #8a7a40; background: rgba(249,226,175,0.06); }
+
+.box-title { font-size: 0.92em; font-weight: 700; margin-bottom: 0.3rem; letter-spacing: 0.04em; }
+.box p { font-size: 0.88em; line-height: 1.55; margin: 0; color: var(--text-secondary); }
+
+/* Compare grid */
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.2rem 0; }
+.compare-col { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.compare-header { padding: 0.8rem 1.1rem; font-weight: 700; font-size: 1rem; letter-spacing: 0.06em; }
+.compare-col:first-child .compare-header { background: rgba(137,180,250,0.1); color: var(--blue); border-bottom: 1px solid rgba(137,180,250,0.15); }
+.compare-col:last-child .compare-header { background: rgba(166,227,161,0.08); color: var(--green); border-bottom: 1px solid rgba(166,227,161,0.12); }
+.compare-body { padding: 0.9rem 1.1rem; }
+.compare-item {
+  display: flex; align-items: baseline; gap: 0.6rem; padding: 0.5rem 0;
+  font-size: clamp(0.78rem, 1.15vw, 0.95rem); line-height: 1.55;
+  border-bottom: 1px solid rgba(59,55,85,0.6);
+}
+.compare-item:last-child { border-bottom: none; }
+.compare-item::before { content: '\25B8'; color: var(--text-dim); flex-shrink: 0; }
+
+/* Bullet list */
+ul.cli-list { list-style: none; padding: 0; margin: 0.8rem 0; }
+ul.cli-list li {
+  padding: 0.4rem 0; padding-left: 2rem; position: relative;
+  font-size: clamp(0.85rem, 1.35vw, 1.08rem);
+}
+ul.cli-list li::before { content: '\25B8'; position: absolute; left: 0; color: var(--lavender); font-weight: 700; }
+
+/* Two-column layout */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; }
+
+/* Callout */
+.callout {
+  border-left: 3px solid var(--green);
+  padding: 0.8rem 1.2rem;
+  background: rgba(166,227,161,0.04);
+  border-radius: 0 8px 8px 0;
+  margin: 1rem 0;
+}
+
+/* Tags */
+.tag {
+  display: inline-block; font-size: 0.68rem; padding: 0.15rem 0.55rem; border-radius: 5px;
+  font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; margin-right: 0.3rem;
+}
+.tag.exercise { background: rgba(249,226,175,0.15); color: var(--yellow); border: 1px solid rgba(249,226,175,0.3); }
+.tag.tip { background: rgba(166,227,161,0.12); color: var(--green); border: 1px solid rgba(166,227,161,0.2); }
+.tag.exp { background: rgba(243,139,168,0.12); color: var(--red); border: 1px solid rgba(243,139,168,0.2); }
+.tag.time { background: rgba(137,180,250,0.12); color: var(--blue); border: 1px solid rgba(137,180,250,0.2); }
+
+/* Exercise card */
+.exercise-card {
+  border: 2px solid rgba(249,226,175,0.3);
+  border-radius: 12px;
+  padding: 1.5rem 1.8rem;
+  background: rgba(249,226,175,0.03);
+  margin: 0.8rem 0;
+}
+.exercise-card h3 { color: var(--yellow); margin-bottom: 0.8rem; }
+
+/* Step list */
+ol.steps { list-style: none; padding: 0; margin: 0.5rem 0; counter-reset: step; }
+ol.steps li {
+  padding: 0.5rem 0; padding-left: 2.5rem; position: relative;
+  font-size: clamp(0.82rem, 1.3vw, 1.02rem); counter-increment: step;
+}
+ol.steps li::before {
+  content: counter(step); position: absolute; left: 0;
+  width: 1.6rem; height: 1.6rem; border-radius: 50%;
+  background: var(--bg-highlight); border: 1px solid var(--yellow);
+  color: var(--yellow); font-size: 0.75rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  top: 0.45rem;
+}
+
+/* ASCII art */
+.ascii-art {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.42rem, 0.85vw, 0.72rem);
+  line-height: 1.15; white-space: pre; margin-bottom: 1rem; overflow: hidden;
+}
+
+/* Blinking cursor */
+.cursor {
+  display: inline-block; width: 0.6em; height: 1.1em; background: var(--lavender);
+  vertical-align: text-bottom; animation: blink 1s step-end infinite; margin-left: 2px;
+  border-radius: 2px;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* Flow arrow */
+.flow-arrow { text-align: center; color: var(--text-dim); font-size: 0.95rem; padding: 0.2rem 0; letter-spacing: 0.15em; }
+
+/* Timer display */
+.timer-display {
+  position: fixed; top: 1.5rem; right: 7vw;
+  font-size: 1.6rem; font-weight: 700; color: var(--yellow);
+  opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 100;
+  text-shadow: 0 0 20px rgba(249,226,175,0.3);
+}
+.timer-display.visible { opacity: 1; }
+.timer-display.warning { color: var(--red); text-shadow: 0 0 20px rgba(243,139,168,0.3); }
+
+/* Progress bar */
+.progress-bar {
+  position: fixed; bottom: 0; left: 0; height: 3px;
+  background: linear-gradient(90deg, var(--blue), var(--green));
+  transition: width 0.3s ease; z-index: 100;
+}
+.slide-counter {
+  position: fixed; bottom: 0.8rem; right: 1.5rem;
+  font-size: 0.7rem; color: var(--text-dim); z-index: 100;
+}
+.nav-hint {
+  position: fixed; bottom: 0.8rem; left: 1.5rem;
+  font-size: 0.65rem; color: var(--text-dim); z-index: 100;
+}
+.nav-hint kbd {
+  background: var(--bg-highlight); border: 1px solid var(--border);
+  padding: 0.1rem 0.4rem; border-radius: 4px; font-family: inherit;
+}
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+<!-- ══════ SLIDE 0: TITLE ══════ -->
+<div class="slide active" data-slide="0">
+  <div class="ascii-art fade-in fade-in-1" style="color: var(--lavender);">
+    _                    _   _         ____          _ _
+   / \   __ _  ___ _ __ | |_(_) ___   / ___|___   __| (_)_ __   __ _
+  / _ \ / _` |/ _ \ '_ \| __| |/ __| | |   / _ \ / _` | | '_ \ / _` |
+ / ___ \ (_| |  __/ | | | |_| | (__  | |__| (_) | (_| | | | | | (_| |
+/_/   \_\__, |\___|_| |_|\__|_|\___|  \____\___/ \__,_|_|_| |_|\__, |
+        |___/                                                    |___/</div>
+  <h1><span class="y">Workshop</span><br><span class="dim" style="font-size:0.55em; font-weight:400;">Hands-On Agent Orchestration in Claude Code</span></h1>
+  <p class="subtitle">Build. Delegate. Parallelize.</p>
+  <div style="margin-top: 1.5rem;">
+    <div class="code-block" style="display: inline-block;">
+      <span class="flag">$</span> <span class="cmd">claude</span> <span class="string">"Let's level up"</span><span class="cursor"></span>
+    </div>
+  </div>
+  <div style="margin-top: 2rem; color: var(--text-secondary); font-size: clamp(0.82rem, 1.2vw, 1rem); line-height: 1.8;">
+    <span class="l">Bill McIntyre</span><br>
+    <span style="color: var(--text-dim);">bill@thinkiac.ai</span>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 1: SETUP CHECK ══════ -->
+<div class="slide" data-slide="1">
+  <div class="prompt"><span class="arrow">></span> <span class="path">preflight</span></div>
+  <h2><span class="s">Preflight</span> Check</h2>
+  <p style="max-width: 55ch; margin-bottom: 1.2rem;">Before we start -- make sure you're ready to fly.</p>
+  <div class="code-block" style="max-width: 600px;">
+<span class="comment"># you should be able to run all of these</span><br>
+<span class="flag">$</span> <span class="cmd">claude</span> <span class="flag">--version</span><br>
+<span class="flag">$</span> <span class="cmd">git</span> <span class="flag">--version</span><br>
+<span class="flag">$</span> <span class="cmd">tmux</span> <span class="flag">-V</span><br>
+<br>
+<span class="comment"># clone the starter repo (or use your own project)</span><br>
+<span class="flag">$</span> <span class="cmd">git clone</span> <span class="val">&lt;starter-repo-url&gt;</span><br>
+<span class="flag">$</span> <span class="cmd">cd</span> <span class="val">workshop-starter</span>
+  </div>
+  <div style="margin-top: 1.2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+    <div class="box accent-green" style="max-width: 200px; text-align: center;">
+      <div class="box-title g">Claude Code</div>
+      <p>CLI installed + authenticated</p>
+    </div>
+    <div class="box accent-blue" style="max-width: 200px; text-align: center;">
+      <div class="box-title b">Git</div>
+      <p>Configured with your identity</p>
+    </div>
+    <div class="box accent-mauve" style="max-width: 200px; text-align: center;">
+      <div class="box-title m">tmux</div>
+      <p>brew install tmux</p>
+    </div>
+    <div class="box accent-peach" style="max-width: 200px; text-align: center;">
+      <div class="box-title p">Terminal</div>
+      <p>Full-size window ready</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 2: THE FIVE LEVELS ══════ -->
+<div class="slide" data-slide="2">
+  <div class="prompt"><span class="arrow">></span> <span class="path">five-levels</span></div>
+  <h2>Where Are <span class="y">You</span> Today?</h2>
+  <p style="margin-bottom: 1rem;">Raise your hand when I hit your level.</p>
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; max-width: 900px;">
+    <div class="box accent-red">
+      <div class="box-title"><span class="r">L0-L1</span></div>
+      <p><strong>Autocomplete / Intern</strong><br>You approve every suggestion. Tab-tab-tab.</p>
+    </div>
+    <div class="box accent-blue" style="border-width: 2px;">
+      <div class="box-title"><span class="b">L2</span> <span class="y" style="font-size: 0.75em;">&larr; MOST PEOPLE</span></div>
+      <p><strong>Junior Dev / Pair Programming</strong><br>claude + dangerously-skip-permissions. One agent, one task.</p>
+    </div>
+    <div class="box accent-green">
+      <div class="box-title"><span class="g">L3-L4</span> <span class="y" style="font-size: 0.75em;">&larr; TODAY'S GOAL</span></div>
+      <p><strong>Developer / Engineering Team</strong><br>You delegate. Agents execute in parallel.</p>
+    </div>
+  </div>
+  <div class="callout" style="margin-top: 1.2rem; max-width: 55ch;">
+    <p><span class="y">Today's mission:</span> move you from L2 to L3/L4 with three hands-on exercises.</p>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 3: THE PROBLEM ══════ -->
+<div class="slide" data-slide="3">
+  <div class="prompt"><span class="arrow">></span> <span class="path">~/the-ceiling</span></div>
+  <h2>The <span class="r">Single-Agent</span> Ceiling</h2>
+  <p style="max-width: 52ch; margin-bottom: 1rem;">
+    One agent. One context window. One task at a time.<br>
+    As context expands, <span class="r">focus degrades</span>.
+  </p>
+  <div class="code-block" style="max-width: 650px;">
+<span class="comment"># the classic failure mode</span><br>
+<span class="flag">$</span> <span class="cmd">claude</span> <span class="string">"Refactor auth, update tests, fix the UI"</span><br><br>
+<span class="comment"># step 1:  [OK]  auth refactored</span><br>
+<span class="comment"># step 2:  [OK]  tests updated</span><br>
+<span class="comment"># step 3:  [!!]  context degraded -- step 1 blurry</span><br>
+<span class="comment"># step 4:  [XX]  /clear and start over</span>
+  </div>
+  <div class="diagram">
+    <div class="diagram-row">
+      <div class="box accent-red">
+        <div class="box-title r">CONTEXT BLOAT</div>
+        <p>Too many concerns in one window</p>
+      </div>
+      <div class="box accent-red">
+        <div class="box-title r">SEQUENTIAL</div>
+        <p>Three independent tasks queued single-file</p>
+      </div>
+      <div class="box accent-red">
+        <div class="box-title r">NO SPECIALIZATION</div>
+        <p>One agent wearing every hat</p>
+      </div>
+    </div>
+  </div>
+  <p style="font-size: 0.95rem; margin-top: 0.4rem; color: var(--text-secondary);">The fix: <span class="g">decompose, delegate, parallelize.</span></p>
+</div>
+
+<!-- ══════ SLIDE 4: TIME BOTTLENECK ══════ -->
+<div class="slide" data-slide="4">
+  <div class="prompt"><span class="arrow">></span> <span class="path">~/the-real-cost</span></div>
+  <h2>The <span class="y">Core</span> Bottleneck: <span class="y">Time</span></h2>
+  <p style="max-width: 55ch; margin-bottom: 1.5rem;">
+    A single agent is cheap in tokens.<br>
+    It is <span class="r">extremely expensive</span> in the only non-renewable resource you have.
+  </p>
+  <div class="diagram">
+    <div class="diagram-row" style="justify-content: center;">
+      <div class="box accent-blue" style="text-align: center; max-width: 240px;">
+        <div class="box-title b" style="font-size: 1.6em;">LOW</div>
+        <p style="font-size: 1em; color: var(--text); font-weight: 600;">Claude Tokens</p>
+        <p style="margin-top: 0.3rem;">Looks cheap on the bill.</p>
+      </div>
+      <div class="box accent-red" style="text-align: center; max-width: 240px;">
+        <div class="box-title r" style="font-size: 1.6em;">MAXIMUM</div>
+        <p style="font-size: 1em; color: var(--text); font-weight: 600;">Your Time</p>
+        <p style="margin-top: 0.3rem;">Watching. Waiting. Approving.<br>Context-switching. Re-explaining.</p>
+      </div>
+    </div>
+  </div>
+  <div class="callout" style="border-left-color: var(--yellow); max-width: 56ch;">
+    <p><span class="y">The goal of orchestration is not to save tokens.</span></p>
+    <p style="margin-top: 0.3rem;">It is to <span class="g">reclaim your time</span>. Spend more Claude tokens. Spend fewer <em>you</em> tokens.</p>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 5: ROADMAP ══════ -->
+<div class="slide" data-slide="5">
+  <div class="prompt"><span class="arrow">></span> <span class="path">workshop/plan</span></div>
+  <h2>What We'll <span class="g">Build</span> Today</h2>
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 1rem;">
+    <div class="exercise-card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3>Exercise 1</h3>
+        <span class="tag time">15 MIN</span>
+      </div>
+      <p style="font-size: 1.1rem; font-weight: 600; color: var(--blue); margin-bottom: 0.5rem;">Custom Sub-Agents</p>
+      <p style="font-size: 0.85rem; color: var(--text-secondary);">
+        Create agent definition files.<br>
+        Restrict tools. Route models.<br>
+        Run agents in parallel.
+      </p>
+    </div>
+    <div class="exercise-card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3>Exercise 2</h3>
+        <span class="tag time">15 MIN</span>
+      </div>
+      <p style="font-size: 1.1rem; font-weight: 600; color: var(--peach); margin-bottom: 0.5rem;">Controller Pattern</p>
+      <p style="font-size: 0.85rem; color: var(--text-secondary);">
+        Build a multi-agent pipeline.<br>
+        Worktree isolation.<br>
+        Plan &rarr; Code &rarr; Test.
+      </p>
+    </div>
+    <div class="exercise-card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3>Exercise 3</h3>
+        <span class="tag time">10 MIN</span>
+      </div>
+      <p style="font-size: 1.1rem; font-weight: 600; color: var(--green); margin-bottom: 0.5rem;">Agent Teams</p>
+      <p style="font-size: 0.85rem; color: var(--text-secondary);">
+        Peer-to-peer agents in tmux.<br>
+        Live demo + try it yourself.<br>
+        <span class="tag exp" style="font-size: 0.6rem;">EXPERIMENTAL</span>
+      </p>
+    </div>
+  </div>
+  <p style="margin-top: 1.5rem; color: var(--text-dim); font-size: 0.9rem;">
+    <span class="tag tip">FORMAT</span> Each exercise: brief intro &rarr; you code &rarr; debrief
+  </p>
+</div>
+
+<!-- ══════ SLIDE 6: SUB-AGENTS INTRO ══════ -->
+<div class="slide" data-slide="6">
+  <div class="prompt"><span class="arrow">></span> <span class="path">sub-agents</span></div>
+  <h2><span class="b">Sub-Agents</span> -- The Building Block</h2>
+  <p style="max-width: 65ch; margin-bottom: 0.8rem;">
+    Specialized workers spawned within your session. Each gets its own context window, runs independently, and <span class="b">reports results back</span> to the parent.
+  </p>
+  <div class="two-col" style="align-items: start;">
+    <div>
+      <div class="diagram" style="margin: 0;">
+        <div class="diagram-row" style="justify-content: center;">
+          <div class="box accent-blue" style="flex: 0 0 auto; min-width: 200px; text-align: center; padding: 0.5rem 0.8rem;">
+            <div class="box-title b">MAIN SESSION (YOU)</div>
+            <p style="font-size: 0.8rem;">orchestrates + receives results</p>
+          </div>
+        </div>
+        <div class="flow-arrow" style="font-size: 0.7rem;">|--------+--------+--------|</div>
+        <div class="diagram-row" style="justify-content: center; gap: 0.3rem;">
+          <div class="box accent-mauve" style="padding: 0.4rem 0.6rem;">
+            <div class="box-title m" style="font-size: 0.75rem;">[EXPLORE]</div>
+            <p style="font-size: 0.7rem;">Read-only search</p>
+          </div>
+          <div class="box accent-peach" style="padding: 0.4rem 0.6rem;">
+            <div class="box-title p" style="font-size: 0.75rem;">[PLAN]</div>
+            <p style="font-size: 0.7rem;">Architecture</p>
+          </div>
+          <div class="box accent-green" style="padding: 0.4rem 0.6rem;">
+            <div class="box-title g" style="font-size: 0.75rem;">[GENERAL]</div>
+            <p style="font-size: 0.7rem;">Full autonomy</p>
+          </div>
+        </div>
+        <div class="flow-arrow" style="font-size: 0.65rem;">`-- results --> parent <-- results --'</div>
+      </div>
+      <p style="font-size: 0.8rem; margin-top: 0.6rem;"><span class="tag tip">KEY</span> Sub-agents <span class="y">cannot</span> message each other.</p>
+    </div>
+    <div>
+      <h3 class="b" style="font-size: 0.9rem;">THE AGENT DEFINITION FILE</h3>
+      <div class="code-block" style="font-size: 0.78rem;">
+<span class="comment"># .claude/agents/reviewer.md</span><br>
+<span class="keyword">---</span><br>
+<span class="flag">name:</span> <span class="val">reviewer</span><br>
+<span class="flag">description:</span> <span class="val">Reviews code for</span><br>
+<span class="val">  bugs, security, and style.</span><br>
+<span class="flag">tools:</span> <span class="val">Read, Grep, Glob</span><br>
+<span class="flag">model:</span> <span class="val">sonnet</span><br>
+<span class="keyword">---</span><br>
+<span class="string">You are a code reviewer. Read the</span><br>
+<span class="string">specified files and report issues</span><br>
+<span class="string">grouped by severity.</span>
+      </div>
+      <h3 class="g" style="font-size: 0.9rem; margin-top: 0.6rem;">KEY LEVERS</h3>
+      <ul class="cli-list" style="font-size: 0.8rem;">
+        <li><span class="g">tools:</span> restrict what the agent can do</li>
+        <li><span class="g">model:</span> route to opus / sonnet / haiku</li>
+        <li><span class="g">isolation:</span> worktree for filesystem safety</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 7: EXERCISE 1 ══════ -->
+<div class="slide" data-slide="7">
+  <div class="prompt"><span class="arrow">></span> <span class="path">exercise-1</span></div>
+  <h2><span class="tag exercise" style="font-size: 0.8rem;">EXERCISE 1</span> Custom <span class="b">Sub-Agents</span></h2>
+  <div class="two-col">
+    <div>
+      <div class="exercise-card">
+        <h3>Your Task</h3>
+        <ol class="steps">
+          <li>Create <span class="b">.claude/agents/reviewer.md</span> -- a read-only code reviewer<br><span class="dim" style="font-size: 0.85em;">tools: Read, Grep, Glob | model: sonnet</span></li>
+          <li>Create <span class="b">.claude/agents/documenter.md</span> -- generates docstrings<br><span class="dim" style="font-size: 0.85em;">tools: Read, Write, Edit | model: haiku</span></li>
+          <li>Open Claude and prompt it to <span class="g">use both agents</span> on a file in your project</li>
+          <li>Observe: agents run in parallel, each with isolated context</li>
+        </ol>
+      </div>
+    </div>
+    <div>
+      <h3>Example Prompt</h3>
+      <div class="code-block" style="font-size: 0.78rem;">
+<span class="flag">$</span> <span class="cmd">claude</span><br>
+<br>
+<span class="string">Use two sub-agents on src/api.py:</span><br>
+<span class="string"></span><br>
+<span class="string">1. The reviewer agent: find bugs,</span><br>
+<span class="string">   security issues, and style problems</span><br>
+<span class="string">2. The documenter agent: add docstrings</span><br>
+<span class="string">   to all public functions</span><br>
+<span class="string"></span><br>
+<span class="string">Run both agents in parallel.</span>
+      </div>
+      <div class="callout" style="margin-top: 0.5rem;">
+        <p style="font-size: 0.85rem;"><span class="y">Bonus:</span> Add a third agent -- a <span class="m">security-reviewer</span> that checks for OWASP top 10 issues.</p>
+      </div>
+    </div>
+  </div>
+  <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-dim);">
+    <span class="tag time">15 MINUTES</span> Go! Ask me if you get stuck.
+  </p>
+</div>
+
+<!-- ══════ SLIDE 8: EXERCISE 1 DEBRIEF ══════ -->
+<div class="slide" data-slide="8">
+  <div class="prompt"><span class="arrow">></span> <span class="path">debrief-1</span></div>
+  <h2>Debrief: <span class="b">Sub-Agents</span></h2>
+  <div class="two-col">
+    <div>
+      <h3 class="g">What Just Happened</h3>
+      <ul class="cli-list">
+        <li>Each agent got a <span class="b">fresh context window</span> -- no crosstalk</li>
+        <li>The reviewer <span class="y">couldn't</span> write files -- tool restrictions enforced</li>
+        <li>The documenter used a cheaper model -- <span class="g">cost control</span></li>
+        <li>Both ran <span class="m">in parallel</span> -- faster than sequential</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="r">Common Gotchas</h3>
+      <ul class="cli-list">
+        <li>Agents can't talk to <span class="r">each other</span> -- only back to parent</li>
+        <li>Too-vague system prompts = generic results</li>
+        <li>Forgetting <span class="y">description:</span> field -- Claude needs it to know when to use the agent</li>
+      </ul>
+      <h3 class="y" style="margin-top: 1rem;">Key Insight</h3>
+      <p style="font-size: 0.9rem;">Agent definitions are <span class="y">reusable</span>. Build a library of specialists. Ship them in your repo's <span class="b">.claude/agents/</span> directory.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 9: CONTROLLER PATTERN INTRO ══════ -->
+<div class="slide" data-slide="9">
+  <div class="prompt"><span class="arrow">></span> <span class="path">controller-pattern</span></div>
+  <h2>The <span class="p">Controller</span> Pattern</h2>
+  <p style="max-width: 58ch; margin-bottom: 1rem;">
+    A single orchestrator session spawns specialized sub-agents in worktrees. You stay in control. Each agent works in isolation and reports back.
+  </p>
+  <div class="two-col">
+    <div>
+      <h3>THE PIPELINE</h3>
+      <div class="diagram" style="margin: 0;">
+        <div class="diagram-row" style="justify-content: center;">
+          <div class="box accent-peach" style="flex: 0 0 auto; text-align: center;">
+            <div class="box-title p">CONTROLLER (YOU)</div>
+          </div>
+        </div>
+        <div class="flow-arrow">|--- spawns ---|</div>
+        <div class="diagram-row" style="justify-content: center; gap: 0.4rem;">
+          <div class="box accent-mauve" style="padding: 0.4rem 0.6rem; text-align: center;">
+            <div class="box-title m" style="font-size: 0.8rem;">1. PLANNER</div>
+            <p style="font-size: 0.7rem;">Read spec &rarr; plan</p>
+          </div>
+          <div class="box accent-blue" style="padding: 0.4rem 0.6rem; text-align: center;">
+            <div class="box-title b" style="font-size: 0.8rem;">2. CODER</div>
+            <p style="font-size: 0.7rem;">Plan &rarr; code</p>
+          </div>
+          <div class="box accent-green" style="padding: 0.4rem 0.6rem; text-align: center;">
+            <div class="box-title g" style="font-size: 0.8rem;">3. TESTER</div>
+            <p style="font-size: 0.7rem;">Code &rarr; tests</p>
+          </div>
+        </div>
+        <div class="flow-arrow">`-- results flow back to controller --'</div>
+      </div>
+    </div>
+    <div>
+      <h3>WHY WORKTREES?</h3>
+      <ul class="cli-list" style="font-size: 0.85rem;">
+        <li>Each agent gets its own <span class="p">filesystem copy</span></li>
+        <li><span class="g">No file collisions</span> -- coder and tester can't step on each other</li>
+        <li>Results merge back via <span class="b">git</span></li>
+        <li>If an agent breaks something, <span class="r">only its worktree is affected</span></li>
+      </ul>
+      <div class="code-block" style="font-size: 0.75rem; margin-top: 0.5rem;">
+<span class="comment"># worktree = separate checkout</span><br>
+<span class="flag">$</span> <span class="cmd">git worktree</span> <span class="val">list</span><br>
+<span class="dim">/project         abc1234 [main]</span><br>
+<span class="dim">/project-coder   def5678 [coder-branch]</span><br>
+<span class="dim">/project-tester  ghi9012 [tester-branch]</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 10: EXERCISE 2 ══════ -->
+<div class="slide" data-slide="10">
+  <div class="prompt"><span class="arrow">></span> <span class="path">exercise-2</span></div>
+  <h2><span class="tag exercise" style="font-size: 0.8rem;">EXERCISE 2</span> The <span class="p">Controller</span> Pipeline</h2>
+  <div class="two-col">
+    <div>
+      <div class="exercise-card">
+        <h3>Your Task</h3>
+        <ol class="steps">
+          <li>Open your project in Claude with <span class="p">--worktree controller</span></li>
+          <li>Create a <span class="m">planner</span> agent (Read, Grep, Glob | model: opus)</li>
+          <li>Create a <span class="b">coder</span> agent (Read, Write, Edit, Bash | isolation: worktree)</li>
+          <li>Create a <span class="g">tester</span> agent (Read, Write, Edit, Bash | isolation: worktree)</li>
+          <li>Prompt the controller to run the pipeline on SPEC.md</li>
+        </ol>
+      </div>
+    </div>
+    <div>
+      <h3>Example Prompt</h3>
+      <div class="code-block" style="font-size: 0.75rem;">
+<span class="string">Implement the feature in SPEC.md.</span><br>
+<span class="string">Use this pipeline:</span><br>
+<span class="string"></span><br>
+<span class="string">1. planner agent reads SPEC.md and</span><br>
+<span class="string">   produces a step-by-step plan</span><br>
+<span class="string">2. coder agent implements the plan</span><br>
+<span class="string">   in a worktree</span><br>
+<span class="string">3. tester agent writes and runs tests</span><br>
+<span class="string">   in a separate worktree</span><br>
+<span class="string"></span><br>
+<span class="string">Run coder and tester in parallel</span><br>
+<span class="string">after the plan is ready.</span>
+      </div>
+      <p style="font-size: 0.8rem; margin-top: 0.5rem;">
+        <span class="tag tip">TIP</span> Check <span class="b">git worktree list</span> to see the isolation in action.
+      </p>
+    </div>
+  </div>
+  <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-dim);">
+    <span class="tag time">15 MINUTES</span> Go! Watch the worktrees appear.
+  </p>
+</div>
+
+<!-- ══════ SLIDE 11: EXERCISE 2 DEBRIEF ══════ -->
+<div class="slide" data-slide="11">
+  <div class="prompt"><span class="arrow">></span> <span class="path">debrief-2</span></div>
+  <h2>Debrief: <span class="p">Controller</span> Pattern</h2>
+  <div class="two-col">
+    <div>
+      <h3 class="g">What You Built</h3>
+      <ul class="cli-list">
+        <li>A <span class="m">planning</span> phase that produced structured output</li>
+        <li><span class="b">Parallel execution</span> -- coder and tester working simultaneously</li>
+        <li><span class="p">Worktree isolation</span> -- no file conflicts between agents</li>
+        <li>The controller <span class="y">orchestrated</span> the flow and collected results</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="y">When to Use This</h3>
+      <ul class="cli-list">
+        <li>Feature implementation from a spec</li>
+        <li>Multi-service changes (frontend + backend + tests)</li>
+        <li>Code review pipelines (lint + security + test)</li>
+        <li>Any workflow with <span class="g">clear sequential + parallel phases</span></li>
+      </ul>
+      <h3 class="r" style="margin-top: 0.8rem;">When NOT to Use This</h3>
+      <ul class="cli-list" style="font-size: 0.85rem;">
+        <li>Simple single-file changes</li>
+        <li>Tasks that need agents to <span class="r">talk to each other</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 12: AGENT TEAMS INTRO ══════ -->
+<div class="slide" data-slide="12">
+  <div class="prompt"><span class="arrow">></span> <span class="path">agent-teams</span></div>
+  <h2><span class="g">Agent Teams</span> -- Peer Collaboration <span class="tag exp">EXPERIMENTAL</span></h2>
+  <p style="max-width: 56ch; margin-bottom: 1rem;">
+    Multiple Claude Code <em>sessions</em> that coordinate as peers in tmux.
+    A lead initiates the team, but all agents <span class="g">message each other directly</span>.
+  </p>
+  <div class="two-col">
+    <div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; max-width: 350px; position: relative;">
+        <svg style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;" preserveAspectRatio="none">
+          <line x1="30%" y1="28%" x2="70%" y2="28%" stroke="#a6e3a1" stroke-width="2" stroke-dasharray="6,4" opacity="0.7"/>
+          <line x1="30%" y1="72%" x2="70%" y2="72%" stroke="#a6e3a1" stroke-width="2" stroke-dasharray="6,4" opacity="0.7"/>
+          <line x1="28%" y1="35%" x2="28%" y2="65%" stroke="#a6e3a1" stroke-width="2" stroke-dasharray="6,4" opacity="0.7"/>
+          <line x1="72%" y1="35%" x2="72%" y2="65%" stroke="#a6e3a1" stroke-width="2" stroke-dasharray="6,4" opacity="0.7"/>
+          <line x1="33%" y1="35%" x2="67%" y2="65%" stroke="#a6e3a1" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.5"/>
+          <line x1="67%" y1="35%" x2="33%" y2="65%" stroke="#a6e3a1" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.5"/>
+        </svg>
+        <div class="box accent-green" style="position: relative; z-index: 2; text-align: center; padding: 0.5rem;">
+          <div class="box-title g" style="font-size: 0.75rem;">[LEAD]</div>
+          <p style="font-size: 0.65rem;">Creates + assigns</p>
+        </div>
+        <div class="box accent-blue" style="position: relative; z-index: 2; text-align: center; padding: 0.5rem;">
+          <div class="box-title b" style="font-size: 0.75rem;">CODER</div>
+          <p style="font-size: 0.65rem;">Implements</p>
+        </div>
+        <div class="box accent-mauve" style="position: relative; z-index: 2; text-align: center; padding: 0.5rem;">
+          <div class="box-title m" style="font-size: 0.75rem;">REVIEWER</div>
+          <p style="font-size: 0.65rem;">Reviews</p>
+        </div>
+        <div class="box accent-peach" style="position: relative; z-index: 2; text-align: center; padding: 0.5rem;">
+          <div class="box-title p" style="font-size: 0.75rem;">TESTER</div>
+          <p style="font-size: 0.65rem;">Validates</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3>SUB-AGENTS vs AGENT TEAMS</h3>
+      <div class="compare-grid" style="grid-template-columns: 1fr 1fr; gap: 0.8rem; margin: 0.5rem 0;">
+        <div class="compare-col">
+          <div class="compare-header" style="font-size: 0.8rem; padding: 0.5rem 0.8rem;">Sub-Agents</div>
+          <div class="compare-body" style="padding: 0.5rem 0.8rem;">
+            <div class="compare-item" style="font-size: 0.75rem;">Hub-and-spoke</div>
+            <div class="compare-item" style="font-size: 0.75rem;">Parent controls flow</div>
+            <div class="compare-item" style="font-size: 0.75rem;">Cheaper, simpler</div>
+          </div>
+        </div>
+        <div class="compare-col">
+          <div class="compare-header" style="font-size: 0.8rem; padding: 0.5rem 0.8rem;">Agent Teams</div>
+          <div class="compare-body" style="padding: 0.5rem 0.8rem;">
+            <div class="compare-item" style="font-size: 0.75rem;">Peer-to-peer mesh</div>
+            <div class="compare-item" style="font-size: 0.75rem;">Agents self-coordinate</div>
+            <div class="compare-item" style="font-size: 0.75rem;">More flexible, experimental</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 13: EXERCISE 3 ══════ -->
+<div class="slide" data-slide="13">
+  <div class="prompt"><span class="arrow">></span> <span class="path">exercise-3</span></div>
+  <h2><span class="tag exercise" style="font-size: 0.8rem;">EXERCISE 3</span> <span class="g">Agent Teams</span> in tmux</h2>
+  <div class="two-col">
+    <div>
+      <h3><span class="y">Part A:</span> Watch the Demo</h3>
+      <p style="font-size: 0.85rem; margin-bottom: 0.8rem; color: var(--text-secondary);">I'll walk through a live agent team setup.</p>
+      <div class="code-block" style="font-size: 0.75rem;">
+<span class="comment"># create a 3-pane tmux layout</span><br>
+<span class="flag">$</span> <span class="cmd">tmux new</span> <span class="flag">-s</span> <span class="val">team</span><br>
+<br>
+<span class="comment"># pane 1: the lead</span><br>
+<span class="flag">$</span> <span class="cmd">claude</span> <span class="flag">--worktree</span> <span class="val">lead</span><br>
+<br>
+<span class="comment"># pane 2: coder teammate</span><br>
+<span class="flag">$</span> <span class="cmd">claude</span> <span class="flag">--worktree</span> <span class="val">coder</span><br>
+<br>
+<span class="comment"># pane 3: tester teammate</span><br>
+<span class="flag">$</span> <span class="cmd">claude</span> <span class="flag">--worktree</span> <span class="val">tester</span>
+      </div>
+    </div>
+    <div>
+      <h3><span class="y">Part B:</span> Try It Yourself</h3>
+      <div class="exercise-card">
+        <h3>Simplified Version</h3>
+        <ol class="steps">
+          <li>Open tmux with <span class="g">2 panes</span> side by side</li>
+          <li>Launch Claude in each pane with different worktrees</li>
+          <li>In pane 1: <span class="b">"Write a function that calculates fibonacci numbers"</span></li>
+          <li>In pane 2: <span class="g">"Write tests for a fibonacci function"</span></li>
+          <li>Watch both agents work in parallel -- then merge</li>
+        </ol>
+      </div>
+      <p style="font-size: 0.8rem; margin-top: 0.3rem;">
+        <span class="tag tip">TIP</span> <span class="dim">tmux split: Ctrl-b %</span>
+      </p>
+    </div>
+  </div>
+  <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-dim);">
+    <span class="tag time">10 MINUTES</span> Demo first, then your turn.
+  </p>
+</div>
+
+<!-- ══════ SLIDE 14: CHOOSING YOUR WEAPON ══════ -->
+<div class="slide" data-slide="14">
+  <div class="prompt"><span class="arrow">></span> <span class="path">decision-tree</span></div>
+  <h2>Choosing Your <span class="y">Weapon</span></h2>
+  <div style="margin-top: 0.5rem;">
+    <div class="code-block" style="font-size: clamp(0.72rem, 1.15vw, 0.95rem); line-height: 1.9; max-width: 700px;">
+<span class="y">START</span>  Is the task a single, focused change?<br>
+<span class="dim">&nbsp;&nbsp;|</span><br>
+<span class="dim">&nbsp;&nbsp;+--</span> <span class="g">YES</span> &rarr; <span class="b">Single Agent</span>  <span class="dim">(most tasks)</span><br>
+<span class="dim">&nbsp;&nbsp;|</span><br>
+<span class="dim">&nbsp;&nbsp;+--</span> <span class="r">NO</span>  &rarr; Can you decompose into independent sub-tasks?<br>
+<span class="dim">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</span><br>
+<span class="dim">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+--</span> <span class="g">YES</span> &rarr; Do tasks need to talk to each other?<br>
+<span class="dim">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</span><br>
+<span class="dim">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+--</span> <span class="r">NO</span>  &rarr; <span class="b">Sub-Agents</span>  <span class="dim">(hub-and-spoke)</span><br>
+<span class="dim">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+--</span> <span class="g">YES</span> &rarr; <span class="g">Agent Teams</span>  <span class="dim">(peer mesh)</span><br>
+<span class="dim">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</span><br>
+<span class="dim">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+--</span> <span class="r">NO</span>  &rarr; Break it down more, then try again
+    </div>
+    <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
+      <div class="box accent-blue" style="max-width: 250px;">
+        <div class="box-title b">Sub-Agents Best For</div>
+        <p>Pipelines, reviews, parallel tasks that report to a controller</p>
+      </div>
+      <div class="box accent-green" style="max-width: 250px;">
+        <div class="box-title g">Agent Teams Best For</div>
+        <p>Complex builds, TDD loops, tasks requiring negotiation between agents</p>
+      </div>
+      <div class="box accent-peach" style="max-width: 250px;">
+        <div class="box-title p">Worktrees Best For</div>
+        <p>Any multi-agent scenario where agents write code to the same repo</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 15: CHEAT SHEET ══════ -->
+<div class="slide" data-slide="15">
+  <div class="prompt"><span class="arrow">></span> <span class="path">cheat-sheet</span></div>
+  <h2>Workshop <span class="l">Cheat Sheet</span></h2>
+  <div class="two-col" style="gap: 1.2rem;">
+    <div>
+      <h3 class="b">Sub-Agent Definition</h3>
+      <div class="code-block" style="font-size: 0.75rem;">
+<span class="comment"># .claude/agents/&lt;name&gt;.md</span><br>
+<span class="keyword">---</span><br>
+<span class="flag">name:</span> <span class="val">&lt;agent-name&gt;</span><br>
+<span class="flag">description:</span> <span class="val">&lt;when to use&gt;</span><br>
+<span class="flag">tools:</span> <span class="val">Read, Grep, Glob</span><br>
+<span class="flag">model:</span> <span class="val">sonnet</span><br>
+<span class="flag">isolation:</span> <span class="val">worktree</span><br>
+<span class="keyword">---</span><br>
+<span class="string">&lt;system prompt for the agent&gt;</span>
+      </div>
+      <h3 class="p" style="margin-top: 0.8rem;">Worktree Commands</h3>
+      <div class="code-block" style="font-size: 0.75rem;">
+<span class="flag">$</span> <span class="cmd">claude</span> <span class="flag">--worktree</span> <span class="val">name</span><br>
+<span class="flag">$</span> <span class="cmd">git worktree</span> <span class="val">list</span><br>
+<span class="flag">$</span> <span class="cmd">git worktree</span> <span class="val">remove</span> <span class="val">name</span>
+      </div>
+    </div>
+    <div>
+      <h3 class="g">tmux Essentials</h3>
+      <div class="code-block" style="font-size: 0.75rem;">
+<span class="comment"># new session</span><br>
+<span class="flag">$</span> <span class="cmd">tmux new</span> <span class="flag">-s</span> <span class="val">team</span><br>
+<br>
+<span class="comment"># split panes</span><br>
+<span class="dim">Ctrl-b %</span>   <span class="comment"># vertical split</span><br>
+<span class="dim">Ctrl-b "</span>   <span class="comment"># horizontal split</span><br>
+<br>
+<span class="comment"># navigate panes</span><br>
+<span class="dim">Ctrl-b &larr;/&rarr;</span>  <span class="comment"># switch pane</span><br>
+<br>
+<span class="comment"># detach/reattach</span><br>
+<span class="dim">Ctrl-b d</span>   <span class="comment"># detach</span><br>
+<span class="flag">$</span> <span class="cmd">tmux a</span> <span class="flag">-t</span> <span class="val">team</span>
+      </div>
+      <h3 class="y" style="margin-top: 0.8rem;">Model Routing</h3>
+      <div class="code-block" style="font-size: 0.75rem;">
+<span class="val">opus</span>   <span class="comment"># planning, architecture</span><br>
+<span class="val">sonnet</span> <span class="comment"># coding, reviewing</span><br>
+<span class="val">haiku</span>  <span class="comment"># docs, formatting, grunt work</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 16: RESOURCES + CLOSING ══════ -->
+<div class="slide" data-slide="16">
+  <div class="ascii-art" style="color: var(--lavender); font-size: clamp(0.38rem, 0.75vw, 0.62rem);">
+  ____                         _               _             _
+ / ___| ___     ___  _ __ ___| |__   ___  ___| |_ _ __ __ _| |_ ___
+| |  _ / _ \   / _ \| '__/ __| '_ \ / _ \/ __| __| '__/ _` | __/ _ \
+| |_| | (_) | | (_) | | | (__| | | |  __/\__ \ |_| | | (_| | ||  __/  _
+ \____|\___/   \___/|_|  \___|_| |_|\___||___/\__|_|  \__,_|\__\___| (_)</div>
+  <h2><span class="l">Go orchestrate.</span></h2>
+  <div style="margin-top: 1.5rem;">
+    <div class="code-block" style="display: inline-block;">
+      <span class="comment"># resources</span><br>
+      <span class="flag">DOCS</span>  <span class="string">code.claude.com/docs/en/agent-teams</span><br>
+      <span class="flag">DOCS</span>  <span class="string">code.claude.com/docs/en/sub-agents</span><br>
+      <span class="flag">DOCS</span>  <span class="string">code.claude.com/docs/en/common-workflows</span>
+    </div>
+  </div>
+  <div style="margin-top: 1.5rem;">
+    <h3 class="y" style="margin-bottom: 0.6rem;">What to Try Next</h3>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+      <div class="box accent-mauve" style="max-width: 220px;">
+        <div class="box-title m">Bug Tribunal</div>
+        <p>Agents debate the root cause of a bug, then vote on the fix</p>
+      </div>
+      <div class="box accent-blue" style="max-width: 220px;">
+        <div class="box-title b">Full-Stack Build</div>
+        <p>Frontend + backend + tests in parallel worktrees</p>
+      </div>
+      <div class="box accent-green" style="max-width: 220px;">
+        <div class="box-title g">QA Swarm</div>
+        <p>N agents each test a different surface area</p>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top: 1.5rem;">
+    <div class="code-block" style="display: inline-block;">
+      <span class="flag">$</span> <span class="cmd">claude</span> <span class="string">"Questions?"</span><span class="cursor"></span>
+    </div>
+  </div>
+  <div style="margin-top: 1.5rem; color: var(--text-secondary); font-size: clamp(0.82rem, 1.2vw, 1rem); line-height: 1.8;">
+    <span class="l">Bill McIntyre</span><br>
+    <span style="color: var(--text-dim);">bill@thinkiac.ai</span>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 17: LICENSE ══════ -->
+<div class="slide" data-slide="17">
+  <div class="prompt"><span class="arrow">></span> <span class="path">license</span></div>
+  <h2>Copyleft</h2>
+  <div style="margin-top: 2rem; max-width: 60ch;">
+    <p style="font-size: 1.1rem; margin-bottom: 1.5rem;">
+      This work is licensed under the <span class="g">GNU General Public License v3.0</span>
+    </p>
+    <div class="code-block" style="text-align: left; display: inline-block;">
+<span class="comment"># You are free to:</span><br>
+<span class="string">Share</span> -- copy and redistribute<br>
+<span class="string">Adapt</span> -- remix, transform, and build upon<br>
+<br>
+<span class="comment"># Under the following terms:</span><br>
+<span class="flag">Copyleft</span> -- derivative works must use GPL3<br>
+<span class="flag">Source</span>   -- source code must be available<br>
+<span class="flag">Notice</span>   -- license and copyright notices preserved
+    </div>
+    <p style="margin-top: 1.5rem; color: var(--text-dim); font-size: 0.9rem;">
+      <a href="https://www.gnu.org/licenses/gpl-3.0.html" style="color: var(--green);">gnu.org/licenses/gpl-3.0.html</a>
+    </p>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<div class="timer-display" id="timer"></div>
+<div class="progress-bar" id="progress"></div>
+<div class="slide-counter" id="counter">01 / 18</div>
+<div class="nav-hint"><span><kbd>&larr;</kbd> <kbd>&rarr;</kbd> or <kbd>SPACE</kbd> &middot; <kbd>T</kbd> timer</span></div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const progress = document.getElementById('progress');
+const counter = document.getElementById('counter');
+const timerEl = document.getElementById('timer');
+let current = 0;
+const total = slides.length;
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function goTo(n) {
+  if (n < 0 || n >= total) return;
+  slides[current].classList.remove('active');
+  current = n;
+  slides[current].classList.add('active');
+  progress.style.width = ((current / (total - 1)) * 100) + '%';
+  counter.textContent = pad(current + 1) + ' / ' + pad(total);
+}
+
+function next() { goTo(current + 1); }
+function prev() { goTo(current - 1); }
+
+// Timer for exercises
+let timerInterval = null;
+let timerSeconds = 0;
+let timerRunning = false;
+
+function toggleTimer() {
+  if (timerRunning) {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    timerEl.classList.remove('visible');
+  } else {
+    timerSeconds = 0;
+    timerRunning = true;
+    timerEl.classList.add('visible');
+    timerEl.classList.remove('warning');
+    timerInterval = setInterval(() => {
+      timerSeconds++;
+      const m = Math.floor(timerSeconds / 60);
+      const s = timerSeconds % 60;
+      timerEl.textContent = pad(m) + ':' + pad(s);
+      if (timerSeconds >= 840) { // 14 min warning
+        timerEl.classList.add('warning');
+      }
+    }, 1000);
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); next(); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); prev(); }
+  if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+  if (e.key === 'End') { e.preventDefault(); goTo(total - 1); }
+  if (e.key === 't' || e.key === 'T') { e.preventDefault(); toggleTimer(); }
+});
+
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  const diff = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(diff) > 50) { diff < 0 ? next() : prev(); }
+});
+
+document.addEventListener('click', e => {
+  if (e.target.closest('.code-block')) return;
+  if (e.clientX > window.innerWidth / 2) next(); else prev();
+});
+
+goTo(0);
+</script>
+</body>
+</html>
