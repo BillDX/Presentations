@@ -609,7 +609,7 @@ h3 .accent-amber { color: var(--amber); }
     <p class="subtitle" style="margin-top:0.5rem; font-size: clamp(0.8rem, 1.3vw, 1rem); font-weight:300; color: var(--text-dim);">A layered defense architecture for LLM-powered agents — from input sanitization to infrastructure isolation.</p>
     <div class="meta">Bill McIntyre &nbsp;·&nbsp; bill@thinkiac.ai &nbsp;·&nbsp; April 2026 &nbsp;·&nbsp; Licensed under GNU GPL v3.0 &nbsp;·&nbsp; ⌘ Use ↓ arrow or scroll</div>
   </div>
-  <div class="slide-number">01 / 40</div>
+  <div class="slide-number">01 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
@@ -686,7 +686,7 @@ h3 .accent-amber { color: var(--amber); }
       <div class="flow-node green">Infra &amp; Test</div>
     </div>
   </div>
-  <div class="slide-number">02 / 40</div>
+  <div class="slide-number">02 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
@@ -723,7 +723,7 @@ h3 .accent-amber { color: var(--amber); }
       <strong>The confused-deputy / "Candy-Gram for Mongo!" pattern is the same in both cases.</strong> In web apps, untrusted input tricked the server. In agentic apps, untrusted input tricks the model — but the model has tools, autonomy, and access to your data.
     </div>
   </div>
-  <div class="slide-number">03 / 40</div>
+  <div class="slide-number">03 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
@@ -754,7 +754,7 @@ h3 .accent-amber { color: var(--amber); }
       <div class="card"><h4>Persistent Context</h4><p>Memory, RAG retrieval, conversation history — all injectable surfaces.</p></div>
     </div>
   </div>
-  <div class="slide-number">04 / 40</div>
+  <div class="slide-number">04 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
@@ -779,90 +779,145 @@ h3 .accent-amber { color: var(--amber); }
       <strong>Key insight:</strong> A malicious prompt doesn't just produce wrong text — it can make your agent send emails, delete files, exfiltrate data, or call paid APIs at scale. The prompt is code.
     </div>
   </div>
-  <div class="slide-number">05 / 40</div>
+  <div class="slide-number">05 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
-<!-- SLIDE 5: THREAT LANDSCAPE -->
+<!-- SLIDE 6: OWASP TOP 10 FOR LLM APPLICATIONS -->
 <!-- ════════════════════════════════════════ -->
 <section class="slide" id="s6">
-  <div class="slide-inner" style="max-width:1100px;">
+  <div class="slide-inner" style="max-width:1200px;">
     <div class="tag">Frameworks</div>
-    <h3>OWASP Top 5 for <span class="accent">LLMs &amp; Agentic Applications</span></h3>
-    <p class="subtitle" style="margin-bottom:1rem;">Two complementary frameworks from OWASP's GenAI Security Project. The LLM Top 10 (2025) covers model-layer risks. The Agentic Top 10 (Dec 2025) extends to autonomous systems with tools, memory, and multi-agent chains.</p>
+    <h3>OWASP Top 10 for <span class="accent-cyan">LLM Applications</span></h3>
+    <p class="subtitle" style="margin-bottom:1rem;">From OWASP's GenAI Security Project (2025). Model-layer risks: how a language model itself becomes the attack surface — through inputs, outputs, training data, and the supply chain that delivers it.</p>
 
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.6rem 1rem;">
 
-      <!-- LLM Top 5 -->
-      <div>
-        <div style="font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--cyan); letter-spacing:0.15em; margin-bottom:0.6rem; padding-bottom:0.3rem; border-bottom:2px solid var(--cyan);">OWASP TOP 10 FOR LLM APPLICATIONS (2025)</div>
-
-        <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden; margin-bottom:0.4rem;">
-          <div style="background:var(--cyan-glow); border-right:2px solid var(--cyan); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--cyan);">01</div>
-          <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Prompt Injection</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Direct and indirect manipulation of model inputs to override instructions</p></div>
-        </div>
-        <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden; margin-bottom:0.4rem;">
-          <div style="background:var(--cyan-glow); border-right:2px solid var(--cyan); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--cyan);">02</div>
-          <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Sensitive Information Disclosure</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Model leaks PII, secrets, or training data in responses</p></div>
-        </div>
-        <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden; margin-bottom:0.4rem;">
-          <div style="background:var(--cyan-glow); border-right:2px solid var(--cyan); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--cyan);">03</div>
-          <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Supply Chain</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Compromised models, plugins, dependencies, or training pipelines</p></div>
-        </div>
-        <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden; margin-bottom:0.4rem;">
-          <div style="background:var(--cyan-glow); border-right:2px solid var(--cyan); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--cyan);">04</div>
-          <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Data and Model Poisoning</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Malicious data injected during training or fine-tuning corrupts behavior</p></div>
-        </div>
-        <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden;">
-          <div style="background:var(--cyan-glow); border-right:2px solid var(--cyan); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--cyan);">05</div>
-          <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Improper Output Handling</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Unsanitized model output triggers downstream XSS, SSRF, or code execution</p></div>
-        </div>
+      <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden;">
+        <div style="background:var(--cyan-glow); border-right:2px solid var(--cyan); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--cyan);">01</div>
+        <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Prompt Injection</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Direct and indirect manipulation of model inputs to override instructions</p></div>
+      </div>
+      <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden;">
+        <div style="background:var(--cyan-glow); border-right:2px solid var(--cyan); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--cyan);">06</div>
+        <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Excessive Agency</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Model granted excessive permissions, autonomy, or unchecked tool access</p></div>
       </div>
 
-      <!-- Agentic Top 5 -->
-      <div>
-        <div style="font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--red-hot); letter-spacing:0.15em; margin-bottom:0.6rem; padding-bottom:0.3rem; border-bottom:2px solid var(--red-hot);">OWASP TOP 10 FOR AGENTIC APPLICATIONS (2026)</div>
+      <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden;">
+        <div style="background:var(--cyan-glow); border-right:2px solid var(--cyan); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--cyan);">02</div>
+        <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Sensitive Information Disclosure</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Model leaks PII, secrets, or training data in responses</p></div>
+      </div>
+      <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden;">
+        <div style="background:var(--cyan-glow); border-right:2px solid var(--cyan); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--cyan);">07</div>
+        <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">System Prompt Leakage</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Sensitive instructions in system prompts exposed to end users</p></div>
+      </div>
 
-        <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden; margin-bottom:0.4rem;">
-          <div style="background:var(--red-glow); border-right:2px solid var(--red-hot); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--red-hot);">01</div>
-          <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Agent Goal Hijack</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Attacker redirects agent objectives via injection or poisoned content</p></div>
-        </div>
-        <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden; margin-bottom:0.4rem;">
-          <div style="background:var(--red-glow); border-right:2px solid var(--red-hot); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--red-hot);">02</div>
-          <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Tool Misuse &amp; Exploitation</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Agent weaponizes legitimate tools with malicious parameters or chained calls</p></div>
-        </div>
-        <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden; margin-bottom:0.4rem;">
-          <div style="background:var(--red-glow); border-right:2px solid var(--red-hot); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--red-hot);">03</div>
-          <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Identity &amp; Privilege Abuse</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Agent escalates privileges via inherited credentials and lateral movement</p></div>
-        </div>
-        <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden; margin-bottom:0.4rem;">
-          <div style="background:var(--red-glow); border-right:2px solid var(--red-hot); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--red-hot);">04</div>
-          <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Cascading Hallucination</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">One agent's fabrication becomes another's trusted input — errors compound</p></div>
-        </div>
-        <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden;">
-          <div style="background:var(--red-glow); border-right:2px solid var(--red-hot); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--red-hot);">05</div>
-          <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Memory Poisoning</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Persistent corruption of agent memory, RAG stores, or embeddings across sessions</p></div>
-        </div>
+      <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden;">
+        <div style="background:var(--cyan-glow); border-right:2px solid var(--cyan); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--cyan);">03</div>
+        <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Supply Chain</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Compromised models, plugins, dependencies, or training pipelines</p></div>
+      </div>
+      <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden;">
+        <div style="background:var(--cyan-glow); border-right:2px solid var(--cyan); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--cyan);">08</div>
+        <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Vector &amp; Embedding Weaknesses</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Flaws in RAG retrieval enable poisoning or unauthorized data access</p></div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden;">
+        <div style="background:var(--cyan-glow); border-right:2px solid var(--cyan); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--cyan);">04</div>
+        <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Data and Model Poisoning</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Malicious data injected during training or fine-tuning corrupts behavior</p></div>
+      </div>
+      <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden;">
+        <div style="background:var(--cyan-glow); border-right:2px solid var(--cyan); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--cyan);">09</div>
+        <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Misinformation</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Hallucinations or incorrect outputs treated as authoritative truth</p></div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden;">
+        <div style="background:var(--cyan-glow); border-right:2px solid var(--cyan); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--cyan);">05</div>
+        <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Improper Output Handling</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Unsanitized model output triggers downstream XSS, SSRF, or code execution</p></div>
+      </div>
+      <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden;">
+        <div style="background:var(--cyan-glow); border-right:2px solid var(--cyan); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--cyan);">10</div>
+        <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Unbounded Consumption</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Uncontrolled resource use enables denial-of-service or cost amplification</p></div>
       </div>
 
     </div>
 
-    <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; color:var(--text-dim); margin-top:0.8rem; padding-top:0.5rem; border-top:1px solid rgba(255,255,255,0.06);">
-      <span><strong style="color:var(--text);">LLM 06–10:</strong> Excessive Agency · System Prompt Leakage · Vector Weaknesses · Misinformation · Unbounded Consumption</span>
-      <span style="color:var(--green);">genai.owasp.org</span>
-    </div>
-    <div style="font-size:0.75rem; color:var(--text-dim); margin-top:0.2rem;">
-      <span><strong style="color:var(--text);">ASI 06–10:</strong> Uncontrolled Autonomy · Supply Chain · Insufficient Logging · Cross-Agent Attacks · Insecure Delegation</span>
+    <div style="display:flex; justify-content:flex-end; align-items:center; font-size:0.75rem; color:var(--text-dim); margin-top:0.8rem; padding-top:0.5rem; border-top:1px solid rgba(255,255,255,0.06);">
+      <span style="color:var(--green);">genai.owasp.org/llm-top-10</span>
     </div>
 
   </div>
-  <div class="slide-number">06 / 40</div>
+  <div class="slide-number">06 / 41</div>
+</section>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 7: OWASP TOP 10 FOR AGENTIC APPLICATIONS -->
+<!-- ════════════════════════════════════════ -->
+<section class="slide" id="s7">
+  <div class="slide-inner" style="max-width:1200px;">
+    <div class="tag">Frameworks</div>
+    <h3>OWASP Top 10 for <span class="accent">Agentic Applications</span></h3>
+    <p class="subtitle" style="margin-bottom:1rem;">From OWASP's GenAI Security Project (Dec 2025). Extends the LLM list to autonomous systems — what changes when models gain tools, memory, identities, and the ability to call other agents.</p>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.6rem 1rem;">
+
+      <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden;">
+        <div style="background:var(--red-glow); border-right:2px solid var(--red-hot); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--red-hot);">01</div>
+        <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Agent Goal Hijack</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Attacker redirects agent objectives via injection or poisoned content</p></div>
+      </div>
+      <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden;">
+        <div style="background:var(--red-glow); border-right:2px solid var(--red-hot); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--red-hot);">06</div>
+        <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Uncontrolled Autonomy</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Agent operates without bounded approval gates or human oversight</p></div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden;">
+        <div style="background:var(--red-glow); border-right:2px solid var(--red-hot); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--red-hot);">02</div>
+        <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Tool Misuse &amp; Exploitation</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Agent weaponizes legitimate tools with malicious parameters or chained calls</p></div>
+      </div>
+      <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden;">
+        <div style="background:var(--red-glow); border-right:2px solid var(--red-hot); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--red-hot);">07</div>
+        <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Supply Chain</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Compromised tools, models, or upstream agents in the execution chain</p></div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden;">
+        <div style="background:var(--red-glow); border-right:2px solid var(--red-hot); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--red-hot);">03</div>
+        <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Identity &amp; Privilege Abuse</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Agent escalates privileges via inherited credentials and lateral movement</p></div>
+      </div>
+      <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden;">
+        <div style="background:var(--red-glow); border-right:2px solid var(--red-hot); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--red-hot);">08</div>
+        <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Insufficient Logging</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Lack of traceability for agent actions, decisions, and tool invocations</p></div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden;">
+        <div style="background:var(--red-glow); border-right:2px solid var(--red-hot); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--red-hot);">04</div>
+        <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Cascading Hallucination</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">One agent's fabrication becomes another's trusted input — errors compound</p></div>
+      </div>
+      <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden;">
+        <div style="background:var(--red-glow); border-right:2px solid var(--red-hot); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--red-hot);">09</div>
+        <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Cross-Agent Attacks</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Multi-agent systems exploited via inter-agent messaging and coordination</p></div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden;">
+        <div style="background:var(--red-glow); border-right:2px solid var(--red-hot); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--red-hot);">05</div>
+        <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Memory Poisoning</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Persistent corruption of agent memory, RAG stores, or embeddings across sessions</p></div>
+      </div>
+      <div style="display:grid; grid-template-columns:3.2rem 1fr; gap:0; align-items:stretch; background:var(--bg-card); border:1px solid rgba(255,255,255,0.06); border-radius:5px; overflow:hidden;">
+        <div style="background:var(--red-glow); border-right:2px solid var(--red-hot); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; color:var(--red-hot);">10</div>
+        <div style="padding:0.45rem 0.7rem;"><h4 style="font-size:0.8rem; color:var(--text-bright); margin:0;">Insecure Delegation</h4><p style="font-size:0.7rem; color:var(--text-dim); margin:0.1rem 0 0;">Agent delegates sensitive tasks to sub-agents without proper authorization</p></div>
+      </div>
+
+    </div>
+
+    <div style="display:flex; justify-content:flex-end; align-items:center; font-size:0.75rem; color:var(--text-dim); margin-top:0.8rem; padding-top:0.5rem; border-top:1px solid rgba(255,255,255,0.06);">
+      <span style="color:var(--green);">genai.owasp.org/agentic-top-10</span>
+    </div>
+
+  </div>
+  <div class="slide-number">07 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE: SCHNEIER QUOTE -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide grid-bg" id="s7">
+<section class="slide grid-bg" id="s8">
   <div class="slide-inner" style="max-width:900px;">
     <div style="border-left: 3px solid var(--red-hot); padding-left: 1.5rem;">
       <h3 style="font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 900; line-height: 1.15; color: var(--text-bright); margin-bottom: 1rem;">"Security is a process,<br>not a product."</h3>
@@ -870,24 +925,24 @@ h3 .accent-amber { color: var(--amber); }
     </div>
     <p class="subtitle" style="max-width:55ch;">No single tool, model, or technique will make your agentic system secure. Security comes from layers that work together — each one assuming the layer before it has already failed. What follows is a map of the attack surface, and then the layers you need to defend it.</p>
   </div>
-  <div class="slide-number">07 / 40</div>
+  <div class="slide-number">08 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SECTION DIVIDER: ATTACK SURFACE -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide section-divider" id="s8">
+<section class="slide section-divider" id="s9">
   <div class="slide-inner">
     <div class="section-label">Section 01</div>
     <h2>Understanding the <span class="accent">Attack Surface</span></h2>
   </div>
-  <div class="slide-number">08 / 40</div>
+  <div class="slide-number">09 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE 7: DIRECT vs INDIRECT -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide" id="s9">
+<section class="slide" id="s10">
   <div class="slide-inner">
     <div class="tag">Attack Vectors</div>
     <h3>Direct vs. <span class="accent">Indirect</span> Injection</h3>
@@ -916,13 +971,13 @@ h3 .accent-amber { color: var(--amber); }
       <strong>For agentic systems, indirect injection is the bigger threat</strong> — the agent retrieves untrusted content autonomously, and the user never sees the payload.
     </div>
   </div>
-  <div class="slide-number">09 / 40</div>
+  <div class="slide-number">10 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE 8: DIRECT INJECTION TECHNIQUES -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide" id="s10">
+<section class="slide" id="s11">
   <div class="slide-inner">
     <div class="tag">Attack Techniques</div>
     <h3>Direct Injection: <span class="accent">Four Techniques</span></h3>
@@ -966,13 +1021,13 @@ h3 .accent-amber { color: var(--amber); }
       <strong>Direct injection is the easier threat to mitigate</strong> — the attacker must interact directly. Indirect injection is far harder because the payload arrives autonomously.
     </div>
   </div>
-  <div class="slide-number">10 / 40</div>
+  <div class="slide-number">11 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE 9: ANATOMY OF AN ATTACK -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide" id="s11">
+<section class="slide" id="s12">
   <div class="slide-inner" style="max-width:1100px;">
     <div class="tag">Walkthrough</div>
     <h3>Anatomy of an <span class="accent">Indirect Injection</span></h3>
@@ -1047,13 +1102,13 @@ h3 .accent-amber { color: var(--amber); }
     </div>
 
   </div>
-  <div class="slide-number">11 / 40</div>
+  <div class="slide-number">12 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE 9: TOOL ABUSE CHAINS -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide" id="s12">
+<section class="slide" id="s13">
   <div class="slide-inner" style="max-width:1100px;">
     <div class="tag">Attack Pattern</div>
     <h3>Tool-Abuse <span class="accent">Chains</span></h3>
@@ -1125,13 +1180,13 @@ h3 .accent-amber { color: var(--amber); }
     </div>
 
   </div>
-  <div class="slide-number">12 / 40</div>
+  <div class="slide-number">13 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE 10: DATA EXFILTRATION -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide" id="s13">
+<section class="slide" id="s14">
   <div class="slide-inner">
     <div class="tag">Attack Pattern</div>
     <h3>Data Exfiltration via <span class="accent">Side Channels</span></h3>
@@ -1147,13 +1202,13 @@ h3 .accent-amber { color: var(--amber); }
       <div class="card"><h4>Invisible Token Smuggling</h4><p>Zero-width characters or encoding tricks to hide data in visible output.</p></div>
     </div>
   </div>
-  <div class="slide-number">13 / 40</div>
+  <div class="slide-number">14 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE: JULES AI KILL CHAIN -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide" id="s14">
+<section class="slide" id="s15">
   <div class="slide-inner" style="max-width:1100px;">
     <div class="tag">Case Study</div>
     <h3>The Jules AI <span class="accent">Kill Chain</span></h3>
@@ -1240,13 +1295,13 @@ h3 .accent-amber { color: var(--amber); }
     </div>
 
   </div>
-  <div class="slide-number">14 / 40</div>
+  <div class="slide-number">15 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE 14: MODEL COMPARISON - CASI SCORES -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide" id="s15">
+<section class="slide" id="s16">
   <div class="slide-inner">
     <div class="tag">Data · F5 Labs / CalypsoAI</div>
     <h3>Not All Models Are <span class="accent">Created Equal</span></h3>
@@ -1287,24 +1342,24 @@ h3 .accent-amber { color: var(--amber); }
 
     <div class="source-note">Sources: F5 Labs CASI & AWR Leaderboards (2025–2026) · CalypsoAI Inference Red-Team · Anthropic System Cards · OWASP LLM Top 10</div>
   </div>
-  <div class="slide-number">15 / 40</div>
+  <div class="slide-number">16 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE: DEFENSE PHILOSOPHY -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide section-divider" id="s16">
+<section class="slide section-divider" id="s17">
   <div class="slide-inner">
     <div class="section-label">Section 02 · Core Focus</div>
     <h2>Securing <span class="accent">Inputs</span></h2>
   </div>
-  <div class="slide-number">16 / 40</div>
+  <div class="slide-number">17 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE: SECURITY IS LAYERED -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide" id="s17">
+<section class="slide" id="s18">
   <div class="slide-inner" style="max-width:1100px;">
     <div class="tag green">Philosophy</div>
     <h3>Security Is a <span class="accent-green">Layered Approach</span></h3>
@@ -1370,13 +1425,13 @@ h3 .accent-amber { color: var(--amber); }
     <p style="text-align:center; font-size:0.85rem; color:var(--text-dim); margin-top:1rem;">Every gate assumes the one before it has been breached. An attack must survive <em>all three</em> to cause harm.</p>
 
   </div>
-  <div class="slide-number">17 / 40</div>
+  <div class="slide-number">18 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE: LAYERED DEFENSE MODEL -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide" id="s18">
+<section class="slide" id="s19">
   <div class="slide-inner">
     <div class="tag green">Architecture</div>
     <h3>Layered <span class="accent-green">Defense Model</span></h3>
@@ -1400,13 +1455,13 @@ h3 .accent-amber { color: var(--amber); }
       <strong>Principle:</strong> Treat the pipeline like network security — each boundary is a firewall. Don't trust any upstream layer to have caught everything.
     </div>
   </div>
-  <div class="slide-number">18 / 40</div>
+  <div class="slide-number">19 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE 14: INPUT SANITIZATION -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide" id="s19">
+<section class="slide" id="s20">
   <div class="slide-inner">
     <div class="tag amber">Layer 1</div>
     <h3>Input <span class="accent-amber">Sanitization</span> Fundamentals</h3>
@@ -1428,13 +1483,13 @@ h3 .accent-amber { color: var(--amber); }
       &nbsp;&nbsp;<span class="kw">return</span> <span class="var">text</span>
     </div>
   </div>
-  <div class="slide-number">19 / 40</div>
+  <div class="slide-number">20 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE 15: SCHEMA VALIDATION -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide" id="s20">
+<section class="slide" id="s21">
   <div class="slide-inner">
     <div class="tag amber">Layer 2</div>
     <h3>Schema-Based <span class="accent-amber">Input Validation</span></h3>
@@ -1462,13 +1517,13 @@ h3 .accent-amber { color: var(--amber); }
       </div>
     </div>
   </div>
-  <div class="slide-number">20 / 40</div>
+  <div class="slide-number">21 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE 16: CONTENT-TYPE AWARE -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide" id="s21">
+<section class="slide" id="s22">
   <div class="slide-inner">
     <div class="tag amber">Layer 3</div>
     <h3>Content-Type Aware <span class="accent-amber">Parsing</span></h3>
@@ -1480,13 +1535,13 @@ h3 .accent-amber { color: var(--amber); }
       <div class="card"><h4>URLs</h4><p>Domain allowlisting. Resolve before fetching. Watch for SSRF via redirects. Never trust user-provided URLs blindly.</p></div>
     </div>
   </div>
-  <div class="slide-number">21 / 40</div>
+  <div class="slide-number">22 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE 17: CANARY TOKENS -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide" id="s22">
+<section class="slide" id="s23">
   <div class="slide-inner">
     <div class="tag amber">Detection</div>
     <h3>Canary <span class="accent-amber">Tokens</span></h3>
@@ -1512,24 +1567,24 @@ h3 .accent-amber { color: var(--amber); }
       </div>
     </div>
   </div>
-  <div class="slide-number">22 / 40</div>
+  <div class="slide-number">23 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SECTION DIVIDER: PROMPT HARDENING -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide section-divider" id="s23">
+<section class="slide section-divider" id="s24">
   <div class="slide-inner">
     <div class="section-label">Section 03</div>
     <h2>Prompt <span class="accent">Hardening</span></h2>
   </div>
-  <div class="slide-number">23 / 40</div>
+  <div class="slide-number">24 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE 19: SYSTEM PROMPT ARCHITECTURE -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide" id="s24">
+<section class="slide" id="s25">
   <div class="slide-inner">
     <div class="tag cyan">Architecture</div>
     <h3>System Prompt <span class="accent-cyan">Architecture</span></h3>
@@ -1551,13 +1606,13 @@ h3 .accent-amber { color: var(--amber); }
       <strong>Principle:</strong> Explicit trust labels (highest / low / untrusted) give the model a clear hierarchy to follow.
     </div>
   </div>
-  <div class="slide-number">24 / 40</div>
+  <div class="slide-number">25 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE: BOUNDARY MARKERS -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide" id="s25">
+<section class="slide" id="s26">
   <div class="slide-inner" style="max-width:1100px;">
     <div class="tag cyan">Defense Pattern</div>
     <h3>Boundary <span class="accent-cyan">Markers</span></h3>
@@ -1610,13 +1665,13 @@ h3 .accent-amber { color: var(--amber); }
       </div>
     </div>
   </div>
-  <div class="slide-number">25 / 40</div>
+  <div class="slide-number">26 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE: FEW-SHOT HARDENING -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide" id="s26">
+<section class="slide" id="s27">
   <div class="slide-inner">
     <div class="tag cyan">Technique</div>
     <h3>Few-Shot <span class="accent-cyan">Hardening</span></h3>
@@ -1635,13 +1690,13 @@ h3 .accent-amber { color: var(--amber); }
       <strong>Why this works:</strong> Few-shot examples anchor the model's behavior more reliably than abstract instructions alone. Show, don't just tell.
     </div>
   </div>
-  <div class="slide-number">26 / 40</div>
+  <div class="slide-number">27 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE 22: RAG-AWARE PROMPTING -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide" id="s27">
+<section class="slide" id="s28">
   <div class="slide-inner">
     <div class="tag cyan">RAG Security</div>
     <h3>Retrieval-Aware <span class="accent-cyan">Prompt Design</span></h3>
@@ -1670,13 +1725,13 @@ h3 .accent-amber { color: var(--amber); }
       </div>
     </div>
   </div>
-  <div class="slide-number">27 / 40</div>
+  <div class="slide-number">28 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE: THREE RETRIEVAL PATHS -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide" id="s28">
+<section class="slide" id="s29">
   <div class="slide-inner">
     <div class="tag">RAG Security</div>
     <h3>Three Retrieval Paths for <span class="accent">Injection Payloads</span></h3>
@@ -1714,13 +1769,13 @@ h3 .accent-amber { color: var(--amber); }
       <strong>Key insight:</strong> Real-world attacks almost exclusively use paths 2 &amp; 3 — payload arrives <em>intact</em> with zero transformation. <strong>Defend all three.</strong>
     </div>
   </div>
-  <div class="slide-number">28 / 40</div>
+  <div class="slide-number">29 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE: PROMPT VERSION CONTROL -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide" id="s29">
+<section class="slide" id="s30">
   <div class="slide-inner" style="max-width:1100px;">
     <div class="tag cyan">Ops</div>
     <h3>Prompt Versioning &amp; <span class="accent-cyan">Change Control</span></h3>
@@ -1787,24 +1842,24 @@ h3 .accent-amber { color: var(--amber); }
       <strong>Prompts drift.</strong> A prompt that resisted injection last month may not resist new attack vectors this month. Without version control and automated testing, you won't know until it's too late.
     </div>
   </div>
-  <div class="slide-number">29 / 40</div>
+  <div class="slide-number">30 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SECTION DIVIDER: OUTPUT & ACTIONS -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide section-divider" id="s30">
+<section class="slide section-divider" id="s31">
   <div class="slide-inner">
     <div class="section-label">Section 04</div>
     <h2>Output &amp; <span class="accent">Action</span> Constraints</h2>
   </div>
-  <div class="slide-number">30 / 40</div>
+  <div class="slide-number">31 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE 25: CONSTRAINED OUTPUT -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide" id="s31">
+<section class="slide" id="s32">
   <div class="slide-inner">
     <div class="tag green">Output</div>
     <h3>Constrained <span class="accent-green">Output Formats</span></h3>
@@ -1830,13 +1885,13 @@ h3 .accent-amber { color: var(--amber); }
       </div>
     </div>
   </div>
-  <div class="slide-number">31 / 40</div>
+  <div class="slide-number">32 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE 26: ACTION GATING -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide" id="s32">
+<section class="slide" id="s33">
   <div class="slide-inner" style="max-width:1100px;">
     <div class="tag green">Defense</div>
     <h3>Domain Validation &amp; <span class="accent-green">Action Gating</span></h3>
@@ -1891,24 +1946,24 @@ h3 .accent-amber { color: var(--amber); }
       <strong>Principle: deny by default, permit by exception.</strong> The agent should have the minimum capabilities needed for its task — and every action beyond that requires explicit gating. This is OWASP's "Least Agency" principle applied at the tool layer.
     </div>
   </div>
-  <div class="slide-number">32 / 40</div>
+  <div class="slide-number">33 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SECTION DIVIDER: INFRASTRUCTURE -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide section-divider" id="s33">
+<section class="slide section-divider" id="s34">
   <div class="slide-inner">
     <div class="section-label">Section 05</div>
     <h2>Infrastructure <span class="accent">Security</span></h2>
   </div>
-  <div class="slide-number">33 / 40</div>
+  <div class="slide-number">34 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE 28: INFRA OVERVIEW -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide" id="s34">
+<section class="slide" id="s35">
   <div class="slide-inner">
     <div class="tag">Infrastructure</div>
     <h3>Container Isolation, Secrets &amp; <span class="accent">Least Privilege</span></h3>
@@ -1919,13 +1974,13 @@ h3 .accent-amber { color: var(--amber); }
       <div class="card" style="border-left: 3px solid var(--red-hot);"><h4>Network Segmentation</h4><p>Agent containers can only reach approved endpoints. Egress filtering blocks unexpected outbound connections.</p></div>
     </div>
   </div>
-  <div class="slide-number">34 / 40</div>
+  <div class="slide-number">35 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE 29: MONITORING -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide" id="s35">
+<section class="slide" id="s36">
   <div class="slide-inner">
     <div class="tag">Observability</div>
     <h3>Monitoring &amp; <span class="accent">Anomaly Detection</span></h3>
@@ -1945,24 +2000,24 @@ h3 .accent-amber { color: var(--amber); }
       </div>
     </div>
   </div>
-  <div class="slide-number">35 / 40</div>
+  <div class="slide-number">36 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SECTION DIVIDER: RED TEAMING -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide section-divider" id="s36">
+<section class="slide section-divider" id="s37">
   <div class="slide-inner">
     <div class="section-label">Section 06</div>
     <h2>Red-Teaming <span class="accent">Your Agents</span></h2>
   </div>
-  <div class="slide-number">36 / 40</div>
+  <div class="slide-number">37 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE: RED TEAMING APPROACH -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide" id="s37">
+<section class="slide" id="s38">
   <div class="slide-inner">
     <div class="tag">Testing</div>
     <h3>Agent Red-Teaming: <span class="accent">What &amp; How</span></h3>
@@ -1986,13 +2041,13 @@ h3 .accent-amber { color: var(--amber); }
       </div>
     </div>
   </div>
-  <div class="slide-number">37 / 40</div>
+  <div class="slide-number">38 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE: OPEN SOURCE SECURITY TOOLS -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide" id="s38">
+<section class="slide" id="s39">
   <div class="slide-inner">
     <div class="tag green">Tools</div>
     <h3>Open-Source <span class="accent-green">Security Tools</span></h3>
@@ -2031,13 +2086,13 @@ h3 .accent-amber { color: var(--amber); }
       </div>
     </div>
   </div>
-  <div class="slide-number">38 / 40</div>
+  <div class="slide-number">39 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE: CHECKLIST / TAKEAWAYS -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide grid-bg" id="s39">
+<section class="slide grid-bg" id="s40">
   <div class="slide-inner">
     <div class="tag green">Takeaway</div>
     <h3>Top 10 Things to Do <span class="accent-green">Next</span></h3>
@@ -2061,13 +2116,13 @@ h3 .accent-amber { color: var(--amber); }
       <strong>Resources:</strong> OWASP Top 10 for LLM Apps &nbsp;·&nbsp; Anthropic Safety Docs &nbsp;·&nbsp; NIST AI RMF &nbsp;·&nbsp; MITRE ATLAS
     </div>
   </div>
-  <div class="slide-number">39 / 40</div>
+  <div class="slide-number">40 / 41</div>
 </section>
 
 <!-- ════════════════════════════════════════ -->
 <!-- SLIDE 41: LICENSE & DISCLAIMER -->
 <!-- ════════════════════════════════════════ -->
-<section class="slide" id="s40">
+<section class="slide" id="s41">
   <div class="slide-inner">
     <h3 style="margin-bottom:1.5rem;">License &amp; <span class="accent">Disclaimer</span></h3>
 
@@ -2085,7 +2140,7 @@ h3 .accent-amber { color: var(--amber); }
       <p style="margin-top:0.8rem; color:var(--text-bright);"><strong style="color:var(--red-hot);">This deck is no substitute for employing a qualified security professional.</strong> The techniques and frameworks discussed here are starting points — not a complete security program. Every deployment has unique risks, compliance requirements, and attack surfaces that demand expert assessment. If you are building or operating agentic AI systems in production, engage experienced security practitioners to evaluate your specific architecture and threat model.</p>
     </div>
   </div>
-  <div class="slide-number">40 / 40</div>
+  <div class="slide-number">41 / 41</div>
 </section>
 
 <script>
