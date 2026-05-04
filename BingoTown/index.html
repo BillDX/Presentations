@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conference Talk Bingo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background-color: #13111c;
+      color: #cdd6f4;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #b4befe;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      margin-bottom: 24px;
+    }
+
+    .cell {
+      border: 1px solid #585b70;
+      border-radius: 8px;
+      padding: 12px 8px;
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      background-color: #1e1b2e;
+      transition: transform 0.1s ease, border-color 0.1s ease, box-shadow 0.15s ease;
+      position: relative;
+      min-height: 60px;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      hyphens: auto;
+    }
+
+    .cell:hover {
+      border-color: #b4befe;
+      transform: scale(1.03);
+    }
+
+    .cell.marked {
+      border-color: #a6e3a1;
+      background-color: #1e1b2e;
+      box-shadow: 0 0 10px #a6e3a1;
+    }
+
+    .cell.marked::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(21, 17, 36, 0.6);
+    }
+
+    .cell.marked::before {
+      content: '\2715';
+      position: absolute;
+      font-size: 2rem;
+      color: #a6e3a1;
+      z-index: 1;
+      text-shadow: 0 0 8px rgba(166, 227, 161, 0.6);
+    }
+
+    .cell.free-space {
+      font-weight: 700;
+      color: #a6e3a1;
+    }
+
+    .new-card-btn {
+      display: block;
+      width: 100%;
+      padding: 14px 24px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #13111c;
+      background-color: #fab387;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.1s ease, box-shadow 0.15s ease, background-color 0.1s ease;
+      min-height: 48px;
+      min-width: 48px;
+    }
+
+    .new-card-btn:hover {
+      background-color: #f8a875;
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(250, 179, 135, 0.3);
+    }
+
+    .new-card-btn:active {
+      transform: scale(0.98);
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(19, 17, 28, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .overlay.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .overlay-content {
+      text-align: center;
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+    }
+
+    .overlay.visible .overlay-content {
+      transform: scale(1);
+    }
+
+    .overlay-content h2 {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #a6e3a1;
+      margin-bottom: 24px;
+      text-shadow: 0 0 20px rgba(166, 227, 161, 0.5);
+    }
+
+    .overlay-close-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #b4befe;
+      cursor: pointer;
+      padding: 8px;
+      position: absolute;
+      top: 16px;
+      right: 16px;
+    }
+
+    .overlay-close-btn:hover {
+      color: #a6e3a1;
+    }
+
+    #play-again-btn {
+      margin-top: 8px;
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.4rem;
+      }
+
+      .cell {
+        padding: 8px 4px;
+        font-size: 0.65rem;
+        min-height: 52px;
+      }
+
+      .cell.marked::before {
+        font-size: 1.5rem;
+      }
+
+      .new-card-btn {
+        padding: 12px 16px;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (min-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      .cell {
+        padding: 16px 8px;
+        font-size: 0.85rem;
+        min-height: 72px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .container {
+        max-width: 650px;
+      }
+
+      .cell {
+        padding: 20px 12px;
+        font-size: 0.95rem;
+        min-height: 80px;
+      }
+
+      h1 {
+        font-size: 2.25rem;
+      }
+
+      .new-card-btn {
+        padding: 16px 28px;
+        font-size: 1.05rem;
+      }
+    }
+
+    .cell:focus-visible {
+      outline: 2px solid #b4befe;
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Conference Talk Bingo</h1>
+
+  <div class="container">
+    <div class="grid" id="bingo-grid"></div>
+    <button class="new-card-btn" id="new-card-btn">New Card</button>
+  </div>
+
+  <div class="overlay" id="overlay">
+    <button class="overlay-close-btn" id="overlay-close" aria-label="Close">&times;</button>
+    <div class="overlay-content">
+      <h2>BINGO!</h2>
+      <button class="new-card-btn" id="play-again-btn">Play Again</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <script>
+    const buzzwords = [
+      'agentic', 'AI-native', 'MCP', 'sub-agent', 'orchestration',
+      'harness', 'vibe coding', 'spicy autocomplete', 'dark factory', 'worktree',
+      'sandbox', 'CLAUDE.md', 'hooks', 'slash command',
+      'prompt engineering', 'context window', 'RAG', 'embedding', 'fine-tune',
+      'evals', 'hallucination', 'token', 'latency', 'cost'
+    ];
+
+    const grid = document.getElementById('bingo-grid');
+    const overlay = document.getElementById('overlay');
+    const newCardBtn = document.getElementById('new-card-btn');
+    const playAgainBtn = document.getElementById('play-again-btn');
+    const overlayClose = document.getElementById('overlay-close');
+
+    function mulberry32(seed) {
+      let s = seed | 0;
+      return function() {
+        s |= 0;
+        s = s + 0x6D2B79F5 | 0;
+        let t = Math.imul(s ^ s >>> 15, 1 | s);
+        t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+      };
+    }
+
+    function generateSeed() {
+      return Math.floor(Math.random() * 4294967296);
+    }
+
+    function shuffleArray(arr, rng) {
+      const shuffled = [...arr];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(rng() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    }
+
+    function getCardWords(seed) {
+      const rng = mulberry32(seed);
+      return shuffleArray(buzzwords, rng);
+    }
+
+    function saveSeed(seed) {
+      localStorage.setItem('bingoSeed', seed);
+    }
+
+    function loadSeed() {
+      const stored = localStorage.getItem('bingoSeed');
+      return stored ? parseInt(stored, 10) : null;
+    }
+
+    function renderGrid(seed) {
+      const words = getCardWords(seed);
+      grid.innerHTML = '';
+      let buzzIndex = 0;
+      for (let i = 0; i < 25; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        cell.dataset.index = i;
+        cell.setAttribute('role', 'button');
+        cell.setAttribute('aria-pressed', 'false');
+        cell.setAttribute('tabindex', '0');
+
+        if (i === 12) {
+          cell.textContent = 'FREE SPACE';
+          cell.classList.add('marked', 'free-space');
+          cell.setAttribute('aria-pressed', 'true');
+        } else {
+          cell.textContent = words[buzzIndex];
+          buzzIndex++;
+        }
+
+        grid.appendChild(cell);
+      }
+    }
+
+    let marked = new Array(25).fill(false);
+    marked[12] = true;
+    let hasBingo = false;
+
+    function checkBingo() {
+      const lines = [];
+      for (let r = 0; r < 5; r++) {
+        lines.push([r * 5, r * 5 + 1, r * 5 + 2, r * 5 + 3, r * 5 + 4]);
+      }
+      for (let c = 0; c < 5; c++) {
+        lines.push([c, c + 5, c + 10, c + 15, c + 20]);
+      }
+      lines.push([0, 6, 12, 18, 24]);
+      lines.push([4, 8, 12, 16, 20]);
+
+      for (const line of lines) {
+        if (line.every(i => marked[i])) return true;
+      }
+      return false;
+    }
+
+    let initialSeed = loadSeed();
+    if (initialSeed === null) {
+      initialSeed = generateSeed();
+      saveSeed(initialSeed);
+    }
+    renderGrid(initialSeed);
+
+    grid.addEventListener('click', (e) => {
+      const cell = e.target.closest('.cell');
+      if (!cell || cell.classList.contains('free-space')) return;
+      const idx = parseInt(cell.dataset.index, 10);
+      marked[idx] = !marked[idx];
+      cell.classList.toggle('marked');
+      cell.setAttribute('aria-pressed', marked[idx]);
+
+      if (!hasBingo && checkBingo()) {
+        hasBingo = true;
+        showOverlay();
+      }
+    });
+
+    grid.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        e.target.click();
+      }
+    });
+
+    function showOverlay() {
+      overlay.classList.add('visible');
+
+      const colors = ['#b4befe', '#a6e3a1', '#fab387', '#f5c2e7'];
+      const end = Date.now() + 3000;
+
+      (function frame() {
+        confetti({
+          particleCount: 4,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+          colors: colors
+        });
+        confetti({
+          particleCount: 4,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+          colors: colors
+        });
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      }());
+
+      setTimeout(() => {
+        confetti({
+          particleCount: 80,
+          spread: 100,
+          startVelocity: 40,
+          origin: { y: 0.6 },
+          colors: colors
+        });
+      }, 1500);
+
+      confetti({
+        particleCount: 100,
+        spread: 160,
+        startVelocity: 50,
+        colors: colors
+      });
+    }
+
+    function hideOverlay() {
+      overlay.classList.remove('visible');
+    }
+
+    function resetMarks() {
+      marked = new Array(25).fill(false);
+      marked[12] = true;
+      hasBingo = false;
+    }
+
+    function newCard() {
+      resetMarks();
+      const seed = generateSeed();
+      saveSeed(seed);
+      renderGrid(seed);
+    }
+
+    overlayClose.addEventListener('click', hideOverlay);
+    playAgainBtn.addEventListener('click', () => {
+      hideOverlay();
+      newCard();
+    });
+    newCardBtn.addEventListener('click', newCard);
+  </script>
+</body>
+</html>
