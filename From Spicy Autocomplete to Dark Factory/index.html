@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>From Spicy Autocomplete to Dark Factory</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <style>
 :root {
   --bg: #13111c;
@@ -333,8 +334,39 @@ ol.steps li::before {
   </div>
 </div>
 
-<!-- ══════ SLIDE 2: THE FIVE LEVELS ══════ -->
+<!-- ══════ SLIDE 2: PRESENTERS ══════ -->
 <div class="slide" data-slide="2">
+  <div class="prompt"><span class="arrow">></span> <span class="path">~/who-we-are</span></div>
+  <h2>Your <span class="b">Presenters</span></h2>
+  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.1rem; margin: 0.6rem 0 0.8rem;">
+    <div class="box accent-blue" style="padding: 1rem 1.2rem;">
+      <div class="box-title b" style="font-size: 1.05rem; margin-bottom: 0.4rem;">Bill McIntyre</div>
+      <p style="color: var(--sky); font-size: 0.78rem; line-height: 1.55; margin-bottom: 0.5rem;">AI Architect &middot; Agentic Harness Builder &middot; Robot Wrangler &middot; Web App Dev (OG)</p>
+      <p style="font-size: 0.8rem; color: var(--text-secondary);">Multi-Modal Models, Machine Learning, and Mechatronics are his idea of fun.</p>
+    </div>
+    <div class="box accent-mauve" style="padding: 1rem 1.2rem;">
+      <div class="box-title m" style="font-size: 1.05rem; margin-bottom: 0.4rem;">Uche Ogbuji</div>
+      <p style="color: var(--pink); font-size: 0.78rem; line-height: 1.55; margin-bottom: 0.5rem;">AI/Software/Data Engineer &middot; LLMOps &middot; AI Agent Framework &middot; Open Source</p>
+      <p style="font-size: 0.8rem; color: var(--text-secondary);">Also a Classicist, B-Boy, Afrofuturistic poet and DJ.</p>
+    </div>
+    <div class="box accent-green" style="padding: 1rem 1.2rem;">
+      <div class="box-title g" style="font-size: 1.05rem; margin-bottom: 0.4rem;">Andrew Spott</div>
+      <p style="color: var(--teal); font-size: 0.78rem; line-height: 1.55; margin-bottom: 0.5rem;">Physicist &middot; Ex ML Engineer &middot; Software Engineer</p>
+      <p style="font-size: 0.8rem; color: var(--text-secondary);">Working on the next generation of integrated nanophotonics simulation tools at EMode Photonix.</p>
+    </div>
+  </div>
+  <div style="border: 1px solid var(--border-bright); border-radius: 12px; padding: 1.2rem 1.8rem; background: var(--bg-panel); display: flex; align-items: center; gap: 2.5rem;">
+    <div style="flex: 1;">
+      <div style="font-size: clamp(1.3rem, 2.4vw, 2rem); font-weight: 700; color: var(--yellow); margin-bottom: 0.4rem; letter-spacing: -0.02em;">Rocky Mountain AI Interest Group</div>
+      <div style="font-size: clamp(0.88rem, 1.35vw, 1.08rem); color: var(--text-secondary); margin-bottom: 0.6rem;">The Front Range's meetup for AI practitioners, builders, and curious minds.</div>
+      <div style="font-size: clamp(1rem, 1.7vw, 1.3rem); color: var(--blue); font-weight: 600;">linktr.ee/rmaiig</div>
+    </div>
+    <div id="rmaiig-qr" style="flex-shrink: 0;"></div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 3: THE FIVE LEVELS ══════ -->
+<div class="slide" data-slide="3">
   <div class="prompt"><span class="arrow">></span> <span class="path">five-levels</span></div>
   <h2>The <span class="y">Five Levels</span> of Agentic Coding</h2>
   <p style="margin-bottom: 1rem; max-width: 70ch;">Raise your hand when I hit your level. The arc of this talk is the arc of the ladder.</p>
@@ -366,7 +398,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 3: THE PROBLEM ══════ -->
-<div class="slide" data-slide="3">
+<div class="slide" data-slide="4">
   <div class="prompt"><span class="arrow">></span> <span class="path">~/the-ceiling</span></div>
   <h2>The <span class="r">Single-Agent</span> Ceiling</h2>
   <p style="max-width: 52ch; margin-bottom: 1rem;">
@@ -401,7 +433,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 4: TIME BOTTLENECK ══════ -->
-<div class="slide" data-slide="4">
+<div class="slide" data-slide="5">
   <div class="prompt"><span class="arrow">></span> <span class="path">~/the-real-cost</span></div>
   <h2>The <span class="y">Core</span> Bottleneck: <span class="y">Time</span></h2>
   <p style="max-width: 55ch; margin-bottom: 1.5rem;">
@@ -429,7 +461,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 5: ROADMAP ══════ -->
-<div class="slide" data-slide="5">
+<div class="slide" data-slide="6">
   <div class="prompt"><span class="arrow">></span> <span class="path">~/the-route</span></div>
   <h2>The <span class="g">Route</span> We'll Take</h2>
   <p style="max-width: 70ch; margin-bottom: 1rem;">Harness engineering first. Then four live demos &mdash; one per level above L2.</p>
@@ -473,11 +505,11 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 6: WHAT IS THE HARNESS? ══════ -->
-<div class="slide" data-slide="6">
+<div class="slide" data-slide="7">
   <div class="prompt"><span class="arrow">></span> <span class="path">~/the-harness</span></div>
-  <h2>The <span class="m">Harness</span> Is the Product</h2>
+  <h2>The <span class="m">Harness</span> Is the Program</h2>
   <p style="max-width: 70ch; margin-bottom: 1rem;">
-    The model is the engine. The <span class="m">harness</span> is the car wrapped around it &mdash; everything that decides what the model sees, what tools it can reach, and what it's not allowed to do.
+    An AI model is an amazing robot brain. Building the <span class="m">harness</span> is building the robot that will run your software factory. Give it the Tools, Techniques, Style, and Guard Rails to help it build out your vision.
   </p>
   <div class="two-col" style="align-items: start;">
     <div>
@@ -512,12 +544,12 @@ ol.steps li::before {
     </div>
   </div>
   <div class="callout" style="margin-top: 0.8rem; max-width: 75ch; border-left-color: var(--mauve);">
-    <p><span class="m">Posture shift:</span> stop thinking like a prompt engineer. Start thinking like a platform engineer building tools for a team you can't fire.</p>
+    <p><span class="m">Perspective Shift:</span> Agentic Development is less hands-on coding and more like mentoring a team of tiny unpredictable robot developers.</p>
   </div>
 </div>
 
 <!-- ══════ SLIDE 7: CLAUDE.md ══════ -->
-<div class="slide" data-slide="7">
+<div class="slide" data-slide="8">
   <div class="prompt"><span class="arrow">></span> <span class="path">CLAUDE.md</span></div>
   <h2><span class="b">CLAUDE.md</span> &mdash; The Brief on Day One</h2>
   <p style="max-width: 70ch; margin-bottom: 0.8rem;">
@@ -554,14 +586,18 @@ ol.steps li::before {
 <br>
 <span class="keyword">## Helpful</span><br>
 <span class="string">- Local DB: </span><span class="val">make db.up</span><br>
-<span class="string">- Smoke tests: </span><span class="val">make smoke</span>
+<span class="string">- Smoke tests: </span><span class="val">make smoke</span><br>
+<br>
+<span class="keyword">## Docs</span><br>
+<span class="string">- For UI/UX work refer to </span><span class="val">/docs/styleguide.md</span><br>
+<span class="string">- For testing guidelines refer to </span><span class="val">/docs/coding_standards.md</span>
       </div>
     </div>
   </div>
 </div>
 
 <!-- ══════ SLIDE 8: AGENT DEFINITIONS ══════ -->
-<div class="slide" data-slide="8">
+<div class="slide" data-slide="9">
   <div class="prompt"><span class="arrow">></span> <span class="path">.claude/agents/</span></div>
   <h2><span class="g">Agent Definitions</span> &mdash; Reusable Specialists</h2>
   <p style="max-width: 70ch; margin-bottom: 0.8rem;">
@@ -600,7 +636,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 9: SLASH COMMANDS & HOOKS ══════ -->
-<div class="slide" data-slide="9">
+<div class="slide" data-slide="10">
   <div class="prompt"><span class="arrow">></span> <span class="path">commands + hooks</span></div>
   <h2><span class="p">Slash Commands</span> &amp; <span class="y">Hooks</span></h2>
   <p style="max-width: 75ch; margin-bottom: 0.8rem;">
@@ -644,7 +680,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 10: SETTINGS & PERMISSIONS ══════ -->
-<div class="slide" data-slide="10">
+<div class="slide" data-slide="11">
   <div class="prompt"><span class="arrow">></span> <span class="path">settings.json</span></div>
   <h2><span class="r">Permissions</span> &mdash; The Trust Budget</h2>
   <p style="max-width: 75ch; margin-bottom: 0.8rem;">
@@ -688,7 +724,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 11: SKILLS ══════ -->
-<div class="slide" data-slide="11">
+<div class="slide" data-slide="12">
   <div class="prompt"><span class="arrow">></span> <span class="path">.claude/skills/</span></div>
   <h2><span class="m">Skills</span> &mdash; Procedures Claude Loads on Demand</h2>
   <p style="max-width: 78ch; margin-bottom: 0.6rem;">
@@ -726,7 +762,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 12: SUB-AGENTS INTRO ══════ -->
-<div class="slide" data-slide="12">
+<div class="slide" data-slide="13">
   <div class="prompt"><span class="arrow">></span> <span class="path">sub-agents</span></div>
   <h2><span class="b">Sub-Agents</span> &mdash; The First Move Up</h2>
   <p style="max-width: 75ch; margin-bottom: 0.4rem;">
@@ -787,7 +823,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 12: DEMO 1 ══════ -->
-<div class="slide" data-slide="13">
+<div class="slide" data-slide="14">
   <div class="prompt"><span class="arrow">></span> <span class="path">demo-1</span></div>
   <h2><span class="tag exercise" style="font-size: 0.8rem;">DEMO 1</span> <span class="b">Sub-Agents</span> in Parallel</h2>
   <p style="max-width: 75ch; margin-bottom: 0.6rem; font-size: 0.95rem;">
@@ -829,7 +865,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 13: DEBRIEF 1 ══════ -->
-<div class="slide" data-slide="14">
+<div class="slide" data-slide="15">
   <div class="prompt"><span class="arrow">></span> <span class="path">~/what-just-happened</span></div>
   <h2>What Just <span class="g">Happened</span></h2>
   <div class="two-col">
@@ -860,7 +896,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 14: CONTAINMENT IN THE AGENT DEFINITION ══════ -->
-<div class="slide" data-slide="15">
+<div class="slide" data-slide="16">
   <div class="prompt"><span class="arrow">></span> <span class="path">~/containment</span></div>
   <h2>Containment Lives in the <span class="g">Agent Definition</span></h2>
   <p style="max-width: 78ch; margin-bottom: 0.6rem;">
@@ -903,7 +939,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 15: WORKTREES ══════ -->
-<div class="slide" data-slide="16">
+<div class="slide" data-slide="17">
   <div class="prompt"><span class="arrow">></span> <span class="path">git-worktree</span></div>
   <h2><span class="p">Git Worktrees</span> &mdash; The Cheap, Boring Primitive</h2>
   <p style="max-width: 70ch; margin-bottom: 0.8rem;">
@@ -938,7 +974,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 16: AGENTIC SECURITY AWARENESS ══════ -->
-<div class="slide" data-slide="17">
+<div class="slide" data-slide="18">
   <div class="prompt"><span class="arrow">></span> <span class="path">~/security-aside</span></div>
   <h2>A Quick Word on <span class="r">Agentic Security</span></h2>
   <p style="max-width: 78ch; margin-bottom: 0.8rem;">
@@ -979,7 +1015,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 17: --dangerously-skip-permissions ══════ -->
-<div class="slide" data-slide="18">
+<div class="slide" data-slide="19">
   <div class="prompt"><span class="arrow">></span> <span class="path">--dangerously-skip-permissions</span></div>
   <h2>When <span class="r">--dangerously-skip-permissions</span> Is OK</h2>
   <p style="max-width: 75ch; margin-bottom: 0.8rem;">
@@ -1012,7 +1048,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 18: CONTROLLER PATTERN INTRO ══════ -->
-<div class="slide" data-slide="19">
+<div class="slide" data-slide="20">
   <div class="prompt"><span class="arrow">></span> <span class="path">controller-pattern</span></div>
   <h2>The <span class="p">Controller</span> Pattern</h2>
   <p style="max-width: 78ch; margin-bottom: 0.8rem;">
@@ -1063,7 +1099,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 19: DEMO 2 ══════ -->
-<div class="slide" data-slide="20">
+<div class="slide" data-slide="21">
   <div class="prompt"><span class="arrow">></span> <span class="path">demo-2</span></div>
   <h2><span class="tag exercise" style="font-size: 0.8rem;">DEMO 2</span> <span class="p">Plan</span> &rarr; <span class="b">Execute</span> &rarr; <span class="g">Review</span></h2>
   <p style="max-width: 80ch; margin-bottom: 0.5rem; font-size: 0.95rem;">
@@ -1116,7 +1152,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 20: DEBRIEF 2 ══════ -->
-<div class="slide" data-slide="21">
+<div class="slide" data-slide="22">
   <div class="prompt"><span class="arrow">></span> <span class="path">~/what-just-happened</span></div>
   <h2>What the <span class="p">Plan</span> &rarr; <span class="b">Execute</span> &rarr; <span class="g">Review</span> Loop Bought You</h2>
   <div class="two-col">
@@ -1146,7 +1182,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 21: AGENT TEAMS INTRO ══════ -->
-<div class="slide" data-slide="22">
+<div class="slide" data-slide="23">
   <div class="prompt"><span class="arrow">></span> <span class="path">agent-teams</span></div>
   <h2><span class="g">Agent Teams</span> &mdash; Peers Who Disagree <span class="tag exp">EXPERIMENTAL</span></h2>
   <p style="max-width: 78ch; margin-bottom: 0.6rem;">
@@ -1198,7 +1234,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 22: DEMO 3 ══════ -->
-<div class="slide" data-slide="23">
+<div class="slide" data-slide="24">
   <div class="prompt"><span class="arrow">></span> <span class="path">demo-3</span></div>
   <h2><span class="tag exercise" style="font-size: 0.8rem;">DEMO 3</span> The <span class="g">Architecture Debate</span> <span class="dim" style="font-size: 0.55em; font-weight: 400;">(team-shaped exercise)</span></h2>
   <p style="max-width: 82ch; margin-bottom: 0.5rem; font-size: 0.93rem;">
@@ -1241,7 +1277,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 24: HONEST DISCLOSURE — TEAM-SHAPED vs REAL TEAMS ══════ -->
-<div class="slide" data-slide="24">
+<div class="slide" data-slide="25">
   <div class="prompt"><span class="arrow">></span> <span class="path">~/honest-disclosure</span></div>
   <h2><span class="g">Honest Disclosure</span> &mdash; That Wasn't a Real Agent Team</h2>
   <p style="max-width: 80ch; margin-bottom: 0.6rem;">
@@ -1275,7 +1311,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 25: SUB-AGENTS vs TEAMS DECISION ══════ -->
-<div class="slide" data-slide="25">
+<div class="slide" data-slide="26">
   <div class="prompt"><span class="arrow">></span> <span class="path">~/which-pattern</span></div>
   <h2>Sub-Agents <span class="dim">vs</span> Teams <span class="dim">vs</span> Single Agent</h2>
   <div style="margin-top: 0.5rem;">
@@ -1300,7 +1336,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 24: DARK FACTORY INTRO ══════ -->
-<div class="slide" data-slide="26">
+<div class="slide" data-slide="27">
   <div class="prompt"><span class="arrow">></span> <span class="path">~/the-dark-factory</span></div>
   <h2><span class="m">L5</span> &mdash; The Dark Factory</h2>
   <p style="max-width: 75ch; margin-bottom: 1rem;">
@@ -1333,7 +1369,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 25: GASTOWN CAPSTONE DEMO ══════ -->
-<div class="slide" data-slide="27">
+<div class="slide" data-slide="28">
   <div class="prompt"><span class="arrow">></span> <span class="path">demo-4 / gastown</span></div>
   <h2><span class="tag exercise" style="font-size: 0.8rem;">CAPSTONE</span> <span class="m">Gastown</span> Builds Bingo</h2>
   <p style="max-width: 75ch; margin-bottom: 0.8rem;">
@@ -1372,7 +1408,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 26: COSTS & TRADEOFFS ══════ -->
-<div class="slide" data-slide="28">
+<div class="slide" data-slide="29">
   <div class="prompt"><span class="arrow">></span> <span class="path">~/the-bill</span></div>
   <h2>The <span class="y">Bill</span> Comes Due</h2>
   <p style="max-width: 75ch; margin-bottom: 0.8rem;">
@@ -1416,7 +1452,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 28: OPEN MODELS & OPEN HARNESSES ══════ -->
-<div class="slide" data-slide="29">
+<div class="slide" data-slide="30">
   <div class="prompt"><span class="arrow">></span> <span class="path">~/off-the-beaten-path</span></div>
   <h2>Open Harnesses, <span class="g">Open Weights</span></h2>
   <p style="max-width: 78ch; margin-bottom: 0.6rem;">
@@ -1460,7 +1496,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 29: CHEAT SHEET ══════ -->
-<div class="slide" data-slide="30">
+<div class="slide" data-slide="31">
   <div class="prompt"><span class="arrow">></span> <span class="path">cheat-sheet</span></div>
   <h2>The <span class="l">Cheat Sheet</span></h2>
   <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
@@ -1537,7 +1573,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 28: TAKE-HOME / RESOURCES ══════ -->
-<div class="slide" data-slide="31">
+<div class="slide" data-slide="32">
   <div class="prompt"><span class="arrow">></span> <span class="path">~/take-home</span></div>
   <h2>The <span class="g">Take-Home</span> &mdash; This Hour Was the Trailer</h2>
   <p style="max-width: 75ch; margin-bottom: 1rem;">
@@ -1578,7 +1614,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 29: CLOSING ══════ -->
-<div class="slide" data-slide="32">
+<div class="slide" data-slide="33">
   <div class="ascii-art" style="color: var(--lavender); font-size: clamp(0.38rem, 0.75vw, 0.62rem);">
   ____                         _               _             _
  / ___| ___     ___  _ __ ___| |__   ___  ___| |_ _ __ __ _| |_ ___
@@ -1618,7 +1654,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 30: APPENDIX — SANDBOXED BASH + CONTAINERS ══════ -->
-<div class="slide" data-slide="33">
+<div class="slide" data-slide="34">
   <div class="prompt"><span class="arrow">></span> <span class="path">~/appendix/sandbox</span></div>
   <h2><span class="dim" style="font-size: 0.55em; font-weight: 400;">APPENDIX</span><br>When the <span class="m">Filesystem</span> Isn't Enough</h2>
   <p style="max-width: 75ch; margin-bottom: 0.8rem;">
@@ -1656,7 +1692,7 @@ ol.steps li::before {
 </div>
 
 <!-- ══════ SLIDE 31: LICENSE ══════ -->
-<div class="slide" data-slide="34">
+<div class="slide" data-slide="35">
   <div class="prompt"><span class="arrow">></span> <span class="path">license</span></div>
   <h2>Copyleft</h2>
   <div style="margin-top: 2rem; max-width: 60ch;">
@@ -1756,6 +1792,15 @@ document.addEventListener('click', e => {
 });
 
 goTo(0);
+
+new QRCode(document.getElementById('rmaiig-qr'), {
+  text: 'https://linktr.ee/rmaiig',
+  width: 128,
+  height: 128,
+  colorDark: '#000000',
+  colorLight: '#ffffff',
+  correctLevel: QRCode.CorrectLevel.M
+});
 </script>
 </body>
 </html>
