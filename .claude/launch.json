@@ -1,0 +1,29 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "life-survives",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8001", "--directory", "Life Survives"],
+      "port": 8001
+    },
+    {
+      "name": "agentic-coding-workshop",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8002", "--directory", "Agentic Coding Workshop"],
+      "port": 8002
+    },
+    {
+      "name": "agent-orchestration",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8003", "--directory", "Agent Orchestration in Claude"],
+      "port": 8003
+    },
+    {
+      "name": "securing-your-agents",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8004", "--directory", "Securing Your Agents"],
+      "port": 8004
+    }
+  ]
+}

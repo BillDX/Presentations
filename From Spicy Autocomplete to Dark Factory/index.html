@@ -1,0 +1,1761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>From Spicy Autocomplete to Dark Factory</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #13111c;
+  --bg-panel: #1a1826;
+  --bg-card: #211f2e;
+  --bg-highlight: #2a2740;
+  --border: #3b3755;
+  --border-bright: #524d6b;
+
+  --text: #e2dff0;
+  --text-secondary: #a9a5bb;
+  --text-dim: #6b6785;
+
+  --green: #a6e3a1;
+  --green-bright: #b8f0b4;
+  --teal: #94e2d5;
+  --blue: #89b4fa;
+  --blue-bright: #b4d0fc;
+  --lavender: #b4befe;
+  --mauve: #cba6f7;
+  --pink: #f5c2e7;
+  --red: #f38ba8;
+  --peach: #fab387;
+  --yellow: #f9e2af;
+  --sky: #89dcfe;
+  --sapphire: #74c7ec;
+  --flamingo: #f2cdcd;
+  --rosewater: #f5e0dc;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  overflow: hidden;
+}
+
+.deck { height: 100vh; width: 100vw; position: relative; }
+
+.slide {
+  position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center;
+  padding: 5vh 7vw; opacity: 0; transform: translateY(10px);
+  transition: opacity 0.35s ease, transform 0.35s ease; pointer-events: none; overflow-y: auto;
+}
+.slide.active { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+/* Prompt */
+.prompt {
+  font-size: clamp(0.9rem, 1.4vw, 1.1rem);
+  margin-bottom: 0.6rem;
+  color: var(--text-secondary);
+}
+.prompt .path { color: var(--blue); }
+.prompt .arrow { color: var(--green); font-weight: 700; }
+
+/* Typography */
+h1 {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 800;
+  font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-weight: 700;
+  font-size: clamp(1.6rem, 4vw, 3rem);
+  line-height: 1.12;
+  margin-bottom: 1.2rem;
+  color: var(--text);
+}
+
+h3 {
+  font-weight: 600;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  margin-bottom: 0.6rem;
+}
+
+p, li {
+  font-size: clamp(0.88rem, 1.5vw, 1.15rem);
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.subtitle {
+  font-size: clamp(1rem, 1.8vw, 1.4rem);
+  color: var(--text-secondary);
+  font-weight: 400;
+  margin-bottom: 2rem;
+}
+
+/* Colors */
+.g { color: var(--green); }
+.t { color: var(--teal); }
+.b { color: var(--blue); }
+.bb { color: var(--blue-bright); }
+.l { color: var(--lavender); }
+.m { color: var(--mauve); }
+.pk { color: var(--pink); }
+.r { color: var(--red); }
+.p { color: var(--peach); }
+.y { color: var(--yellow); }
+.s { color: var(--sky); }
+.dim { color: var(--text-dim); }
+
+/* Code blocks */
+.code-block {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.3rem 1.6rem;
+  margin: 0.8rem 0;
+  font-size: clamp(0.78rem, 1.25vw, 1.02rem);
+  line-height: 1.8;
+  overflow-x: auto;
+}
+
+.code-block .comment { color: var(--text-dim); font-style: italic; }
+.code-block .keyword { color: var(--mauve); }
+.code-block .string { color: var(--green); }
+.code-block .flag { color: var(--blue); }
+.code-block .cmd { color: var(--yellow); }
+.code-block .val { color: var(--peach); }
+
+/* Diagrams */
+.diagram { display: flex; flex-direction: column; gap: 0.5rem; margin: 1.2rem 0; }
+.diagram-row { display: flex; gap: 0.8rem; align-items: stretch; flex-wrap: wrap; justify-content: center; }
+
+.box {
+  border: 1px solid var(--border); border-radius: 10px;
+  padding: 0.9rem 1.1rem; background: var(--bg-card);
+  flex: 1 1 0; min-width: 150px; max-width: 290px;
+}
+.box.accent-green { border-color: #4c7a4a; background: rgba(166,227,161,0.06); }
+.box.accent-teal { border-color: #3d7a72; background: rgba(148,226,213,0.06); }
+.box.accent-blue { border-color: #4a6ca0; background: rgba(137,180,250,0.06); }
+.box.accent-mauve { border-color: #6a4f8a; background: rgba(203,166,247,0.06); }
+.box.accent-peach { border-color: #8a6040; background: rgba(250,179,135,0.06); }
+.box.accent-red { border-color: #8a4455; background: rgba(243,139,168,0.06); }
+.box.accent-lavender { border-color: #5a5a8a; background: rgba(180,190,254,0.06); }
+.box.accent-yellow { border-color: #8a7a40; background: rgba(249,226,175,0.06); }
+
+.box-title { font-size: 0.92em; font-weight: 700; margin-bottom: 0.3rem; letter-spacing: 0.04em; }
+.box p { font-size: 0.88em; line-height: 1.55; margin: 0; color: var(--text-secondary); }
+
+/* Compare grid */
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.2rem 0; }
+.compare-col { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.compare-header { padding: 0.8rem 1.1rem; font-weight: 700; font-size: 1rem; letter-spacing: 0.06em; }
+.compare-col:first-child .compare-header { background: rgba(137,180,250,0.1); color: var(--blue); border-bottom: 1px solid rgba(137,180,250,0.15); }
+.compare-col:last-child .compare-header { background: rgba(166,227,161,0.08); color: var(--green); border-bottom: 1px solid rgba(166,227,161,0.12); }
+.compare-body { padding: 0.9rem 1.1rem; }
+.compare-item {
+  display: flex; align-items: baseline; gap: 0.6rem; padding: 0.5rem 0;
+  font-size: clamp(0.78rem, 1.15vw, 0.95rem); line-height: 1.55;
+  border-bottom: 1px solid rgba(59,55,85,0.6);
+}
+.compare-item:last-child { border-bottom: none; }
+.compare-item::before { content: '\25B8'; color: var(--text-dim); flex-shrink: 0; }
+
+/* Bullet list */
+ul.cli-list { list-style: none; padding: 0; margin: 0.8rem 0; }
+ul.cli-list li {
+  padding: 0.4rem 0; padding-left: 2rem; position: relative;
+  font-size: clamp(0.85rem, 1.35vw, 1.08rem);
+}
+ul.cli-list li::before { content: '\25B8'; position: absolute; left: 0; color: var(--lavender); font-weight: 700; }
+
+/* Two-column layout */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; }
+
+/* Callout */
+.callout {
+  border-left: 3px solid var(--green);
+  padding: 0.8rem 1.2rem;
+  background: rgba(166,227,161,0.04);
+  border-radius: 0 8px 8px 0;
+  margin: 1rem 0;
+}
+
+/* Tags */
+.tag {
+  display: inline-block; font-size: 0.68rem; padding: 0.15rem 0.55rem; border-radius: 5px;
+  font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; margin-right: 0.3rem;
+}
+.tag.exercise { background: rgba(249,226,175,0.15); color: var(--yellow); border: 1px solid rgba(249,226,175,0.3); }
+.tag.tip { background: rgba(166,227,161,0.12); color: var(--green); border: 1px solid rgba(166,227,161,0.2); }
+.tag.exp { background: rgba(243,139,168,0.12); color: var(--red); border: 1px solid rgba(243,139,168,0.2); }
+.tag.time { background: rgba(137,180,250,0.12); color: var(--blue); border: 1px solid rgba(137,180,250,0.2); }
+
+/* Exercise card */
+.exercise-card {
+  border: 2px solid rgba(249,226,175,0.3);
+  border-radius: 12px;
+  padding: 1.5rem 1.8rem;
+  background: rgba(249,226,175,0.03);
+  margin: 0.8rem 0;
+}
+.exercise-card h3 { color: var(--yellow); margin-bottom: 0.8rem; }
+
+/* Step list */
+ol.steps { list-style: none; padding: 0; margin: 0.5rem 0; counter-reset: step; }
+ol.steps li {
+  padding: 0.5rem 0; padding-left: 2.5rem; position: relative;
+  font-size: clamp(0.82rem, 1.3vw, 1.02rem); counter-increment: step;
+}
+ol.steps li::before {
+  content: counter(step); position: absolute; left: 0;
+  width: 1.6rem; height: 1.6rem; border-radius: 50%;
+  background: var(--bg-highlight); border: 1px solid var(--yellow);
+  color: var(--yellow); font-size: 0.75rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  top: 0.45rem;
+}
+
+/* ASCII art */
+.ascii-art {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.42rem, 0.85vw, 0.72rem);
+  line-height: 1.15; white-space: pre; margin-bottom: 1rem; overflow: hidden;
+}
+
+/* Blinking cursor */
+.cursor {
+  display: inline-block; width: 0.6em; height: 1.1em; background: var(--lavender);
+  vertical-align: text-bottom; animation: blink 1s step-end infinite; margin-left: 2px;
+  border-radius: 2px;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* Flow arrow */
+.flow-arrow { text-align: center; color: var(--text-dim); font-size: 0.95rem; padding: 0.2rem 0; letter-spacing: 0.15em; }
+
+/* Timer display */
+.timer-display {
+  position: fixed; top: 1.5rem; right: 7vw;
+  font-size: 1.6rem; font-weight: 700; color: var(--yellow);
+  opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 100;
+  text-shadow: 0 0 20px rgba(249,226,175,0.3);
+}
+.timer-display.visible { opacity: 1; }
+.timer-display.warning { color: var(--red); text-shadow: 0 0 20px rgba(243,139,168,0.3); }
+
+/* Progress bar */
+.progress-bar {
+  position: fixed; bottom: 0; left: 0; height: 3px;
+  background: linear-gradient(90deg, var(--blue), var(--green));
+  transition: width 0.3s ease; z-index: 100;
+}
+.slide-counter {
+  position: fixed; bottom: 0.8rem; right: 1.5rem;
+  font-size: 0.7rem; color: var(--text-dim); z-index: 100;
+}
+.nav-hint {
+  position: fixed; bottom: 0.8rem; left: 1.5rem;
+  font-size: 0.65rem; color: var(--text-dim); z-index: 100;
+}
+.nav-hint kbd {
+  background: var(--bg-highlight); border: 1px solid var(--border);
+  padding: 0.1rem 0.4rem; border-radius: 4px; font-family: inherit;
+}
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+<!-- ══════ SLIDE 0: TITLE ══════ -->
+<div class="slide active" data-slide="0">
+  <div class="ascii-art fade-in fade-in-1" style="color: var(--lavender);"> ____                                             _
+|  _ \  __ _ _ __   __ _  ___ _ __ ___  _   _ ___| |_   _
+| | | |/ _` | '_ \ / _` |/ _ \ '__/ _ \| | | / __| | | | |
+| |_| | (_| | | | | (_| |  __/ | | (_) | |_| \__ \ | |_| |
+|____/ \__,_|_| |_|\__, |\___|_|  \___/ \__,_|___/_|\__, |
+                   |___/                            |___/
+ ____  _    _         ____                     _         _
+/ ___|| | _(_)_ __   |  _ \ ___ _ __ _ __ ___ (_)___ ___(_) ___  _ __  ___
+\___ \| |/ / | '_ \  | |_) / _ \ '__| '_ ` _ \| / __/ __| |/ _ \| '_ \/ __|
+ ___) |   <| | |_) | |  __/  __/ |  | | | | | | \__ \__ \ | (_) | | | \__ \
+|____/|_|\_\_| .__/  |_|   \___|_|  |_| |_| |_|_|___/___/_|\___/|_| |_|___/
+             |_|                                                            </div>
+  <h1>From <span class="r">Spicy Autocomplete</span><br>to <span class="m">Dark Factory</span></h1>
+  <p class="subtitle"><span class="y">Agentic Coding</span> in Practice</p>
+  <div style="margin-top: 1.5rem;">
+    <div class="code-block" style="display: inline-block;">
+      <span class="flag">$</span> <span class="cmd">claude</span> <span class="string">"Let's build an automated token incinerator"</span><span class="cursor"></span>
+    </div>
+  </div>
+  <div style="margin-top: 2rem; color: var(--text-secondary); font-size: clamp(0.82rem, 1.2vw, 1rem); line-height: 1.8;">
+    <span class="l">Bill McIntyre</span><br>
+    <span style="color: var(--text-dim);">bill@thinkiac.ai</span>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 1: WHAT TO EXPECT ══════ -->
+<div class="slide" data-slide="1">
+  <div class="prompt"><span class="arrow">></span> <span class="path">~/welcome</span></div>
+  <h2>What to <span class="y">Expect</span></h2>
+  <p style="max-width: 60ch; margin-bottom: 1rem;">
+    A demo-led tour of agentic coding -- from the floor we're on now to the lights-out factory floor at the far end of the road.
+  </p>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-top: 0.8rem;">
+    <div class="box accent-blue">
+      <div class="box-title b">FOUR LIVE DEMOS</div>
+      <p>Sub-agents &middot; the controller pattern &middot; agent teams in tmux &middot; a "dark factory" capstone</p>
+    </div>
+    <div class="box accent-green">
+      <div class="box-title g">FOLLOW ALONG IF YOU CAN</div>
+      <p>Laptop optional. The take-home starter repo is where the real work happens after this hour.</p>
+    </div>
+    <div class="box accent-mauve">
+      <div class="box-title m">HARNESS ENGINEERING</div>
+      <p>The scaffolding that makes any of this work: <span class="b">CLAUDE.md</span>, agents, hooks, slash commands, sandboxing.</p>
+    </div>
+    <div class="box accent-peach">
+      <div class="box-title p">REAL COSTS, REAL TRADEOFFS</div>
+      <p>What this saves, what it spends, and where it bites. No hype.</p>
+    </div>
+  </div>
+  <div class="callout" style="margin-top: 1rem; max-width: 70ch;">
+    <p style="font-size: 0.95rem;"><span class="y">Take-home repo:</span> <span class="b">github.com/BillDX/spicy-to-dark-factory-starter</span> &mdash; clone now if you want to play along, or grab the QR at the end.</p>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 2: THE FIVE LEVELS ══════ -->
+<div class="slide" data-slide="2">
+  <div class="prompt"><span class="arrow">></span> <span class="path">five-levels</span></div>
+  <h2>The <span class="y">Five Levels</span> of Agentic Coding</h2>
+  <p style="margin-bottom: 1rem; max-width: 70ch;">Raise your hand when I hit your level. The arc of this talk is the arc of the ladder.</p>
+  <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.6rem; max-width: 1180px;">
+    <div class="box accent-red" style="padding: 0.7rem 0.8rem;">
+      <div class="box-title"><span class="r">L0-L1</span></div>
+      <p style="font-size: 0.78rem;"><strong class="r">Spicy Autocomplete</strong><br>Tab-tab-tab. Copilot. You approve every token.</p>
+    </div>
+    <div class="box accent-peach" style="padding: 0.7rem 0.8rem;">
+      <div class="box-title"><span class="p">L2</span> <span class="y" style="font-size: 0.7em;">&larr; MOST</span></div>
+      <p style="font-size: 0.78rem;"><strong class="p">Vibe Coding</strong><br>One agent, one task. You're in the loop on every step.</p>
+    </div>
+    <div class="box accent-blue" style="padding: 0.7rem 0.8rem;">
+      <div class="box-title"><span class="b">L3</span></div>
+      <p style="font-size: 0.78rem;"><strong class="b">Delegation</strong><br>You hand off whole tasks. Sub-agents run in parallel.</p>
+    </div>
+    <div class="box accent-green" style="padding: 0.7rem 0.8rem; border-width: 2px;">
+      <div class="box-title"><span class="g">L4</span> <span class="y" style="font-size: 0.7em;">&larr; TODAY</span></div>
+      <p style="font-size: 0.78rem;"><strong class="g">Orchestration</strong><br>Agent teams. Pipelines. Worktrees. You're the EM.</p>
+    </div>
+    <div class="box accent-mauve" style="padding: 0.7rem 0.8rem;">
+      <div class="box-title"><span class="m">L5</span></div>
+      <p style="font-size: 0.78rem;"><strong class="m">Dark Factory</strong><br>Lights-out. The harness ate the team. You're the PM.</p>
+    </div>
+  </div>
+  <div class="callout" style="margin-top: 1.2rem; max-width: 80ch;">
+    <p><span class="y">Today's arc:</span> we'll move from <span class="r">L1</span> to <span class="g">L4</span> with live demos &mdash; and end with a glimpse of <span class="m">L5</span>.</p>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 3: THE PROBLEM ══════ -->
+<div class="slide" data-slide="3">
+  <div class="prompt"><span class="arrow">></span> <span class="path">~/the-ceiling</span></div>
+  <h2>The <span class="r">Single-Agent</span> Ceiling</h2>
+  <p style="max-width: 52ch; margin-bottom: 1rem;">
+    One agent. One context window. One task at a time.<br>
+    As context expands, <span class="r">focus degrades</span>.
+  </p>
+  <div class="code-block" style="max-width: 650px;">
+<span class="comment"># the classic failure mode</span><br>
+<span class="flag">$</span> <span class="cmd">claude</span> <span class="string">"Refactor auth, update tests, fix the UI"</span><br><br>
+<span class="comment"># step 1:  [OK]  auth refactored</span><br>
+<span class="comment"># step 2:  [OK]  tests updated</span><br>
+<span class="comment"># step 3:  [!!]  context degraded -- step 1 blurry</span><br>
+<span class="comment"># step 4:  [XX]  /clear and start over</span>
+  </div>
+  <div class="diagram">
+    <div class="diagram-row">
+      <div class="box accent-red">
+        <div class="box-title r">CONTEXT BLOAT</div>
+        <p>Too many concerns in one window</p>
+      </div>
+      <div class="box accent-red">
+        <div class="box-title r">SEQUENTIAL</div>
+        <p>Three independent tasks queued single-file</p>
+      </div>
+      <div class="box accent-red">
+        <div class="box-title r">NO SPECIALIZATION</div>
+        <p>One agent wearing every hat</p>
+      </div>
+    </div>
+  </div>
+  <p style="font-size: 0.95rem; margin-top: 0.4rem; color: var(--text-secondary);">The fix: <span class="g">decompose, delegate, parallelize.</span></p>
+</div>
+
+<!-- ══════ SLIDE 4: TIME BOTTLENECK ══════ -->
+<div class="slide" data-slide="4">
+  <div class="prompt"><span class="arrow">></span> <span class="path">~/the-real-cost</span></div>
+  <h2>The <span class="y">Core</span> Bottleneck: <span class="y">Time</span></h2>
+  <p style="max-width: 55ch; margin-bottom: 1.5rem;">
+    A single agent is cheap in tokens.<br>
+    It is <span class="r">extremely expensive</span> in the only non-renewable resource you have.
+  </p>
+  <div class="diagram">
+    <div class="diagram-row" style="justify-content: center;">
+      <div class="box accent-blue" style="text-align: center; max-width: 240px;">
+        <div class="box-title b" style="font-size: 1.6em;">LOW</div>
+        <p style="font-size: 1em; color: var(--text); font-weight: 600;">Claude Tokens</p>
+        <p style="margin-top: 0.3rem;">Looks cheap on the bill.</p>
+      </div>
+      <div class="box accent-red" style="text-align: center; max-width: 240px;">
+        <div class="box-title r" style="font-size: 1.6em;">MAXIMUM</div>
+        <p style="font-size: 1em; color: var(--text); font-weight: 600;">Your Time</p>
+        <p style="margin-top: 0.3rem;">Watching. Waiting. Approving.<br>Context-switching. Re-explaining.</p>
+      </div>
+    </div>
+  </div>
+  <div class="callout" style="border-left-color: var(--yellow); max-width: 56ch;">
+    <p><span class="y">The goal of orchestration is not to save tokens.</span></p>
+    <p style="margin-top: 0.3rem;">It is to <span class="g">reclaim your time</span>. Spend more Claude tokens. Spend fewer <em>you</em> tokens.</p>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 5: ROADMAP ══════ -->
+<div class="slide" data-slide="5">
+  <div class="prompt"><span class="arrow">></span> <span class="path">~/the-route</span></div>
+  <h2>The <span class="g">Route</span> We'll Take</h2>
+  <p style="max-width: 70ch; margin-bottom: 1rem;">Harness engineering first. Then four live demos &mdash; one per level above L2.</p>
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; margin-top: 0.6rem;">
+    <div class="exercise-card" style="padding: 0.9rem 1rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="font-size: 1rem; margin: 0;">Demo 1</h3>
+        <span class="tag time">L3</span>
+      </div>
+      <p style="font-size: 0.95rem; font-weight: 600; color: var(--blue); margin: 0.3rem 0;">Sub-Agents</p>
+      <p style="font-size: 0.78rem; color: var(--text-secondary);">Reviewer + documenter, parallel, isolated context.</p>
+    </div>
+    <div class="exercise-card" style="padding: 0.9rem 1rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="font-size: 1rem; margin: 0;">Demo 2</h3>
+        <span class="tag time">L4</span>
+      </div>
+      <p style="font-size: 0.95rem; font-weight: 600; color: var(--peach); margin: 0.3rem 0;">Controller</p>
+      <p style="font-size: 0.78rem; color: var(--text-secondary);">Plan &rarr; Code &rarr; Test pipeline in worktrees.</p>
+    </div>
+    <div class="exercise-card" style="padding: 0.9rem 1rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="font-size: 1rem; margin: 0;">Demo 3</h3>
+        <span class="tag time">L4</span>
+      </div>
+      <p style="font-size: 0.95rem; font-weight: 600; color: var(--green); margin: 0.3rem 0;">Agent Teams</p>
+      <p style="font-size: 0.78rem; color: var(--text-secondary);">Peer mesh in tmux. <span class="tag exp" style="font-size: 0.55rem;">EXPERIMENTAL</span></p>
+    </div>
+    <div class="exercise-card" style="padding: 0.9rem 1rem; border-color: rgba(203,166,247,0.4);">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="font-size: 1rem; margin: 0; color: var(--mauve);">Capstone</h3>
+        <span class="tag time" style="background: rgba(203,166,247,0.12); color: var(--mauve); border-color: rgba(203,166,247,0.3);">L5</span>
+      </div>
+      <p style="font-size: 0.95rem; font-weight: 600; color: var(--mauve); margin: 0.3rem 0;">Dark Factory</p>
+      <p style="font-size: 0.78rem; color: var(--text-secondary);">Gastown takes a spec to a live product.</p>
+    </div>
+  </div>
+  <p style="margin-top: 1.2rem; color: var(--text-dim); font-size: 0.9rem;">
+    <span class="tag tip">FORMAT</span> Each demo: setup &rarr; live run &rarr; what just happened &mdash; follow along on your laptop or just watch.
+  </p>
+</div>
+
+<!-- ══════ SLIDE 6: WHAT IS THE HARNESS? ══════ -->
+<div class="slide" data-slide="6">
+  <div class="prompt"><span class="arrow">></span> <span class="path">~/the-harness</span></div>
+  <h2>The <span class="m">Harness</span> Is the Product</h2>
+  <p style="max-width: 70ch; margin-bottom: 1rem;">
+    The model is the engine. The <span class="m">harness</span> is the car wrapped around it &mdash; everything that decides what the model sees, what tools it can reach, and what it's not allowed to do.
+  </p>
+  <div class="two-col" style="align-items: start;">
+    <div>
+      <h3 class="l">Layers of the Harness</h3>
+      <ul class="cli-list" style="font-size: 0.88rem;">
+        <li><span class="b">CLAUDE.md</span> &mdash; the always-loaded brief</li>
+        <li><span class="g">.claude/agents/</span> &mdash; reusable specialists</li>
+        <li><span class="m">.claude/skills/</span> &mdash; auto-loaded procedures</li>
+        <li><span class="p">.claude/commands/</span> &mdash; your slash commands</li>
+        <li><span class="y">hooks</span> &mdash; programmatic gates around tool calls</li>
+        <li><span class="r">settings.json</span> &mdash; permissions + allowlists</li>
+        <li><span class="s">MCP servers</span> &mdash; external tools and APIs</li>
+      </ul>
+    </div>
+    <div>
+      <div class="code-block" style="font-size: 0.78rem;">
+<span class="comment"># a fully-loaded harness</span><br>
+<span class="cmd">project/</span><br>
+<span class="dim">├──</span> <span class="b">CLAUDE.md</span><br>
+<span class="dim">└──</span> <span class="cmd">.claude/</span><br>
+<span class="dim">    ├──</span> <span class="g">agents/</span><br>
+<span class="dim">    │   ├──</span> <span class="val">reviewer.md</span><br>
+<span class="dim">    │   └──</span> <span class="val">tester.md</span><br>
+<span class="dim">    ├──</span> <span class="m">skills/</span><br>
+<span class="dim">    │   └──</span> <span class="val">release-notes/</span><br>
+<span class="dim">    │       └──</span> <span class="val">SKILL.md</span><br>
+<span class="dim">    ├──</span> <span class="p">commands/</span><br>
+<span class="dim">    │   ├──</span> <span class="val">review.md</span><br>
+<span class="dim">    │   └──</span> <span class="val">ship.md</span><br>
+<span class="dim">    └──</span> <span class="r">settings.json</span>
+      </div>
+    </div>
+  </div>
+  <div class="callout" style="margin-top: 0.8rem; max-width: 75ch; border-left-color: var(--mauve);">
+    <p><span class="m">Posture shift:</span> stop thinking like a prompt engineer. Start thinking like a platform engineer building tools for a team you can't fire.</p>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 7: CLAUDE.md ══════ -->
+<div class="slide" data-slide="7">
+  <div class="prompt"><span class="arrow">></span> <span class="path">CLAUDE.md</span></div>
+  <h2><span class="b">CLAUDE.md</span> &mdash; The Brief on Day One</h2>
+  <p style="max-width: 70ch; margin-bottom: 0.8rem;">
+    A markdown file. <span class="b">Auto-loaded</span> at the start of every Claude Code session. The closest thing the agent has to onboarding.
+  </p>
+  <div class="two-col" style="align-items: start;">
+    <div>
+      <h3 class="g">Where it lives (merged in order)</h3>
+      <ul class="cli-list" style="font-size: 0.85rem;">
+        <li><span class="dim">~/.claude/CLAUDE.md</span> &mdash; your global voice</li>
+        <li><span class="b">project/CLAUDE.md</span> &mdash; the team's brief (committed)</li>
+        <li><span class="p">project/&lt;subdir&gt;/CLAUDE.md</span> &mdash; loaded when working there</li>
+      </ul>
+      <h3 class="y" style="margin-top: 0.8rem;">Rule of thumb</h3>
+      <p style="font-size: 0.9rem;">Things you'd tell a new contractor on day one. Conventions, gotchas, "don't touch X".</p>
+      <p style="font-size: 0.85rem; margin-top: 0.4rem; color: var(--text-secondary);"><span class="tag tip">KEEP IT SHORT</span> Every line costs context. Aim for &lt; 150 lines.</p>
+    </div>
+    <div>
+      <div class="code-block" style="font-size: 0.78rem;">
+<span class="comment"># project/CLAUDE.md</span><br>
+<br>
+<span class="keyword">## Project</span><br>
+<span class="string">FastAPI service for conference</span><br>
+<span class="string">talk submissions. Postgres backend.</span><br>
+<br>
+<span class="keyword">## Conventions</span><br>
+<span class="string">- We use </span><span class="val">uv</span><span class="string">, not pip</span><br>
+<span class="string">- Tests live in </span><span class="val">tests/</span><span class="string">, never inline</span><br>
+<span class="string">- Type hints on every public fn</span><br>
+<br>
+<span class="keyword">## Don't</span><br>
+<span class="string">- Touch </span><span class="val">migrations/</span><span class="string"> without sign-off</span><br>
+<span class="string">- Run </span><span class="val">pytest -k</span><span class="string"> in CI mode</span><br>
+<br>
+<span class="keyword">## Helpful</span><br>
+<span class="string">- Local DB: </span><span class="val">make db.up</span><br>
+<span class="string">- Smoke tests: </span><span class="val">make smoke</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 8: AGENT DEFINITIONS ══════ -->
+<div class="slide" data-slide="8">
+  <div class="prompt"><span class="arrow">></span> <span class="path">.claude/agents/</span></div>
+  <h2><span class="g">Agent Definitions</span> &mdash; Reusable Specialists</h2>
+  <p style="max-width: 70ch; margin-bottom: 0.8rem;">
+    A markdown file per agent in <span class="g">.claude/agents/</span>. Frontmatter declares capabilities; the body is the system prompt. Ship them in your repo so the team uses the same specialists you do.
+  </p>
+  <div class="two-col" style="align-items: start;">
+    <div>
+      <div class="code-block" style="font-size: 0.78rem;">
+<span class="comment"># .claude/agents/reviewer.md</span><br>
+<span class="keyword">---</span><br>
+<span class="flag">name:</span> <span class="val">reviewer</span><br>
+<span class="flag">description:</span> <span class="val">Reviews code for</span><br>
+<span class="val">  bugs, security, and style.</span><br>
+<span class="flag">tools:</span> <span class="val">Read, Grep, Glob</span><br>
+<span class="flag">model:</span> <span class="val">sonnet</span><br>
+<span class="flag">isolation:</span> <span class="val">worktree</span><br>
+<span class="keyword">---</span><br>
+<span class="string">You are a code reviewer. Read the</span><br>
+<span class="string">specified files and report issues</span><br>
+<span class="string">grouped by severity.</span>
+      </div>
+    </div>
+    <div>
+      <h3 class="g">Key Levers</h3>
+      <ul class="cli-list" style="font-size: 0.88rem;">
+        <li><span class="b">tools:</span> restrict capability surface (read-only? write? Bash?)</li>
+        <li><span class="p">model:</span> route to <span class="val">opus</span> / <span class="val">sonnet</span> / <span class="val">haiku</span> by job</li>
+        <li><span class="m">isolation:</span> <span class="val">worktree</span> sandboxes the filesystem</li>
+        <li><span class="y">description:</span> Claude reads this to decide <em>when</em> to invoke</li>
+      </ul>
+      <div class="callout" style="margin-top: 0.8rem;">
+        <p style="font-size: 0.88rem;"><span class="g">Library mindset:</span> a small set of well-named, well-scoped agents beats a giant generic one. Build them like you build internal tools.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 9: SLASH COMMANDS & HOOKS ══════ -->
+<div class="slide" data-slide="9">
+  <div class="prompt"><span class="arrow">></span> <span class="path">commands + hooks</span></div>
+  <h2><span class="p">Slash Commands</span> &amp; <span class="y">Hooks</span></h2>
+  <p style="max-width: 75ch; margin-bottom: 0.8rem;">
+    Two ways to encode workflow into the harness: <span class="p">slash commands</span> for repeatable prompts, <span class="y">hooks</span> for programmatic gates around tool calls.
+  </p>
+  <div class="two-col" style="align-items: start;">
+    <div>
+      <h3 class="p">Slash Commands</h3>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.4rem;">A markdown file becomes a <span class="p">/command</span>. Saves typing the same prompt twice.</p>
+      <div class="code-block" style="font-size: 0.75rem;">
+<span class="comment"># .claude/commands/review.md</span><br>
+<span class="keyword">---</span><br>
+<span class="flag">description:</span> <span class="val">Run the reviewer agent</span><br>
+<span class="val">  on the current branch's diff.</span><br>
+<span class="keyword">---</span><br>
+<span class="string">Use the reviewer agent to review</span><br>
+<span class="string">all changes in the current branch</span><br>
+<span class="string">vs main. Group findings by file.</span>
+      </div>
+      <p style="font-size: 0.78rem; margin-top: 0.4rem;"><span class="dim">In session:</span> <span class="p">/review</span></p>
+    </div>
+    <div>
+      <h3 class="y">Hooks</h3>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.4rem;">Shell commands fired on events: <span class="val">PreToolUse</span>, <span class="val">PostToolUse</span>, <span class="val">Stop</span>, <span class="val">SessionStart</span>.</p>
+      <div class="code-block" style="font-size: 0.72rem;">
+<span class="comment"># .claude/settings.json</span><br>
+<span class="keyword">{</span><br>
+&nbsp;&nbsp;<span class="flag">"hooks"</span>: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="flag">"PostToolUse"</span>: [{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="flag">"matcher"</span>: <span class="val">"Edit|Write"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="flag">"hooks"</span>: [{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="flag">"command"</span>: <span class="val">"ruff format $FILE"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}]<br>
+&nbsp;&nbsp;}<br>
+<span class="keyword">}</span>
+      </div>
+      <p style="font-size: 0.78rem; margin-top: 0.4rem;"><span class="dim">Effect:</span> auto-format on every edit, no prompt.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 10: SETTINGS & PERMISSIONS ══════ -->
+<div class="slide" data-slide="10">
+  <div class="prompt"><span class="arrow">></span> <span class="path">settings.json</span></div>
+  <h2><span class="r">Permissions</span> &mdash; The Trust Budget</h2>
+  <p style="max-width: 75ch; margin-bottom: 0.8rem;">
+    Every permission prompt mid-flow is friction. <span class="r">settings.json</span> lets you decide <span class="y">once</span> which calls are auto-approved and which are denied outright.
+  </p>
+  <div class="two-col" style="align-items: start;">
+    <div>
+      <h3 class="g">You Build It By <em>Using</em> Claude</h3>
+      <p style="font-size: 0.9rem;">Most of your <span class="b">allow</span> list writes itself. When Claude asks for permission, you'll see:</p>
+      <div class="code-block" style="font-size: 0.78rem; margin: 0.5rem 0;">
+<span class="dim">Bash command:</span> <span class="val">uv run pytest</span><br>
+<span class="dim">[a]</span> Allow once<br>
+<span class="g">[A]</span> <span class="g">Always allow</span> &larr; <span class="y">writes to settings.json</span><br>
+<span class="dim">[d]</span> Don't allow
+      </div>
+      <p style="font-size: 0.88rem;">Pick <span class="g">"always allow"</span> &mdash; the rule lands in <span class="b">.claude/settings.json</span>. Next time, no prompt.</p>
+      <p style="font-size: 0.85rem; margin-top: 0.5rem; color: var(--text-secondary);"><span class="tag tip">ALSO</span> Edit <span class="val">settings.json</span> by hand to seed the allowlist before you start, or to add <span class="r">deny</span> rules &mdash; those are click-once-never.</p>
+    </div>
+    <div>
+      <div class="code-block" style="font-size: 0.74rem;">
+<span class="comment"># .claude/settings.json &mdash; grown by clicking</span><br>
+<span class="keyword">{</span><br>
+&nbsp;&nbsp;<span class="flag">"permissions"</span>: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="flag">"allow"</span>: [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="val">"Read"</span>, <span class="val">"Edit"</span>, <span class="val">"Glob"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="val">"Bash(git status:*)"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="val">"Bash(uv run pytest:*)"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="val">"Bash(make:*)"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;],<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="flag">"deny"</span>: [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="val">"Bash(rm -rf:*)"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="val">"Write(./.env)"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="val">"Write(./.env.*)"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;]<br>
+&nbsp;&nbsp;}<br>
+<span class="keyword">}</span>
+      </div>
+      <p style="font-size: 0.78rem; margin-top: 0.4rem;"><span class="tag tip">TIP</span> The <span class="g">/fewer-permission-prompts</span> skill scans your transcripts for repeated approvals and proposes additions in bulk.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 11: SKILLS ══════ -->
+<div class="slide" data-slide="11">
+  <div class="prompt"><span class="arrow">></span> <span class="path">.claude/skills/</span></div>
+  <h2><span class="m">Skills</span> &mdash; Procedures Claude Loads on Demand</h2>
+  <p style="max-width: 78ch; margin-bottom: 0.6rem;">
+    A skill is a packaged procedure: a folder with a <span class="val">SKILL.md</span> describing <span class="g">when to use it</span> and how. Claude reads the descriptions of every available skill and <span class="g">loads the relevant one automatically</span> when your task matches.
+  </p>
+  <div class="two-col" style="align-items: start;">
+    <div>
+      <div class="code-block" style="font-size: 0.74rem;">
+<span class="comment"># .claude/skills/release-notes/SKILL.md</span><br>
+<span class="keyword">---</span><br>
+<span class="flag">name:</span> <span class="val">release-notes</span><br>
+<span class="flag">description:</span> <span class="val">Generate release notes</span><br>
+<span class="val">&nbsp;&nbsp;for a tag range. Use when the user</span><br>
+<span class="val">&nbsp;&nbsp;asks "what shipped" or for a changelog.</span><br>
+<span class="keyword">---</span><br>
+<br>
+<span class="string">## Process</span><br>
+<span class="string">1. Run scripts/collect-prs.sh</span><br>
+<span class="string">2. Group by area using AREAS.md</span><br>
+<span class="string">3. Output in TEMPLATE.md format</span>
+      </div>
+      <p style="font-size: 0.82rem; margin-top: 0.4rem; color: var(--text-secondary);">A skill folder ships scripts, templates, examples &mdash; whatever the procedure needs. The description is how Claude knows to reach for it.</p>
+    </div>
+    <div>
+      <h3 class="g">Skills vs Slash Commands</h3>
+      <ul class="cli-list" style="font-size: 0.9rem;">
+        <li><span class="p">/command</span> &mdash; explicit. You type it.</li>
+        <li><span class="m">Skill</span> &mdash; auto-discovered. Claude picks it up when the description matches your ask.</li>
+      </ul>
+      <div class="callout" style="margin-top: 0.8rem; border-left-color: var(--mauve);">
+        <p style="font-size: 0.92rem;"><span class="m">Rule of thumb:</span> cross-cutting procedure that should fire whenever it applies? <span class="m">Skill</span>. One-off prompt shortcut you want to type yourself? <span class="p">Slash command</span>.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 12: SUB-AGENTS INTRO ══════ -->
+<div class="slide" data-slide="12">
+  <div class="prompt"><span class="arrow">></span> <span class="path">sub-agents</span></div>
+  <h2><span class="b">Sub-Agents</span> &mdash; The First Move Up</h2>
+  <p style="max-width: 75ch; margin-bottom: 0.4rem;">
+    The simplest way out of the single-agent ceiling. The parent spawns specialized workers, each with its own context window. Hub-and-spoke, not mesh.
+  </p>
+  <div class="callout" style="margin: 0.4rem 0 0.8rem 0; max-width: 75ch; border-left-color: var(--yellow); padding: 0.5rem 1rem;">
+    <p style="font-size: 0.95rem;"><span class="y">Their job:</span> serve <em>your</em> current context window. They explore, summarize, or do a small piece of work &mdash; then hand the answer back.</p>
+  </div>
+  <div class="two-col" style="align-items: start;">
+    <div>
+      <div class="diagram" style="margin: 0;">
+        <div class="diagram-row" style="justify-content: center;">
+          <div class="box accent-blue" style="flex: 0 0 auto; min-width: 200px; text-align: center; padding: 0.5rem 0.8rem;">
+            <div class="box-title b">MAIN SESSION (YOU)</div>
+            <p style="font-size: 0.8rem;">orchestrates + receives results</p>
+          </div>
+        </div>
+        <div class="flow-arrow" style="font-size: 0.7rem;">|--------+--------+--------|</div>
+        <div class="diagram-row" style="justify-content: center; gap: 0.3rem;">
+          <div class="box accent-mauve" style="padding: 0.4rem 0.6rem;">
+            <div class="box-title m" style="font-size: 0.75rem;">[REVIEWER]</div>
+            <p style="font-size: 0.7rem;">Read-only critique</p>
+          </div>
+          <div class="box accent-peach" style="padding: 0.4rem 0.6rem;">
+            <div class="box-title p" style="font-size: 0.75rem;">[DOCUMENTER]</div>
+            <p style="font-size: 0.7rem;">Adds docstrings</p>
+          </div>
+          <div class="box accent-green" style="padding: 0.4rem 0.6rem;">
+            <div class="box-title g" style="font-size: 0.75rem;">[EXPLORE]</div>
+            <p style="font-size: 0.7rem;">Locates code</p>
+          </div>
+        </div>
+        <div class="flow-arrow" style="font-size: 0.65rem;">`-- results --> parent <-- results --'</div>
+      </div>
+      <p style="font-size: 0.8rem; margin-top: 0.6rem;"><span class="tag tip">KEY</span> Sub-agents <span class="y">cannot</span> message each other. The parent is the only hub.</p>
+    </div>
+    <div>
+      <h3 class="b">What You Get</h3>
+      <ul class="cli-list" style="font-size: 0.85rem;">
+        <li>Each agent gets a <span class="b">fresh context window</span> &mdash; no crosstalk</li>
+        <li>Tool restrictions <span class="g">enforce blast radius</span></li>
+        <li>Cheaper agents (haiku) for grunt work; opus for thinking</li>
+        <li>Parallel by default &mdash; faster than sequential</li>
+      </ul>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-top: 0.8rem;">
+        <div class="box accent-green" style="padding: 0.6rem 0.8rem;">
+          <div class="box-title g" style="font-size: 0.85rem;">USE FOR</div>
+          <p style="font-size: 0.78rem;"><span class="g">Bounded</span> tasks <span class="g">directly tied</span> to what you're working on. Review this file. Document these handlers. Find usages of X.</p>
+        </div>
+        <div class="box accent-red" style="padding: 0.6rem 0.8rem;">
+          <div class="box-title r">DON'T USE FOR</div>
+          <p style="font-size: 0.78rem;">Open-ended exploration. Whole-feature builds. Anything you can't describe in <span class="r">one sentence</span> with a clear stop condition.</p>
+        </div>
+      </div>
+      <p style="font-size: 0.82rem; margin-top: 0.5rem; color: var(--text-secondary);"><span class="tag tip">NEXT</span> Demo 1: a reviewer and a documenter, in parallel, on the same file.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 12: DEMO 1 ══════ -->
+<div class="slide" data-slide="13">
+  <div class="prompt"><span class="arrow">></span> <span class="path">demo-1</span></div>
+  <h2><span class="tag exercise" style="font-size: 0.8rem;">DEMO 1</span> <span class="b">Sub-Agents</span> in Parallel</h2>
+  <p style="max-width: 75ch; margin-bottom: 0.6rem; font-size: 0.95rem;">
+    Two parts. <span class="g">Part A:</span> make Claude build something tiny. <span class="b">Part B:</span> spin up two sub-agents to work on what Part A just produced &mdash; on the fly, no repo setup.
+  </p>
+  <div class="two-col">
+    <div>
+      <h3 class="g">Part A &mdash; Make a target</h3>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.3rem;">In any directory, open Claude:</p>
+      <div class="code-block" style="font-size: 0.78rem;">
+<span class="flag">$</span> <span class="cmd">claude</span><br>
+<br>
+<span class="string">Create a quick CLI utility in Python</span><br>
+<span class="string">that converts a text document to</span><br>
+<span class="string">lowercase. Call it lowerCaseMe.py.</span>
+      </div>
+      <p style="font-size: 0.82rem; margin-top: 0.4rem; color: var(--text-secondary);"><span class="tag tip">~30 sec</span> Skim the file when it's done. We're about to make agents work on it.</p>
+    </div>
+    <div>
+      <h3 class="b">Part B &mdash; Two agents, in parallel</h3>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.3rem;">Same Claude session, paste:</p>
+      <div class="code-block" style="font-size: 0.76rem;">
+<span class="string">Use two sub-agents on lowerCaseMe.py,</span><br>
+<span class="string">in parallel:</span><br>
+<span class="string"></span><br>
+<span class="string">1. A reviewer agent (sonnet, read-only:</span><br>
+<span class="string">   Read, Grep, Glob) -- find bugs, edge</span><br>
+<span class="string">   cases, and style problems.</span><br>
+<span class="string"></span><br>
+<span class="string">2. A documenter agent (haiku, can edit)</span><br>
+<span class="string">   -- add docstrings to public functions.</span>
+      </div>
+      <p style="font-size: 0.82rem; margin-top: 0.4rem; color: var(--text-secondary);"><span class="tag tip">WATCH FOR</span> Two agent boxes spinning at once. Reviewer can't write &mdash; that's the tools field. Documenter is on a cheaper model &mdash; that's the model field.</p>
+    </div>
+  </div>
+  <div class="callout" style="margin-top: 0.5rem; max-width: 80ch;">
+    <p style="font-size: 0.88rem;"><span class="g">The point:</span> sub-agents and their tool restrictions are something you control on the fly &mdash; on whatever code you happen to be working on. No repo setup, no scaffolding.</p>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 13: DEBRIEF 1 ══════ -->
+<div class="slide" data-slide="14">
+  <div class="prompt"><span class="arrow">></span> <span class="path">~/what-just-happened</span></div>
+  <h2>What Just <span class="g">Happened</span></h2>
+  <div class="two-col">
+    <div>
+      <h3 class="g">The Wins</h3>
+      <ul class="cli-list">
+        <li>Two fresh context windows &mdash; <span class="b">no crosstalk</span></li>
+        <li>The reviewer <span class="y">couldn't</span> write files &mdash; tool restrictions enforced</li>
+        <li>Wall-clock time: roughly <span class="m">half</span> the sequential version</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="y">The Takeaway</h3>
+      <p style="font-size: 0.95rem; margin-bottom: 0.6rem;">You have <span class="y">two ways</span> to spin up a sub-agent:</p>
+      <div style="display: grid; grid-template-columns: 1fr; gap: 0.6rem;">
+        <div class="box accent-blue" style="padding: 0.7rem 0.9rem;">
+          <div class="box-title b">ON THE FLY</div>
+          <p style="font-size: 0.85rem;">Like we just did. Describe the agent in the prompt &mdash; tools, model, job &mdash; and Claude spins it up for that turn. <span class="dim">Disposable, fast, zero setup.</span></p>
+        </div>
+        <div class="box accent-green" style="padding: 0.7rem 0.9rem;">
+          <div class="box-title g">PERSISTED IN <span class="val">.claude/agents/&lt;name&gt;.md</span></div>
+          <p style="font-size: 0.85rem;">Permanent, reusable, committed. Becomes part of the repo. The whole team gets the same specialists, the same way you do. <span class="dim">Build a library.</span></p>
+        </div>
+      </div>
+      <p style="font-size: 0.88rem; margin-top: 0.6rem; color: var(--text-secondary);"><span class="tag tip">RULE</span> Throwaway? Inline. Used twice? Persist it.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 14: CONTAINMENT IN THE AGENT DEFINITION ══════ -->
+<div class="slide" data-slide="15">
+  <div class="prompt"><span class="arrow">></span> <span class="path">~/containment</span></div>
+  <h2>Containment Lives in the <span class="g">Agent Definition</span></h2>
+  <p style="max-width: 78ch; margin-bottom: 0.6rem;">
+    Demo 1's <span class="b">reviewer.md</span> and <span class="p">documenter.md</span> were already containing the agent &mdash; through three frontmatter fields. Each one bounds a different kind of risk.
+  </p>
+  <div class="two-col" style="align-items: start;">
+    <div>
+      <div class="code-block" style="font-size: 0.78rem;">
+<span class="comment"># .claude/agents/reviewer.md</span><br>
+<span class="keyword">---</span><br>
+<span class="flag">name:</span> <span class="val">reviewer</span><br>
+<span class="flag">description:</span> <span class="val">read-only critique</span><br>
+<span class="flag">tools:</span> <span class="val">Read, Grep, Glob</span>&nbsp;&nbsp;<span class="comment"># &larr;</span><br>
+<span class="flag">model:</span> <span class="val">sonnet</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># &larr;</span><br>
+<span class="flag">isolation:</span> <span class="val">worktree</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># &larr;</span><br>
+<span class="keyword">---</span>
+      </div>
+      <p style="font-size: 0.85rem; margin-top: 0.5rem; color: var(--text-secondary);">Three fields. Three independent bounds on what the agent can do, how much it costs, and where its work lands.</p>
+    </div>
+    <div>
+      <div style="display: grid; grid-template-columns: 1fr; gap: 0.5rem;">
+        <div class="box accent-blue" style="padding: 0.6rem 0.9rem;">
+          <div class="box-title b"><span class="val">tools:</span> &mdash; capability surface</div>
+          <p style="font-size: 0.83rem;">Whitelist of what the agent can do. Read-only? Edit but no Bash? Closes off whole categories of failure before the agent runs.</p>
+        </div>
+        <div class="box accent-peach" style="padding: 0.6rem 0.9rem;">
+          <div class="box-title p"><span class="val">model:</span> &mdash; cost &amp; horsepower</div>
+          <p style="font-size: 0.83rem;">Match the model to the work. Haiku for grunt work, sonnet for code, opus for planning. Cheaper agents are also a containment lever &mdash; less rope to hang with.</p>
+        </div>
+        <div class="box accent-green" style="padding: 0.6rem 0.9rem;">
+          <div class="box-title g"><span class="val">isolation:</span> &mdash; filesystem blast radius</div>
+          <p style="font-size: 0.83rem;">Where the agent's writes land. <span class="val">worktree</span> means a separate checkout &mdash; mistakes stay on a throwaway branch, not your real tree.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p style="margin-top: 0.6rem; font-size: 0.88rem; color: var(--text-secondary); max-width: 80ch;">
+    The next three slides go deeper on the third one &mdash; worktrees, sandboxed bash, and containers &mdash; because that's where the most damage usually lives.
+  </p>
+</div>
+
+<!-- ══════ SLIDE 15: WORKTREES ══════ -->
+<div class="slide" data-slide="16">
+  <div class="prompt"><span class="arrow">></span> <span class="path">git-worktree</span></div>
+  <h2><span class="p">Git Worktrees</span> &mdash; The Cheap, Boring Primitive</h2>
+  <p style="max-width: 70ch; margin-bottom: 0.8rem;">
+    A worktree is a second checkout of the same repo on a different branch, in a separate directory. Built into git. Free. Most people forget it exists.
+  </p>
+  <div class="two-col" style="align-items: start;">
+    <div>
+      <h3 class="g">Why It Works for Agents</h3>
+      <ul class="cli-list" style="font-size: 0.88rem;">
+        <li>Each agent gets its own <span class="p">filesystem copy</span></li>
+        <li><span class="g">No file collisions</span> when two agents edit at once</li>
+        <li>Results merge back via <span class="b">git</span> &mdash; you review the diff</li>
+        <li>If an agent breaks something, <span class="r">only its worktree dies</span></li>
+        <li>Claude Code can manage worktrees automatically &mdash; <span class="val">isolation: worktree</span></li>
+      </ul>
+    </div>
+    <div>
+      <div class="code-block" style="font-size: 0.76rem;">
+<span class="comment"># worktree = separate checkout</span><br>
+<span class="flag">$</span> <span class="cmd">git worktree</span> <span class="val">add</span> <span class="val">../proj-coder</span> <span class="val">coder-branch</span><br>
+<span class="flag">$</span> <span class="cmd">git worktree</span> <span class="val">list</span><br>
+<span class="dim">/project          abc1234 [main]</span><br>
+<span class="dim">/project-coder    def5678 [coder-branch]</span><br>
+<span class="dim">/project-tester   ghi9012 [tester-branch]</span><br>
+<br>
+<span class="comment"># cleanup when done</span><br>
+<span class="flag">$</span> <span class="cmd">git worktree</span> <span class="val">remove</span> <span class="val">../proj-coder</span>
+      </div>
+      <p style="font-size: 0.8rem; margin-top: 0.4rem;"><span class="tag tip">RULE</span> If two agents touch the same repo at the same time, they need different worktrees. Full stop.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 16: AGENTIC SECURITY AWARENESS ══════ -->
+<div class="slide" data-slide="17">
+  <div class="prompt"><span class="arrow">></span> <span class="path">~/security-aside</span></div>
+  <h2>A Quick Word on <span class="r">Agentic Security</span></h2>
+  <p style="max-width: 78ch; margin-bottom: 0.8rem;">
+    Containment is local hygiene. There's a larger conversation about agentic and LLM-powered apps that's <span class="dim">out of scope today</span> &mdash; but you should know it exists before you ship anything that lets an agent touch the outside world.
+  </p>
+  <div class="two-col" style="align-items: start;">
+    <div>
+      <h3 class="r">The Lethal Trifecta</h3>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.4rem;">Simon Willison's framing for what makes an agent <em>dangerous</em>:</p>
+      <div style="display: grid; grid-template-columns: 1fr; gap: 0.4rem; margin-top: 0.3rem;">
+        <div class="box accent-red" style="padding: 0.5rem 0.8rem;">
+          <div class="box-title r" style="font-size: 0.85rem;">1. Access to private data</div>
+          <p style="font-size: 0.78rem;">Your repo. Your secrets. Your customers' info.</p>
+        </div>
+        <div class="box accent-peach" style="padding: 0.5rem 0.8rem;">
+          <div class="box-title p" style="font-size: 0.85rem;">2. Exposure to untrusted content</div>
+          <p style="font-size: 0.78rem;">A web page, an issue, an email body, a PDF.</p>
+        </div>
+        <div class="box accent-blue" style="padding: 0.5rem 0.8rem;">
+          <div class="box-title b" style="font-size: 0.85rem;">3. Ability to communicate externally</div>
+          <p style="font-size: 0.78rem;">Send mail, hit an API, write a file someone else can read.</p>
+        </div>
+      </div>
+      <p style="font-size: 0.78rem; margin-top: 0.4rem; color: var(--text-dim);">All three? An attacker can trick the agent into exfiltrating your data <em>through</em> the agent's own permissions.</p>
+    </div>
+    <div>
+      <h3 class="y">What This Means for You</h3>
+      <ul class="cli-list" style="font-size: 0.88rem;">
+        <li>Coding agents on a private repo with no internet? <span class="g">Lower risk.</span></li>
+        <li>An agent that browses the web <em>and</em> can edit your codebase? <span class="r">Trifecta &mdash; treat it like prod.</span></li>
+        <li>The prompt is code. <span class="b">Untrusted prompts are untrusted code.</span></li>
+      </ul>
+      <div class="callout" style="margin-top: 0.8rem; border-left-color: var(--mauve);">
+        <p style="font-size: 0.88rem;"><span class="m">Out of scope today.</span> If you're shipping agentic apps to users, the deeper version of this material lives in <span class="b">"Securing Your Agents"</span> &mdash; same Presentations repo.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 17: --dangerously-skip-permissions ══════ -->
+<div class="slide" data-slide="18">
+  <div class="prompt"><span class="arrow">></span> <span class="path">--dangerously-skip-permissions</span></div>
+  <h2>When <span class="r">--dangerously-skip-permissions</span> Is OK</h2>
+  <p style="max-width: 75ch; margin-bottom: 0.8rem;">
+    The flag does what it says. It is wildly useful. It is also how you wake up to a deleted branch, a broken database, or a $300 token bill. Use it &mdash; but only with a <span class="g">net</span>.
+  </p>
+  <div class="two-col" style="align-items: start;">
+    <div>
+      <h3 class="g">OK to Use When&hellip;</h3>
+      <ul class="cli-list" style="font-size: 0.88rem;">
+        <li>The agent is in a <span class="g">container</span> or VM</li>
+        <li>The agent is in a <span class="p">worktree</span> on a throwaway branch</li>
+        <li>You have <span class="b">deny</span> rules in <span class="val">settings.json</span> for the truly dangerous calls</li>
+        <li>You're <span class="m">watching</span> &mdash; or have a stop hook</li>
+        <li>Token spend is bounded by a quota or budget alert</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="r">Not OK When&hellip;</h3>
+      <ul class="cli-list" style="font-size: 0.88rem;">
+        <li>You're on your <span class="r">primary working tree</span></li>
+        <li>The agent has access to <span class="r">prod credentials</span> or your real shell</li>
+        <li>The agent can <span class="y">push</span>, <span class="y">deploy</span>, or call paid APIs without limit</li>
+        <li>You're going to bed</li>
+      </ul>
+      <div class="callout" style="margin-top: 0.6rem; border-left-color: var(--red);">
+        <p style="font-size: 0.88rem;"><span class="r">Mental model:</span> the flag isn't "skip safety." It's "I've moved the safety to a different layer." If you haven't, don't pull it.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 18: CONTROLLER PATTERN INTRO ══════ -->
+<div class="slide" data-slide="19">
+  <div class="prompt"><span class="arrow">></span> <span class="path">controller-pattern</span></div>
+  <h2>The <span class="p">Controller</span> Pattern</h2>
+  <p style="max-width: 78ch; margin-bottom: 0.8rem;">
+    The same three-move shape, scaled up. <span class="p">Plan</span> &rarr; <span class="b">Execute</span> &rarr; <span class="g">Review</span> &mdash; with you as the controller, and as much (or as little) parallelism in the middle as the work needs.
+  </p>
+  <div class="two-col" style="align-items: start;">
+    <div>
+      <h3>The Shape</h3>
+      <div class="diagram" style="margin: 0;">
+        <div class="diagram-row" style="justify-content: center;">
+          <div class="box accent-peach" style="flex: 0 0 auto; text-align: center;">
+            <div class="box-title p">CONTROLLER (YOU)</div>
+            <p style="font-size: 0.72rem;">owns the plan, merges the work</p>
+          </div>
+        </div>
+        <div class="flow-arrow">|--- routes work ---|</div>
+        <div class="diagram-row" style="justify-content: center; gap: 0.4rem;">
+          <div class="box accent-peach" style="padding: 0.4rem 0.6rem; text-align: center;">
+            <div class="box-title p" style="font-size: 0.8rem;">1. PLAN</div>
+            <p style="font-size: 0.7rem;">PLAN.md, approved</p>
+          </div>
+          <div class="box accent-blue" style="padding: 0.4rem 0.6rem; text-align: center;">
+            <div class="box-title b" style="font-size: 0.8rem;">2. EXECUTE</div>
+            <p style="font-size: 0.7rem;">1 agent or N, in worktrees</p>
+          </div>
+          <div class="box accent-green" style="padding: 0.4rem 0.6rem; text-align: center;">
+            <div class="box-title g" style="font-size: 0.8rem;">3. REVIEW</div>
+            <p style="font-size: 0.7rem;">REVIEW.md vs the plan</p>
+          </div>
+        </div>
+        <div class="flow-arrow">`-- artifacts you can read --'</div>
+      </div>
+      <p style="font-size: 0.82rem; margin-top: 0.6rem; color: var(--text-secondary);"><span class="tag tip">KEY</span> The plan and the review are <span class="b">documents</span>. They survive the conversation. They're reviewable, editable, and version-controllable.</p>
+    </div>
+    <div>
+      <h3>Why It Wins</h3>
+      <ul class="cli-list" style="font-size: 0.88rem;">
+        <li><span class="p">PLAN.md</span> &mdash; you steer before tokens get burned on the wrong path</li>
+        <li><span class="b">Execute step</span> scales: one agent for small work, sub-agents in parallel worktrees for big work</li>
+        <li><span class="g">REVIEW.md</span> &mdash; Claude is held to its own plan. Deviations get called out, not buried</li>
+        <li>Failure stays <span class="r">scoped</span> &mdash; you find it in writing, before merge</li>
+      </ul>
+      <div class="callout" style="margin-top: 0.6rem;">
+        <p style="font-size: 0.88rem;"><span class="g">When to reach for it:</span> any task where you'd normally regret what Claude did before you could intervene. Feature-from-spec, multi-file refactors, non-trivial bug fixes.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 19: DEMO 2 ══════ -->
+<div class="slide" data-slide="20">
+  <div class="prompt"><span class="arrow">></span> <span class="path">demo-2</span></div>
+  <h2><span class="tag exercise" style="font-size: 0.8rem;">DEMO 2</span> <span class="p">Plan</span> &rarr; <span class="b">Execute</span> &rarr; <span class="g">Review</span></h2>
+  <p style="max-width: 80ch; margin-bottom: 0.5rem; font-size: 0.95rem;">
+    The controller pattern's real value isn't the agents &mdash; it's the <span class="y">discipline</span>. Force Claude to write a plan as a document <span class="g">before</span> writing code. You read it. You adjust. <em>Then</em> it builds. <em>Then</em> it reviews itself against the plan.
+  </p>
+  <div class="two-col">
+    <div>
+      <h3 class="y">Why This Wins</h3>
+      <div style="display: grid; grid-template-columns: 1fr; gap: 0.4rem;">
+        <div class="box accent-peach" style="padding: 0.5rem 0.8rem;">
+          <div class="box-title p" style="font-size: 0.85rem;">1. PLAN <span class="dim" style="font-size: 0.85em;">&rarr; PLAN.md</span></div>
+          <p style="font-size: 0.78rem;">Claude commits to an approach in <span class="b">writing</span>. You catch wrong assumptions before tokens are spent.</p>
+        </div>
+        <div class="box accent-blue" style="padding: 0.5rem 0.8rem;">
+          <div class="box-title b" style="font-size: 0.85rem;">2. EXECUTE</div>
+          <p style="font-size: 0.78rem;">Implement the approved plan. Tests as it goes. One agent or many, in parallel worktrees &mdash; doesn't matter, the plan is the spine.</p>
+        </div>
+        <div class="box accent-green" style="padding: 0.5rem 0.8rem;">
+          <div class="box-title g" style="font-size: 0.85rem;">3. REVIEW <span class="dim" style="font-size: 0.85em;">&rarr; REVIEW.md</span></div>
+          <p style="font-size: 0.78rem;">Diff the result against the plan. Anything skipped, added, or changed gets called out &mdash; on the record.</p>
+        </div>
+      </div>
+      <p style="font-size: 0.83rem; margin-top: 0.4rem; color: var(--text-secondary);"><span class="tag tip">THE INSIGHT</span> A bad plan is cheap to fix. A bad implementation is expensive to throw away.</p>
+    </div>
+    <div>
+      <h3>The Prompt</h3>
+      <p style="font-size: 0.83rem; color: var(--text-secondary); margin-bottom: 0.3rem;">Use the <span class="val">lowerCaseMe.py</span> from Demo 1. Paste:</p>
+      <div class="code-block" style="font-size: 0.74rem;">
+<span class="string">Extend lowerCaseMe.py into a multi-mode</span><br>
+<span class="string">text transformer with --upper, --snake,</span><br>
+<span class="string">--kebab, and --leet flags. Add tests.</span><br>
+<span class="string"></span><br>
+<span class="string">But work in three steps:</span><br>
+<span class="string"></span><br>
+<span class="string">1. PLAN: Write PLAN.md -- the modes,</span><br>
+<span class="string">   ordering, file/stdin handling, edge</span><br>
+<span class="string">   cases, and the test cases. Stop and</span><br>
+<span class="string">   wait for me to approve.</span><br>
+<span class="string"></span><br>
+<span class="string">2. EXECUTE: Once I approve, implement</span><br>
+<span class="string">   the plan. Run the tests as you go.</span><br>
+<span class="string"></span><br>
+<span class="string">3. REVIEW: Write REVIEW.md -- diff the</span><br>
+<span class="string">   result against the plan, list any</span><br>
+<span class="string">   deviations, and rate your own work.</span>
+      </div>
+      <p style="font-size: 0.8rem; margin-top: 0.4rem; color: var(--text-secondary);"><span class="tag tip">WATCH FOR</span> Claude stops before code &mdash; the plan is the first artifact. <span class="g">You</span> get to steer.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 20: DEBRIEF 2 ══════ -->
+<div class="slide" data-slide="21">
+  <div class="prompt"><span class="arrow">></span> <span class="path">~/what-just-happened</span></div>
+  <h2>What the <span class="p">Plan</span> &rarr; <span class="b">Execute</span> &rarr; <span class="g">Review</span> Loop Bought You</h2>
+  <div class="two-col">
+    <div>
+      <h3 class="g">The Wins</h3>
+      <ul class="cli-list">
+        <li>You got a <span class="p">PLAN.md</span> to read <em>before</em> any code &mdash; the cheap moment to redirect Claude</li>
+        <li>The plan was <span class="b">concrete</span>: file names, functions, edge cases, test cases &mdash; not vibes</li>
+        <li><span class="g">REVIEW.md</span> made deviations visible. Anything Claude skipped or improvised got logged, not buried in the diff</li>
+        <li>The artifacts <span class="m">survive the session</span>. Git-diffable. Reviewable by a teammate.</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="y">When to Reach for This</h3>
+      <ul class="cli-list" style="font-size: 0.92rem;">
+        <li>Anything you'd hate to throw away &mdash; refactors, multi-file changes, non-trivial bug fixes</li>
+        <li>Work where you want a <span class="b">paper trail</span> beyond the chat transcript</li>
+        <li>Tasks big enough that one agent might lose the thread halfway through</li>
+      </ul>
+      <h3 class="r" style="margin-top: 0.7rem;">Skip It When&hellip;</h3>
+      <ul class="cli-list" style="font-size: 0.88rem;">
+        <li>The change is one line in one file &mdash; planning ceremony adds friction, not value</li>
+        <li>You're exploring &mdash; the goal is learning the codebase, not shipping a deliverable</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 21: AGENT TEAMS INTRO ══════ -->
+<div class="slide" data-slide="22">
+  <div class="prompt"><span class="arrow">></span> <span class="path">agent-teams</span></div>
+  <h2><span class="g">Agent Teams</span> &mdash; Peers Who Disagree <span class="tag exp">EXPERIMENTAL</span></h2>
+  <p style="max-width: 78ch; margin-bottom: 0.6rem;">
+    Multiple Claude sessions in tmux that <span class="g">talk to each other directly</span> &mdash; not through you. The unique value isn't parallelism (sub-agents already do that). It's <span class="y">conflict</span>: agents with different roles, different stances, pushing back on each other.
+  </p>
+  <div class="two-col" style="align-items: start;">
+    <div>
+      <h3 class="g" style="font-size: 0.95rem;">What Makes a Team a <em>Team</em></h3>
+      <ul class="cli-list" style="font-size: 0.86rem;">
+        <li><span class="b">Conversational</span> &mdash; back-and-forth, not request/response</li>
+        <li><span class="m">Role-oriented</span> &mdash; each agent has a stance, not just a task</li>
+        <li><span class="r">Oppositional</span> &mdash; they're allowed to disagree, and the prompt encourages it</li>
+        <li><span class="y">Autonomous</span> &mdash; once you kick them off, they self-coordinate</li>
+      </ul>
+      <div class="callout" style="margin-top: 0.6rem; border-left-color: var(--green);">
+        <p style="font-size: 0.86rem;"><span class="g">The thing a single agent can't do for itself:</span> argue with itself convincingly. Two agents with sharp, opposing roles will surface tradeoffs a solo agent waves past.</p>
+      </div>
+    </div>
+    <div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; max-width: 380px; position: relative; margin: 0 auto;">
+        <svg style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;" preserveAspectRatio="none">
+          <line x1="30%" y1="28%" x2="70%" y2="28%" stroke="#a6e3a1" stroke-width="2" stroke-dasharray="6,4" opacity="0.7"/>
+          <line x1="30%" y1="72%" x2="70%" y2="72%" stroke="#a6e3a1" stroke-width="2" stroke-dasharray="6,4" opacity="0.7"/>
+          <line x1="28%" y1="35%" x2="28%" y2="65%" stroke="#a6e3a1" stroke-width="2" stroke-dasharray="6,4" opacity="0.7"/>
+          <line x1="72%" y1="35%" x2="72%" y2="65%" stroke="#a6e3a1" stroke-width="2" stroke-dasharray="6,4" opacity="0.7"/>
+          <line x1="33%" y1="35%" x2="67%" y2="65%" stroke="#a6e3a1" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.5"/>
+          <line x1="67%" y1="35%" x2="33%" y2="65%" stroke="#a6e3a1" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.5"/>
+        </svg>
+        <div class="box accent-green" style="position: relative; z-index: 2; text-align: center; padding: 0.6rem;">
+          <div class="box-title g" style="font-size: 0.78rem;">MINIMALIST</div>
+          <p style="font-size: 0.7rem;">"simplest wins"</p>
+        </div>
+        <div class="box accent-mauve" style="position: relative; z-index: 2; text-align: center; padding: 0.6rem;">
+          <div class="box-title m" style="font-size: 0.78rem;">DEFENSIVE</div>
+          <p style="font-size: 0.7rem;">"handle the edges"</p>
+        </div>
+        <div class="box accent-peach" style="position: relative; z-index: 2; text-align: center; padding: 0.6rem;">
+          <div class="box-title p" style="font-size: 0.78rem;">PERF HAWK</div>
+          <p style="font-size: 0.7rem;">"runtime is everything"</p>
+        </div>
+        <div class="box accent-blue" style="position: relative; z-index: 2; text-align: center; padding: 0.6rem;">
+          <div class="box-title b" style="font-size: 0.78rem;">YOU</div>
+          <p style="font-size: 0.7rem;">"settle their fight"</p>
+        </div>
+      </div>
+      <p style="font-size: 0.8rem; margin-top: 0.5rem; color: var(--text-secondary); text-align: center;">A team is a <span class="g">peer mesh</span> &mdash; every line is a real channel.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 22: DEMO 3 ══════ -->
+<div class="slide" data-slide="23">
+  <div class="prompt"><span class="arrow">></span> <span class="path">demo-3</span></div>
+  <h2><span class="tag exercise" style="font-size: 0.8rem;">DEMO 3</span> The <span class="g">Architecture Debate</span> <span class="dim" style="font-size: 0.55em; font-weight: 400;">(team-shaped exercise)</span></h2>
+  <p style="max-width: 82ch; margin-bottom: 0.5rem; font-size: 0.93rem;">
+    Three agents. Three personalities. One small problem. They <span class="y">argue it out</span> and produce a single recommendation &mdash; the disagreement is the feature. Coordination is via <span class="b">shared filesystem</span> (each agent writes to its worktree, reads the others'); see the next slide for what real agent teams add.
+  </p>
+  <div class="two-col">
+    <div>
+      <h3>The Setup <span class="dim" style="font-size: 0.7em;">(one command)</span></h3>
+      <div class="code-block" style="font-size: 0.78rem;">
+<span class="flag">$</span> <span class="cmd">./scripts/demo3-debate.sh</span>
+      </div>
+      <p style="font-size: 0.82rem; margin-top: 0.4rem; color: var(--text-secondary);">The script does everything: three worktrees, a 3-pane tmux session, Claude in each pane with its persona pre-loaded, mouse mode on. Then it auto-fires the kickoff in all three panes after the personas ack.</p>
+      <h3 class="m" style="margin-top: 0.6rem; font-size: 0.95rem;">The Personas (one per pane)</h3>
+      <ul class="cli-list" style="font-size: 0.82rem;">
+        <li><span class="g">MINIMALIST</span> &mdash; "the simplest correct implementation always wins. Lines of code are a cost."</li>
+        <li><span class="m">DEFENSIVE</span> &mdash; "handle every edge case up front. Silent bugs are the worst bugs."</li>
+        <li><span class="p">PERF HAWK</span> &mdash; "runtime and memory matter most. Don't ship anything you haven't reasoned about."</li>
+      </ul>
+      <p style="font-size: 0.78rem; margin-top: 0.4rem; color: var(--text-dim);"><span class="tag tip">CLEANUP</span> <span class="cmd">./scripts/demo3-debate.sh</span> <span class="flag">--cleanup</span></p>
+    </div>
+    <div>
+      <h3>The Kickoff <span class="dim" style="font-size: 0.7em;">(auto-fired by the script)</span></h3>
+      <div class="code-block" style="font-size: 0.74rem;">
+<span class="string">DEBATE BEGINS. Implement</span><br>
+<span class="string">  dedupe(items: list[str]) -> list[str]</span><br>
+<span class="string">case-insensitive, first-seen order.</span><br>
+<br>
+<span class="string">(1) Write your IMPL.py in your worktree</span><br>
+<span class="string">    with role-flavored comments.</span><br>
+<span class="string">(2) Read the others' IMPL.py files.</span><br>
+<span class="string">(3) Write CRITIQUE.md -- your sharpest</span><br>
+<span class="string">    objections to each.</span><br>
+<span class="string">(4) Minimalist: write PROPOSAL.md</span><br>
+<span class="string">    synthesizing the team. Others:</span><br>
+<span class="string">    append agreement or dissent.</span>
+      </div>
+      <p style="font-size: 0.8rem; margin-top: 0.4rem;"><span class="tag tip">WATCH FOR</span> Real pushback in the CRITIQUE files. "I disagree because&hellip;" is the moment that justifies the tmux setup.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 24: HONEST DISCLOSURE — TEAM-SHAPED vs REAL TEAMS ══════ -->
+<div class="slide" data-slide="24">
+  <div class="prompt"><span class="arrow">></span> <span class="path">~/honest-disclosure</span></div>
+  <h2><span class="g">Honest Disclosure</span> &mdash; That Wasn't a Real Agent Team</h2>
+  <p style="max-width: 80ch; margin-bottom: 0.6rem;">
+    What you just watched was a <span class="y">team-shaped exercise</span>: three independent Claude sessions coordinating through the <span class="b">filesystem</span>. Real agent teams (the experimental Claude Code feature) add <span class="g">native peer messaging</span> on top of that pattern. Same shape, different plumbing.
+  </p>
+  <div class="compare-grid" style="margin: 0.6rem 0;">
+    <div class="compare-col">
+      <div class="compare-header" style="font-size: 0.95rem; padding: 0.6rem 1rem;">What the demo did <span class="dim" style="font-size: 0.85em;">(filesystem-coordinated)</span></div>
+      <div class="compare-body" style="padding: 0.7rem 1rem;">
+        <div class="compare-item">Three independent <span class="b">claude</span> sessions, no shared channel</div>
+        <div class="compare-item">Each agent in its own <span class="p">worktree</span></div>
+        <div class="compare-item">Coordination by <span class="g">writing &amp; reading files</span> across worktrees</div>
+        <div class="compare-item">Agents only "hear" each other when they read disk</div>
+        <div class="compare-item"><span class="g">Works on any Claude Code version</span> &mdash; deterministic, demoable</div>
+      </div>
+    </div>
+    <div class="compare-col">
+      <div class="compare-header" style="font-size: 0.95rem; padding: 0.6rem 1rem;">What real agent teams add <span class="dim" style="font-size: 0.85em;">(experimental)</span></div>
+      <div class="compare-body" style="padding: 0.7rem 1rem;">
+        <div class="compare-item"><span class="g">@-mention</span> a teammate &mdash; direct message, not a file</div>
+        <div class="compare-item">Shared team channel &mdash; broadcasts to the group</div>
+        <div class="compare-item">Recipient sees messages <span class="b">in conversation</span>, mid-turn</div>
+        <div class="compare-item">More fluid back-and-forth, less polling</div>
+        <div class="compare-item"><span class="r">Newer, more variable</span> &mdash; not what I'd risk on stage yet</div>
+      </div>
+    </div>
+  </div>
+  <div class="callout" style="margin-top: 0.6rem; max-width: 82ch; border-left-color: var(--yellow);">
+    <p style="font-size: 0.9rem;"><span class="y">The pattern is the same in both:</span> sharp opposing roles, structured disagreement, a converged artifact. The plumbing changes; the value of letting agents <em>argue</em> doesn't.</p>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 25: SUB-AGENTS vs TEAMS DECISION ══════ -->
+<div class="slide" data-slide="25">
+  <div class="prompt"><span class="arrow">></span> <span class="path">~/which-pattern</span></div>
+  <h2>Sub-Agents <span class="dim">vs</span> Teams <span class="dim">vs</span> Single Agent</h2>
+  <div style="margin-top: 0.5rem;">
+    <div class="code-block" style="font-size: clamp(0.72rem, 1.15vw, 0.95rem); line-height: 1.9; max-width: 720px;">
+<span class="y">START</span>  Is the task a single, focused change?<br>
+<span class="dim">&nbsp;&nbsp;|</span><br>
+<span class="dim">&nbsp;&nbsp;+--</span> <span class="g">YES</span> &rarr; <span class="b">Single Agent</span>  <span class="dim">(most tasks &mdash; don't over-engineer)</span><br>
+<span class="dim">&nbsp;&nbsp;|</span><br>
+<span class="dim">&nbsp;&nbsp;+--</span> <span class="r">NO</span>  &rarr; Do you need <em>disagreement</em>, or just parallelism?<br>
+<span class="dim">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</span><br>
+<span class="dim">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+--</span> <span class="b">PARALLELISM</span> &rarr; <span class="b">Sub-Agents</span> + Plan&rarr;Execute&rarr;Review<br>
+<span class="dim">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</span><br>
+<span class="dim">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+--</span> <span class="g">DISAGREEMENT</span> &rarr; <span class="g">Agent Teams</span>  <span class="dim">(peer mesh in tmux)</span><br>
+<span class="dim">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="dim">debates, negotiations, adversarial review</span><br>
+<span class="dim">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</span><br>
+<span class="dim">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+--</span> <span class="r">NEITHER</span> &rarr; Break it down further, then ask again
+    </div>
+    <p style="margin-top: 1rem; font-size: 0.95rem; color: var(--text-secondary); max-width: 70ch;">
+      <span class="tag tip">DEFAULT</span> When in doubt, single agent. Most tasks don't need parallelism &mdash; they need a clearer prompt.
+    </p>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 24: DARK FACTORY INTRO ══════ -->
+<div class="slide" data-slide="26">
+  <div class="prompt"><span class="arrow">></span> <span class="path">~/the-dark-factory</span></div>
+  <h2><span class="m">L5</span> &mdash; The Dark Factory</h2>
+  <p style="max-width: 75ch; margin-bottom: 1rem;">
+    A factory floor that runs without lights, without humans, often through the night. Borrowed by Steve Yegge for the agentic version: <span class="m">no controller, no tmux, no orchestration</span>. You write a prompt; the platform writes the code.
+  </p>
+  <div class="two-col" style="align-items: start;">
+    <div>
+      <h3 class="m">What Changes at L5</h3>
+      <ul class="cli-list" style="font-size: 0.92rem;">
+        <li>You stop being the <span class="b">controller</span></li>
+        <li>The harness <span class="g">picks the agents</span> for you</li>
+        <li>The harness <span class="p">picks the architecture</span> for you</li>
+        <li>You're now the <span class="y">customer</span>, not the engineer</li>
+        <li>Output: a deployable product, not a diff</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="r">What You Give Up</h3>
+      <ul class="cli-list" style="font-size: 0.92rem;">
+        <li><span class="r">Legibility</span> &mdash; you don't see the team structure</li>
+        <li><span class="r">Steerability</span> &mdash; less mid-flight course correction</li>
+        <li><span class="r">Cost predictability</span> &mdash; tokens go up fast</li>
+        <li><span class="r">Trust</span> &mdash; you have to take the output on faith, or test it</li>
+      </ul>
+      <div class="callout" style="margin-top: 0.6rem; border-left-color: var(--mauve);">
+        <p style="font-size: 0.9rem;"><span class="m">The bargain:</span> trade control for speed. Sometimes that's the right trade. Sometimes it isn't.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 25: GASTOWN CAPSTONE DEMO ══════ -->
+<div class="slide" data-slide="27">
+  <div class="prompt"><span class="arrow">></span> <span class="path">demo-4 / gastown</span></div>
+  <h2><span class="tag exercise" style="font-size: 0.8rem;">CAPSTONE</span> <span class="m">Gastown</span> Builds Bingo</h2>
+  <p style="max-width: 75ch; margin-bottom: 0.8rem;">
+    One paragraph in. A working web app out. While you watch, scan the QR &mdash; the same prompt ran clean last night, and you're about to play <span class="y">Conference Talk Bingo</span> live.
+  </p>
+  <div class="two-col" style="align-items: start;">
+    <div>
+      <h3 class="m">The Spec (in one paragraph)</h3>
+      <div class="code-block" style="font-size: 0.74rem;">
+<span class="string">Build a single-page app: Conference</span><br>
+<span class="string">Talk Bingo. 5x5 grid of buzzwords,</span><br>
+<span class="string">click to mark, detect 5-in-a-row,</span><br>
+<span class="string">"New Card" reshuffles. Mobile-first,</span><br>
+<span class="string">dark mode, JetBrains Mono. Vanilla</span><br>
+<span class="string">JS, single static HTML file.</span><br>
+<br>
+<span class="string">Words: agentic, MCP, sub-agent,</span><br>
+<span class="string">harness, vibe coding, dark factory,</span><br>
+<span class="string">worktree, sandbox, CLAUDE.md, ...</span>
+      </div>
+      <p style="font-size: 0.78rem; margin-top: 0.4rem; color: var(--text-secondary);">Full spec, buzzword list, and recovery plan: <span class="b">GASTOWN-DEMO.md</span> in the take-home repo.</p>
+    </div>
+    <div>
+      <h3 class="g">Watch For</h3>
+      <ul class="cli-list" style="font-size: 0.88rem;">
+        <li>Agents spinning up I never <span class="m">named</span></li>
+        <li>A file tree growing in <span class="b">parallel branches</span></li>
+        <li>Tests, formatting, deploy &mdash; <span class="g">unprompted</span></li>
+        <li>Time-to-product measured in <span class="y">minutes</span></li>
+      </ul>
+      <div class="callout" style="margin-top: 0.6rem; border-left-color: var(--peach);">
+        <p style="font-size: 0.85rem;"><span class="p">Play along:</span> QR on the closing slide opens the same Bingo card I'm building, pre-deployed last night. Mark off the buzzwords as I say them.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 26: COSTS & TRADEOFFS ══════ -->
+<div class="slide" data-slide="28">
+  <div class="prompt"><span class="arrow">></span> <span class="path">~/the-bill</span></div>
+  <h2>The <span class="y">Bill</span> Comes Due</h2>
+  <p style="max-width: 75ch; margin-bottom: 0.8rem;">
+    Token spend looks small until it isn't. As you climb the ladder, the cost shape changes &mdash; and <span class="r">"Claude is cheap"</span> stops being true.
+  </p>
+  <div class="diagram">
+    <div class="diagram-row">
+      <div class="box accent-blue">
+        <div class="box-title b">L2 &mdash; Vibe Coding</div>
+        <p style="font-size: 0.85rem;">~<span class="g">$1-5</span> per session<br><span class="dim">One agent, one task, you in the loop</span></p>
+      </div>
+      <div class="box accent-peach">
+        <div class="box-title p">L3-L4 &mdash; Orchestration</div>
+        <p style="font-size: 0.85rem;">~<span class="y">$10-50</span> per feature<br><span class="dim">N agents, parallel runs, retries</span></p>
+      </div>
+      <div class="box accent-mauve">
+        <div class="box-title m">L5 &mdash; Dark Factory</div>
+        <p style="font-size: 0.85rem;">~<span class="r">$50-500+</span> per build<br><span class="dim">The platform burns aggressively</span></p>
+      </div>
+    </div>
+  </div>
+  <div class="two-col" style="align-items: start; margin-top: 0.6rem;">
+    <div>
+      <h3 class="g">Saves What</h3>
+      <ul class="cli-list" style="font-size: 0.88rem;">
+        <li>Your <span class="g">time</span> &mdash; the only non-renewable resource</li>
+        <li>Context-switching cost between tasks</li>
+        <li>"Boring" code (boilerplate, tests, docs)</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="r">Spends What</h3>
+      <ul class="cli-list" style="font-size: 0.88rem;">
+        <li><span class="r">Tokens</span> &mdash; sometimes 10-100x a single agent</li>
+        <li><span class="r">Trust</span> &mdash; you read fewer lines of what shipped</li>
+        <li><span class="r">Skill atrophy</span> &mdash; junior devs need a path that isn't this</li>
+      </ul>
+    </div>
+  </div>
+  <p style="font-size: 0.85rem; margin-top: 0.6rem; color: var(--text-secondary);"><span class="tag tip">RULE</span> Set a budget alert. Track per-feature cost. The minute orchestration stops paying back, drop a level.</p>
+</div>
+
+<!-- ══════ SLIDE 28: OPEN MODELS & OPEN HARNESSES ══════ -->
+<div class="slide" data-slide="29">
+  <div class="prompt"><span class="arrow">></span> <span class="path">~/off-the-beaten-path</span></div>
+  <h2>Open Harnesses, <span class="g">Open Weights</span></h2>
+  <p style="max-width: 78ch; margin-bottom: 0.6rem;">
+    The bill on the last slide assumed Claude. It doesn't have to. The harness pattern is portable &mdash; same agents, same worktrees, same <span class="val">CLAUDE.md</span>-style brief &mdash; against open-weight models you can run yourself or rent for cents.
+  </p>
+  <div class="two-col" style="align-items: start;">
+    <div>
+      <h3 class="b">The Open Stack</h3>
+      <ul class="cli-list" style="font-size: 0.88rem;">
+        <li><span class="b">opencode</span> &mdash; OSS terminal CLI, similar shape to Claude Code, <span class="g">bring your own model</span></li>
+        <li><span class="m">Qwen3-Coder</span> &mdash; open-weight from Alibaba; strong on coding + agentic flows; long context</li>
+        <li>Run via <span class="val">ollama</span> / <span class="val">vLLM</span> on your own GPU, or via cheap API providers (OpenRouter, Together, DeepInfra)</li>
+      </ul>
+      <div class="code-block" style="font-size: 0.74rem; margin-top: 0.5rem;">
+<span class="comment"># local: zero per-token cost</span><br>
+<span class="flag">$</span> <span class="cmd">ollama pull</span> <span class="val">qwen2.5-coder:32b</span><br>
+<span class="flag">$</span> <span class="cmd">opencode</span> <span class="flag">--model</span> <span class="val">ollama/qwen2.5-coder:32b</span><br>
+<br>
+<span class="comment"># or via API: pennies per session</span><br>
+<span class="flag">$</span> <span class="cmd">opencode</span> <span class="flag">--model</span> <span class="val">openrouter/qwen3-coder</span>
+      </div>
+    </div>
+    <div>
+      <h3 class="g">Why It Matters</h3>
+      <ul class="cli-list" style="font-size: 0.85rem;">
+        <li><span class="g">Cost</span> &mdash; pennies per session via API, or zero on your own hardware</li>
+        <li><span class="b">Sovereignty</span> &mdash; code never leaves your machine</li>
+        <li><span class="m">Tunable</span> &mdash; fine-tune the model on your codebase if you want</li>
+      </ul>
+      <h3 class="r" style="margin-top: 0.6rem;">Honest Tradeoffs</h3>
+      <ul class="cli-list" style="font-size: 0.85rem;">
+        <li>Frontier capability still favors closed models &mdash; gap is narrowing, not closed</li>
+        <li>Harness ecosystem is younger; rougher edges, fewer skills</li>
+        <li>More setup, more opinion required &mdash; you become the platform engineer</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout" style="margin-top: 0.5rem; max-width: 80ch;">
+    <p style="font-size: 0.9rem;"><span class="g">The takeaway:</span> the patterns from this hour &mdash; sub-agents, controllers, worktrees, harness layers &mdash; aren't Claude-specific. They're the shape of agentic coding, full stop. Take them with you, whatever stack you land on.</p>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 29: CHEAT SHEET ══════ -->
+<div class="slide" data-slide="30">
+  <div class="prompt"><span class="arrow">></span> <span class="path">cheat-sheet</span></div>
+  <h2>The <span class="l">Cheat Sheet</span></h2>
+  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+    <div>
+      <h3 class="b" style="font-size: 0.95rem;">Agent Definition</h3>
+      <div class="code-block" style="font-size: 0.7rem; padding: 0.8rem 1rem;">
+<span class="comment"># .claude/agents/x.md</span><br>
+<span class="keyword">---</span><br>
+<span class="flag">name:</span> <span class="val">reviewer</span><br>
+<span class="flag">description:</span> <span class="val">when to use</span><br>
+<span class="flag">tools:</span> <span class="val">Read, Grep</span><br>
+<span class="flag">model:</span> <span class="val">sonnet</span><br>
+<span class="flag">isolation:</span> <span class="val">worktree</span><br>
+<span class="keyword">---</span><br>
+<span class="string">system prompt&hellip;</span>
+      </div>
+      <h3 class="g" style="font-size: 0.95rem; margin-top: 0.6rem;">CLAUDE.md</h3>
+      <div class="code-block" style="font-size: 0.7rem; padding: 0.8rem 1rem;">
+<span class="comment"># project/CLAUDE.md</span><br>
+<span class="keyword">## Conventions</span><br>
+<span class="string">- We use uv, not pip</span><br>
+<span class="keyword">## Don't</span><br>
+<span class="string">- Touch migrations/</span>
+      </div>
+    </div>
+    <div>
+      <h3 class="p" style="font-size: 0.95rem;">Worktrees + tmux</h3>
+      <div class="code-block" style="font-size: 0.7rem; padding: 0.8rem 1rem;">
+<span class="flag">$</span> <span class="cmd">claude</span> <span class="flag">--worktree</span> <span class="val">name</span><br>
+<span class="flag">$</span> <span class="cmd">git worktree list</span><br>
+<span class="flag">$</span> <span class="cmd">git worktree remove</span><br>
+<br>
+<span class="comment"># tmux</span><br>
+<span class="flag">$</span> <span class="cmd">tmux new</span> <span class="flag">-s</span> <span class="val">team</span><br>
+<span class="dim">Ctrl-b %</span>  <span class="comment"># vsplit</span><br>
+<span class="dim">Ctrl-b "</span>  <span class="comment"># hsplit</span><br>
+<span class="dim">Ctrl-b d</span>  <span class="comment"># detach</span>
+      </div>
+      <h3 class="y" style="font-size: 0.95rem; margin-top: 0.6rem;">Model Routing</h3>
+      <div class="code-block" style="font-size: 0.7rem; padding: 0.8rem 1rem;">
+<span class="val">opus</span>   <span class="comment"># planning</span><br>
+<span class="val">sonnet</span> <span class="comment"># coding</span><br>
+<span class="val">haiku</span>  <span class="comment"># grunt work</span>
+      </div>
+    </div>
+    <div>
+      <h3 class="r" style="font-size: 0.95rem;">Permissions</h3>
+      <div class="code-block" style="font-size: 0.7rem; padding: 0.8rem 1rem;">
+<span class="comment"># settings.json</span><br>
+<span class="keyword">{</span><br>
+&nbsp;<span class="flag">"permissions"</span>: {<br>
+&nbsp;&nbsp;<span class="flag">"allow"</span>: [<br>
+&nbsp;&nbsp;&nbsp;<span class="val">"Read"</span>,<br>
+&nbsp;&nbsp;&nbsp;<span class="val">"Bash(make:*)"</span><br>
+&nbsp;&nbsp;],<br>
+&nbsp;&nbsp;<span class="flag">"deny"</span>: [<br>
+&nbsp;&nbsp;&nbsp;<span class="val">"Write(./.env)"</span><br>
+&nbsp;&nbsp;]<br>
+&nbsp;}<br>
+<span class="keyword">}</span>
+      </div>
+      <h3 class="m" style="font-size: 0.95rem; margin-top: 0.6rem;">Hook (auto-format)</h3>
+      <div class="code-block" style="font-size: 0.68rem; padding: 0.8rem 1rem;">
+<span class="flag">"PostToolUse"</span>: [{<br>
+&nbsp;<span class="flag">"matcher"</span>: <span class="val">"Edit"</span>,<br>
+&nbsp;<span class="flag">"hooks"</span>: [{<br>
+&nbsp;&nbsp;<span class="flag">"command"</span>:<br>
+&nbsp;&nbsp;<span class="val">"ruff format $F"</span><br>
+&nbsp;}]<br>
+}]
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 28: TAKE-HOME / RESOURCES ══════ -->
+<div class="slide" data-slide="31">
+  <div class="prompt"><span class="arrow">></span> <span class="path">~/take-home</span></div>
+  <h2>The <span class="g">Take-Home</span> &mdash; This Hour Was the Trailer</h2>
+  <p style="max-width: 75ch; margin-bottom: 1rem;">
+    The starter repo is the workshop. Same agents, same SPEC, same Gastown spec, plus three self-paced exercises and a bonus track.
+  </p>
+  <div class="two-col" style="align-items: start;">
+    <div>
+      <h3 class="g">Starter Repo</h3>
+      <div class="code-block" style="font-size: 0.78rem;">
+<span class="flag">$</span> <span class="cmd">git clone</span> <span class="val">github.com/BillDX/</span><br>
+<span class="val">&nbsp;&nbsp;&nbsp;&nbsp;spicy-to-dark-factory-starter</span><br>
+<span class="flag">$</span> <span class="cmd">cd</span> <span class="val">spicy-to-dark-factory-starter</span><br>
+<span class="flag">$</span> <span class="cmd">claude</span><br>
+<br>
+<span class="comment"># inside Claude:</span><br>
+<span class="string">/exercise-1   # sub-agents</span><br>
+<span class="string">/exercise-2   # controller</span><br>
+<span class="string">/exercise-3   # team in tmux</span>
+      </div>
+      <p style="font-size: 0.85rem; margin-top: 0.5rem; color: var(--text-secondary);">
+        <span class="tag tip">QR</span> Pre-baked. Snap it. <span class="dim">[QR placeholder &mdash; renders in final build]</span>
+      </p>
+    </div>
+    <div>
+      <h3 class="y">What's in the Repo</h3>
+      <ul class="cli-list" style="font-size: 0.88rem;">
+        <li>A Python/FastAPI mini-project to operate on</li>
+        <li>Pre-built agents: <span class="b">reviewer</span>, <span class="g">planner</span>, <span class="p">coder</span>, <span class="m">tester</span>, <span class="r">security-reviewer</span></li>
+        <li><span class="val">CLAUDE.md</span>, <span class="val">settings.json</span>, slash commands, hooks</li>
+        <li><span class="val">SPEC.md</span> for the controller-pattern run</li>
+        <li><span class="val">EXERCISES.md</span> + <span class="val">BONUS.md</span> (bug tribunal, TDD pair, full-stack swarm)</li>
+        <li><span class="val">GASTOWN-DEMO.md</span> &mdash; the bingo capstone, paste-ready</li>
+      </ul>
+      <h3 class="b" style="margin-top: 0.6rem;">Docs</h3>
+      <p style="font-size: 0.85rem;"><span class="val">code.claude.com/docs</span> &middot; sub-agents, agent-teams, hooks, common-workflows</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 29: CLOSING ══════ -->
+<div class="slide" data-slide="32">
+  <div class="ascii-art" style="color: var(--lavender); font-size: clamp(0.38rem, 0.75vw, 0.62rem);">
+  ____                         _               _             _
+ / ___| ___     ___  _ __ ___| |__   ___  ___| |_ _ __ __ _| |_ ___
+| |  _ / _ \   / _ \| '__/ __| '_ \ / _ \/ __| __| '__/ _` | __/ _ \
+| |_| | (_) | | (_) | | | (__| | | |  __/\__ \ |_| | | (_| | ||  __/  _
+ \____|\___/   \___/|_|  \___|_| |_|\___||___/\__|_|  \__,_|\__\___| (_)</div>
+  <h2><span class="l">Go build the factory.</span></h2>
+  <p style="max-width: 72ch; margin-top: 0.6rem; color: var(--text-secondary); font-size: 1.05rem;">
+    Three things to take with you: the <span class="b">harness</span> is the product. <span class="p">Plan</span>&rarr;<span class="b">Execute</span>&rarr;<span class="g">Review</span> beats winging it. And teams of agents are most useful when you let them <span class="g">disagree</span>.
+  </p>
+  <div style="margin-top: 1.5rem;">
+    <h3 class="y" style="margin-bottom: 0.6rem;">Bonus Patterns to Try</h3>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+      <div class="box accent-mauve" style="max-width: 230px;">
+        <div class="box-title m">Bug Tribunal <span class="dim" style="font-size: 0.7em;">(team)</span></div>
+        <p>Three agents diagnose the same bug from different priors. They argue. A judge picks.</p>
+      </div>
+      <div class="box accent-blue" style="max-width: 230px;">
+        <div class="box-title b">Full-Stack Pipeline <span class="dim" style="font-size: 0.7em;">(controller)</span></div>
+        <p>One PLAN.md fans out to frontend + backend + tests in parallel worktrees, then a unified REVIEW.md.</p>
+      </div>
+      <div class="box accent-green" style="max-width: 230px;">
+        <div class="box-title g">Red/Green Pair <span class="dim" style="font-size: 0.7em;">(team)</span></div>
+        <p>One agent only writes failing tests. The other only makes them pass. Sharp roles, no overlap.</p>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top: 1.5rem;">
+    <div class="code-block" style="display: inline-block;">
+      <span class="flag">$</span> <span class="cmd">claude</span> <span class="string">"Questions?"</span><span class="cursor"></span>
+    </div>
+  </div>
+  <div style="margin-top: 1.5rem; color: var(--text-secondary); font-size: clamp(0.82rem, 1.2vw, 1rem); line-height: 1.8;">
+    <span class="l">Bill McIntyre</span><br>
+    <span style="color: var(--text-dim);">bill@thinkiac.ai &middot; github.com/BillDX</span>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 30: APPENDIX — SANDBOXED BASH + CONTAINERS ══════ -->
+<div class="slide" data-slide="33">
+  <div class="prompt"><span class="arrow">></span> <span class="path">~/appendix/sandbox</span></div>
+  <h2><span class="dim" style="font-size: 0.55em; font-weight: 400;">APPENDIX</span><br>When the <span class="m">Filesystem</span> Isn't Enough</h2>
+  <p style="max-width: 75ch; margin-bottom: 0.8rem;">
+    Worktrees protect your repo. They <span class="r">don't</span> protect your machine. For agents that run untrusted code, install random packages, or hit your network &mdash; you need a real sandbox.
+  </p>
+  <div class="two-col" style="align-items: start;">
+    <div>
+      <h3 class="b">Sandboxed Bash <span class="dim" style="font-size: 0.75em;">(Claude Code, macOS)</span></h3>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.4rem;">A built-in seatbelt: bash commands run with restricted file/network access. Cheap, no setup, lives inside Claude Code.</p>
+      <div class="code-block" style="font-size: 0.74rem;">
+<span class="comment"># settings.json</span><br>
+<span class="keyword">{</span><br>
+&nbsp;&nbsp;<span class="flag">"sandbox"</span>: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="flag">"enabled"</span>: <span class="val">true</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="flag">"network"</span>: <span class="val">"deny"</span><br>
+&nbsp;&nbsp;}<br>
+<span class="keyword">}</span>
+      </div>
+      <p style="font-size: 0.78rem; margin-top: 0.4rem;"><span class="dim">Best for:</span> running tests, formatters, linters, builds.</p>
+    </div>
+    <div>
+      <h3 class="m">Containers <span class="dim" style="font-size: 0.75em;">(devcontainer / Docker)</span></h3>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.4rem;">Full OS-level isolation. The agent lives in a container that you can nuke and rebuild. Heavier, but the right tool for fully-autonomous work.</p>
+      <div class="code-block" style="font-size: 0.74rem;">
+<span class="comment"># run claude in a fresh devcontainer</span><br>
+<span class="flag">$</span> <span class="cmd">devcontainer</span> <span class="val">up</span><br>
+<span class="flag">$</span> <span class="cmd">devcontainer</span> <span class="val">exec</span> <span class="val">claude</span>
+      </div>
+      <p style="font-size: 0.78rem; margin-top: 0.4rem;"><span class="dim">Best for:</span> --dangerously-skip-permissions runs, untrusted code, overnight agents.</p>
+    </div>
+  </div>
+  <p style="margin-top: 0.6rem; font-size: 0.85rem; color: var(--text-secondary);">
+    <span class="tag tip">RULE OF THUMB</span> Worktree for parallelism &middot; sandboxed bash for normal work &middot; container for "I'm not watching this run".
+  </p>
+</div>
+
+<!-- ══════ SLIDE 31: LICENSE ══════ -->
+<div class="slide" data-slide="34">
+  <div class="prompt"><span class="arrow">></span> <span class="path">license</span></div>
+  <h2>Copyleft</h2>
+  <div style="margin-top: 2rem; max-width: 60ch;">
+    <p style="font-size: 1.1rem; margin-bottom: 1.5rem;">
+      This work is licensed under the <span class="g">GNU General Public License v3.0</span>
+    </p>
+    <div class="code-block" style="text-align: left; display: inline-block;">
+<span class="comment"># You are free to:</span><br>
+<span class="string">Share</span> -- copy and redistribute<br>
+<span class="string">Adapt</span> -- remix, transform, and build upon<br>
+<br>
+<span class="comment"># Under the following terms:</span><br>
+<span class="flag">Copyleft</span> -- derivative works must use GPL3<br>
+<span class="flag">Source</span>   -- source code must be available<br>
+<span class="flag">Notice</span>   -- license and copyright notices preserved
+    </div>
+    <p style="margin-top: 1.5rem; color: var(--text-dim); font-size: 0.9rem;">
+      <a href="https://www.gnu.org/licenses/gpl-3.0.html" style="color: var(--green);">gnu.org/licenses/gpl-3.0.html</a>
+    </p>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<div class="timer-display" id="timer"></div>
+<div class="progress-bar" id="progress"></div>
+<div class="slide-counter" id="counter">01 / 18</div>
+<div class="nav-hint"><span><kbd>&larr;</kbd> <kbd>&rarr;</kbd> or <kbd>SPACE</kbd> &middot; <kbd>T</kbd> timer</span></div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const progress = document.getElementById('progress');
+const counter = document.getElementById('counter');
+const timerEl = document.getElementById('timer');
+let current = 0;
+const total = slides.length;
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function goTo(n) {
+  if (n < 0 || n >= total) return;
+  slides[current].classList.remove('active');
+  current = n;
+  slides[current].classList.add('active');
+  progress.style.width = ((current / (total - 1)) * 100) + '%';
+  counter.textContent = pad(current + 1) + ' / ' + pad(total);
+}
+
+function next() { goTo(current + 1); }
+function prev() { goTo(current - 1); }
+
+// Timer for exercises
+let timerInterval = null;
+let timerSeconds = 0;
+let timerRunning = false;
+
+function toggleTimer() {
+  if (timerRunning) {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    timerEl.classList.remove('visible');
+  } else {
+    timerSeconds = 0;
+    timerRunning = true;
+    timerEl.classList.add('visible');
+    timerEl.classList.remove('warning');
+    timerInterval = setInterval(() => {
+      timerSeconds++;
+      const m = Math.floor(timerSeconds / 60);
+      const s = timerSeconds % 60;
+      timerEl.textContent = pad(m) + ':' + pad(s);
+      if (timerSeconds >= 840) { // 14 min warning
+        timerEl.classList.add('warning');
+      }
+    }, 1000);
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); next(); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); prev(); }
+  if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+  if (e.key === 'End') { e.preventDefault(); goTo(total - 1); }
+  if (e.key === 't' || e.key === 'T') { e.preventDefault(); toggleTimer(); }
+});
+
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  const diff = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(diff) > 50) { diff < 0 ? next() : prev(); }
+});
+
+document.addEventListener('click', e => {
+  if (e.target.closest('.code-block')) return;
+  if (e.clientX > window.innerWidth / 2) next(); else prev();
+});
+
+goTo(0);
+</script>
+</body>
+</html>
