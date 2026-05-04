@@ -329,8 +329,14 @@ ol.steps li::before {
       <p>What this saves, what it spends, and where it bites. No hype.</p>
     </div>
   </div>
-  <div class="callout" style="margin-top: 1rem; max-width: 70ch;">
-    <p style="font-size: 0.95rem;"><span class="y">Take-home repo:</span> <span class="b">github.com/BillDX/spicy-to-dark-factory-starter</span> &mdash; clone now if you want to play along, or grab the QR at the end.</p>
+  <div style="display: flex; gap: 1.2rem; margin-top: 1rem;">
+    <div class="callout" style="flex: 1; max-width: 42ch;">
+      <p style="font-size: 0.95rem;"><span class="y">Take-home repo:</span> <span class="b">github.com/BillDX/spicy-to-dark-factory-starter</span> &mdash; clone now if you want to play along, or grab the QR at the end.</p>
+    </div>
+    <div class="callout" style="flex: 1; max-width: 42ch; border-left-color: var(--blue);">
+      <p style="font-size: 0.9rem;"><span class="b">Prerequisite:</span> the exercises assume <span class="b">Claude Code</span> installed and a Claude account. Both at <span class="b">claude.ai</span>.</p>
+      <p style="font-size: 0.8rem; margin-top: 0.3rem; color: var(--text-secondary);">Free &amp; lower-cost alternatives covered at the end of the deck.</p>
+    </div>
   </div>
 </div>
 
@@ -1503,10 +1509,10 @@ ol.steps li::before {
         <rect x="120" y="16" width="120" height="44" rx="9" fill="rgba(249,226,175,0.10)" stroke="rgba(249,226,175,0.5)" stroke-width="1.5"/>
         <text x="180" y="36" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="12" font-weight="700" fill="#f9e2af" letter-spacing="0.06em">MAYOR</text>
         <text x="180" y="52" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#6b6785">orchestrator</text>
-        <!-- TOAST node -->
+        <!-- POLECAT node -->
         <rect x="15" y="148" width="130" height="44" rx="9" fill="rgba(166,227,161,0.08)" stroke="#4c7a4a" stroke-width="1.5"/>
-        <text x="80" y="168" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="12" font-weight="700" fill="#a6e3a1" letter-spacing="0.06em">TOAST</text>
-        <text x="80" y="184" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#6b6785">coder (Polecat)</text>
+        <text x="80" y="168" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="12" font-weight="700" fill="#a6e3a1" letter-spacing="0.06em">POLECAT</text>
+        <text x="80" y="184" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#6b6785">coder agent</text>
         <!-- REFINERY node -->
         <rect x="215" y="128" width="130" height="44" rx="9" fill="rgba(137,180,250,0.08)" stroke="#4a6ca0" stroke-width="1.5"/>
         <text x="280" y="148" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="12" font-weight="700" fill="#89b4fa" letter-spacing="0.06em">REFINERY</text>
@@ -1521,7 +1527,7 @@ ol.steps li::before {
       <div style="display: grid; grid-template-columns: auto 1fr; gap: 0.25rem 0.8rem; font-size: 0.82rem; line-height: 1.8;">
         <span class="y" style="font-weight:700;">Mayor</span><span class="dim">=</span>
         <span style="color:var(--text-secondary);">the <span class="p">planner</span> &mdash; reads the spec, breaks it into steps</span>
-        <span class="g" style="font-weight:700;">Toast</span><span class="dim">=</span>
+        <span class="g" style="font-weight:700;">Polecat</span><span class="dim">=</span>
         <span style="color:var(--text-secondary);">the <span class="b">coder</span> &mdash; implements each bead, runs tests</span>
         <span class="b" style="font-weight:700;">Refinery</span><span class="dim">=</span>
         <span style="color:var(--text-secondary);">the <span class="g">reviewer</span> &mdash; reviews PRs, catches regressions</span>
@@ -1542,7 +1548,7 @@ ol.steps li::before {
   <div class="prompt"><span class="arrow">></span> <span class="path">~/bingo-beads</span></div>
   <h2>Bingo in <span class="m">Five Beads</span></h2>
   <p style="max-width: 80ch; margin-bottom: 0.8rem; font-size: 0.95rem;">
-    The Mayor read the spec and decomposed it into a five-step convoy. Toast built each bead in sequence. Refinery reviewed the PRs.
+    The Mayor read the spec and decomposed it into a five-step convoy. A Polecat built each bead in sequence. The Refinery reviewed the PRs.
   </p>
   <div class="two-col" style="align-items: start; gap: 2rem;">
     <div>
@@ -1551,7 +1557,7 @@ ol.steps li::before {
         <div style="display: flex; align-items: center; gap: 0.8rem; padding: 0.5rem 0.7rem; border: 1px solid var(--border); border-bottom: none; border-radius: 8px 8px 0 0; background: var(--bg-card);">
           <span style="font-size: 0.7rem; font-weight: 700; color: var(--green); width: 1.2rem; text-align: center;">1</span>
           <span style="font-size: 0.82rem; color: var(--text);"><span class="g">HTML/CSS skeleton</span></span>
-          <span style="font-size: 0.65rem; color: var(--text-dim); margin-left: auto;">Toast</span>
+          <span style="font-size: 0.65rem; color: var(--text-dim); margin-left: auto;">Polecat</span>
         </div>
         <div style="display: flex; align-items: center; gap: 0.8rem; padding: 0.5rem 0.7rem; border: 1px solid var(--border); border-bottom: none; background: var(--bg-card);">
           <span style="font-size: 0.7rem; font-weight: 700; color: var(--green); width: 1.2rem; text-align: center;">2</span>
@@ -1580,7 +1586,7 @@ ol.steps li::before {
       <h3 style="font-size: 0.92rem; margin-bottom: 0.5rem;">What You're Watching</h3>
       <ul class="cli-list" style="font-size: 0.85rem;">
         <li>The <span class="y">Mayor</span> decomposed your spec into beads &mdash; you didn't write a PLAN.md</li>
-        <li><span class="g">Toast</span> picked up each bead, wrote code, ran tests &mdash; you didn't prompt it</li>
+        <li>A <span class="g">Polecat</span> picked up each bead, wrote code, ran tests &mdash; you didn't prompt it</li>
         <li>The <span class="b">Refinery</span> reviewed each PR &mdash; you didn't ask for a review</li>
         <li>Every PR that landed created a <span class="m">deployable artifact</span></li>
       </ul>
