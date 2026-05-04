@@ -824,6 +824,10 @@ ol.steps li::before {
 
 <!-- ══════ SLIDE 12: DEMO 1 ══════ -->
 <div class="slide" data-slide="14">
+  <div id="demo1-qr-wrap" style="position:absolute;top:1.4rem;right:7vw;text-align:center;z-index:10;">
+    <div id="demo1-qr" style="background:#fff;border-radius:6px;padding:5px;display:inline-block;"></div>
+    <div style="font-size:0.58rem;color:var(--text-dim);margin-top:0.25rem;letter-spacing:0.04em;">follow along</div>
+  </div>
   <div class="prompt"><span class="arrow">></span> <span class="path">demo-1</span></div>
   <h2><span class="tag exercise" style="font-size: 0.8rem;">DEMO 1</span> <span class="b">Sub-Agents</span> in Parallel</h2>
   <p style="max-width: 75ch; margin-bottom: 0.6rem; font-size: 0.95rem;">
@@ -1100,6 +1104,10 @@ ol.steps li::before {
 
 <!-- ══════ SLIDE 19: DEMO 2 ══════ -->
 <div class="slide" data-slide="21">
+  <div id="demo2-qr-wrap" style="position:absolute;top:1.4rem;right:7vw;text-align:center;z-index:10;">
+    <div id="demo2-qr" style="background:#fff;border-radius:6px;padding:5px;display:inline-block;"></div>
+    <div style="font-size:0.58rem;color:var(--text-dim);margin-top:0.25rem;letter-spacing:0.04em;">follow along</div>
+  </div>
   <div class="prompt"><span class="arrow">></span> <span class="path">demo-2</span></div>
   <h2><span class="tag exercise" style="font-size: 0.8rem;">DEMO 2</span> <span class="p">Plan</span> &rarr; <span class="b">Execute</span> &rarr; <span class="g">Review</span></h2>
   <p style="max-width: 80ch; margin-bottom: 0.5rem; font-size: 0.95rem;">
@@ -1235,6 +1243,10 @@ ol.steps li::before {
 
 <!-- ══════ SLIDE 22: DEMO 3 ══════ -->
 <div class="slide" data-slide="24">
+  <div id="demo3-qr-wrap" style="position:absolute;top:1.4rem;right:7vw;text-align:center;z-index:10;">
+    <div id="demo3-qr" style="background:#fff;border-radius:6px;padding:5px;display:inline-block;"></div>
+    <div style="font-size:0.58rem;color:var(--text-dim);margin-top:0.25rem;letter-spacing:0.04em;">follow along</div>
+  </div>
   <div class="prompt"><span class="arrow">></span> <span class="path">demo-3</span></div>
   <h2><span class="tag exercise" style="font-size: 0.8rem;">DEMO 3</span> The <span class="g">Architecture Debate</span> <span class="dim" style="font-size: 0.55em; font-weight: 400;">(team-shaped exercise)</span></h2>
   <p style="max-width: 82ch; margin-bottom: 0.5rem; font-size: 0.93rem;">
@@ -1792,6 +1804,19 @@ document.addEventListener('click', e => {
 });
 
 goTo(0);
+
+const demoQRs = [
+  { id: 'demo1-qr', url: 'https://github.com/BillDX/Presentations/blob/main/From%20Spicy%20Autocomplete%20to%20Dark%20Factory/demos/demo-1.md' },
+  { id: 'demo2-qr', url: 'https://github.com/BillDX/Presentations/blob/main/From%20Spicy%20Autocomplete%20to%20Dark%20Factory/demos/demo-2.md' },
+  { id: 'demo3-qr', url: 'https://github.com/BillDX/Presentations/blob/main/From%20Spicy%20Autocomplete%20to%20Dark%20Factory/demos/demo-3.md' },
+];
+demoQRs.forEach(({ id, url }) => {
+  new QRCode(document.getElementById(id), {
+    text: url, width: 96, height: 96,
+    colorDark: '#000000', colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M
+  });
+});
 
 new QRCode(document.getElementById('rmaiig-qr'), {
   text: 'https://linktr.ee/rmaiig',
