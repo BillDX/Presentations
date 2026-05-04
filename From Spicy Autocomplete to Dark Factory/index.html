@@ -1496,45 +1496,52 @@ ol.steps li::before {
   <div class="two-col" style="align-items: start; gap: 2.5rem;">
     <div>
       <h3 style="font-size: 0.95rem; margin-bottom: 0.5rem;">Gastown's Agent Team</h3>
-      <svg viewBox="0 0 360 260" style="width:100%;max-width:360px;height:auto;display:block;">
-        <!-- Mayor → Toast connection -->
-        <line x1="180" y1="58" x2="80" y2="148" stroke="#f9e2af" stroke-width="2" stroke-dasharray="6,4" opacity="0.8"/>
-        <!-- Mayor → Refinery connection -->
-        <line x1="180" y1="58" x2="280" y2="148" stroke="#f9e2af" stroke-width="2" stroke-dasharray="6,4" opacity="0.8"/>
-        <!-- Toast → Refinery connection -->
-        <line x1="80" y1="192" x2="280" y2="148" stroke="#a6e3a1" stroke-width="1.5" stroke-dasharray="4,5" opacity="0.6"/>
-        <!-- Beads from Mayor -->
-        <line x1="180" y1="58" x2="180" y2="220" stroke="#cba6f7" stroke-width="1.2" stroke-dasharray="3,5" opacity="0.4"/>
+      <svg viewBox="0 0 320 210" style="width:100%;max-width:340px;height:auto;display:block;">
+        <!-- Mayor → Polecat line (edge to edge) -->
+        <line x1="130" y1="60" x2="85" y2="110" stroke="#f9e2af" stroke-width="2" stroke-dasharray="6,4" opacity="0.8"/>
+        <!-- Mayor → Refinery line (edge to edge) -->
+        <line x1="190" y1="60" x2="235" y2="110" stroke="#f9e2af" stroke-width="2" stroke-dasharray="6,4" opacity="0.8"/>
+        <!-- Polecat → Refinery arrow (code → review) -->
+        <line x1="130" y1="132" x2="186" y2="132" stroke="#a6e3a1" stroke-width="2" opacity="0.7"/>
+        <polygon points="186,128 194,132 186,136" fill="#a6e3a1" opacity="0.7"/>
         <!-- MAYOR node -->
-        <rect x="120" y="16" width="120" height="44" rx="9" fill="rgba(249,226,175,0.10)" stroke="rgba(249,226,175,0.5)" stroke-width="1.5"/>
-        <text x="180" y="36" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="12" font-weight="700" fill="#f9e2af" letter-spacing="0.06em">MAYOR</text>
-        <text x="180" y="52" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#6b6785">orchestrator</text>
-        <!-- POLECAT node -->
-        <rect x="15" y="148" width="130" height="44" rx="9" fill="rgba(166,227,161,0.08)" stroke="#4c7a4a" stroke-width="1.5"/>
-        <text x="80" y="168" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="12" font-weight="700" fill="#a6e3a1" letter-spacing="0.06em">POLECAT</text>
-        <text x="80" y="184" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#6b6785">coder agent</text>
-        <!-- REFINERY node -->
-        <rect x="215" y="128" width="130" height="44" rx="9" fill="rgba(137,180,250,0.08)" stroke="#4a6ca0" stroke-width="1.5"/>
-        <text x="280" y="148" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="12" font-weight="700" fill="#89b4fa" letter-spacing="0.06em">REFINERY</text>
-        <text x="280" y="164" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#6b6785">reviewer</text>
-        <!-- BEADS label -->
-        <rect x="120" y="216" width="120" height="36" rx="9" fill="rgba(203,166,247,0.08)" stroke="#6a4f8a" stroke-width="1.5" stroke-dasharray="5,3"/>
-        <text x="180" y="238" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#cba6f7">BEADS</text>
+        <rect x="100" y="14" width="120" height="46" rx="9" fill="rgba(249,226,175,0.10)" stroke="rgba(249,226,175,0.5)" stroke-width="1.5"/>
+        <text x="160" y="36" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="12" font-weight="700" fill="#f9e2af" letter-spacing="0.06em">MAYOR</text>
+        <text x="160" y="52" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#6b6785">orchestrator</text>
+        <!-- POLECAT node (same Y as Refinery) -->
+        <rect x="10" y="110" width="120" height="46" rx="9" fill="rgba(166,227,161,0.08)" stroke="#4c7a4a" stroke-width="1.5"/>
+        <text x="70" y="132" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="12" font-weight="700" fill="#a6e3a1" letter-spacing="0.06em">POLECAT</text>
+        <text x="70" y="148" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#6b6785">coder</text>
+        <!-- REFINERY node (same Y as Polecat) -->
+        <rect x="190" y="110" width="120" height="46" rx="9" fill="rgba(137,180,250,0.08)" stroke="#4a6ca0" stroke-width="1.5"/>
+        <text x="250" y="132" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="12" font-weight="700" fill="#89b4fa" letter-spacing="0.06em">REFINERY</text>
+        <text x="250" y="148" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#6b6785">reviewer</text>
+        <!-- BEADS label (centered below, dashed = work units not agents) -->
+        <line x1="130" y1="174" x2="90" y2="156" stroke="#cba6f7" stroke-width="1" stroke-dasharray="3,4" opacity="0.4"/>
+        <line x1="190" y1="174" x2="230" y2="156" stroke="#cba6f7" stroke-width="1" stroke-dasharray="3,4" opacity="0.4"/>
+        <rect x="105" y="170" width="110" height="32" rx="8" fill="rgba(203,166,247,0.08)" stroke="#6a4f8a" stroke-width="1.5" stroke-dasharray="5,3"/>
+        <text x="160" y="190" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" font-weight="700" fill="#cba6f7">BEADS</text>
+        <text x="160" y="68" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="#6b6785">creates &amp; assigns</text>
       </svg>
     </div>
     <div>
-      <h3 style="font-size: 0.95rem; margin-bottom: 0.5rem;">Translate to What You Know</h3>
-      <div style="display: grid; grid-template-columns: auto 1fr; gap: 0.25rem 0.8rem; font-size: 0.82rem; line-height: 1.8;">
-        <span class="y" style="font-weight:700;">Mayor</span><span class="dim">=</span>
-        <span style="color:var(--text-secondary);">the <span class="p">planner</span> &mdash; reads the spec, breaks it into steps</span>
-        <span class="g" style="font-weight:700;">Polecat</span><span class="dim">=</span>
+      <h3 style="font-size: 0.95rem; margin-bottom: 0.6rem;">Translate to What You Know</h3>
+      <div style="display: grid; grid-template-columns: 5.5rem 1.2rem 1fr; row-gap: 0.15rem; align-items: baseline; font-size: 0.84rem; line-height: 2;">
+        <span class="y" style="font-weight:700;">Mayor</span>
+        <span class="dim" style="text-align:center;">=</span>
+        <span style="color:var(--text-secondary);">the <span class="p">planner</span> &mdash; reads spec, breaks into steps</span>
+        <span class="g" style="font-weight:700;">Polecat</span>
+        <span class="dim" style="text-align:center;">=</span>
         <span style="color:var(--text-secondary);">the <span class="b">coder</span> &mdash; implements each bead, runs tests</span>
-        <span class="b" style="font-weight:700;">Refinery</span><span class="dim">=</span>
+        <span class="b" style="font-weight:700;">Refinery</span>
+        <span class="dim" style="text-align:center;">=</span>
         <span style="color:var(--text-secondary);">the <span class="g">reviewer</span> &mdash; reviews PRs, catches regressions</span>
-        <span class="m" style="font-weight:700;">Beads</span><span class="dim">=</span>
+        <span class="m" style="font-weight:700;">Beads</span>
+        <span class="dim" style="text-align:center;">=</span>
         <span style="color:var(--text-secondary);">individual tasks &mdash; like items in a PLAN.md</span>
-        <span class="dim" style="font-weight:700;">Convoy</span><span class="dim">=</span>
-        <span style="color:var(--text-secondary);">a pipeline of beads &mdash; the full Plan&rarr;Execute&rarr;Review</span>
+        <span class="dim" style="font-weight:700;">Convoy</span>
+        <span class="dim" style="text-align:center;">=</span>
+        <span style="color:var(--text-secondary);">a pipeline of beads &mdash; Plan&rarr;Execute&rarr;Review</span>
       </div>
       <div class="callout" style="margin-top: 0.8rem; border-left-color: var(--mauve);">
         <p style="font-size: 0.85rem;"><span class="m">The difference from Demo 2:</span> you didn't write the plan. You didn't pick the agents. You didn't create the worktrees. The <em>platform</em> did all of that from a one-paragraph spec.</p>
