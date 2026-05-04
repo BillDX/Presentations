@@ -853,12 +853,17 @@ ol.steps li::before {
 <span class="string">Use two sub-agents on lowerCaseMe.py,</span><br>
 <span class="string">in parallel:</span><br>
 <span class="string"></span><br>
-<span class="string">1. A reviewer agent (sonnet, read-only:</span><br>
-<span class="string">   Read, Grep, Glob) -- find bugs, edge</span><br>
-<span class="string">   cases, and style problems.</span><br>
+<span class="string">1. A reviewer agent</span><br>
+<span class="val">   model: sonnet</span><br>
+<span class="val">   tools: Read, Grep, Glob</span><br>
+<span class="string">   Find bugs, edge cases, and style</span><br>
+<span class="string">   problems. Read-only.</span><br>
 <span class="string"></span><br>
-<span class="string">2. A documenter agent (haiku, can edit)</span><br>
-<span class="string">   -- add docstrings to public functions.</span>
+<span class="string">2. A documenter agent</span><br>
+<span class="val">   model: haiku</span><br>
+<span class="val">   tools: Read, Write, Edit</span><br>
+<span class="string">   Add docstrings to every public</span><br>
+<span class="string">   function.</span>
       </div>
       <p style="font-size: 0.82rem; margin-top: 0.4rem; color: var(--text-secondary);"><span class="tag tip">WATCH FOR</span> Two agent boxes spinning at once. Reviewer can't write &mdash; that's the tools field. Documenter is on a cheaper model &mdash; that's the model field.</p>
     </div>

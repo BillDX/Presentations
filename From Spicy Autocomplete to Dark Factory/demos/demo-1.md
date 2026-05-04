@@ -44,10 +44,15 @@ In the **same Claude session**, paste:
 ```
 Use two sub-agents on lowerCaseMe.py, in parallel:
 
-1. A reviewer agent (sonnet, read-only: Read, Grep, Glob) -- find bugs, edge
-   cases, and style problems.
+1. A reviewer agent
+   model: sonnet
+   tools: Read, Grep, Glob
+   Find bugs, edge cases, and style problems. Read-only.
 
-2. A documenter agent (haiku, can edit) -- add docstrings to public functions.
+2. A documenter agent
+   model: haiku
+   tools: Read, Write, Edit
+   Add docstrings to every public function.
 ```
 
 **Watch for:** two agent boxes spinning at the same time in the Claude Code UI.
@@ -60,13 +65,21 @@ When they finish:
 
 ## What to notice
 
+### Model routing
+
+Yes — you can specify the model for each sub-agent directly in the prompt. Claude Code reads the `model:` line and routes that agent to the right model. This works both inline (as above) and in persisted agent definition files.
+
 | | Reviewer | Documenter |
 |---|---|---|
-| Model | sonnet | haiku |
+| Model | `sonnet` | `haiku` |
 | Can write files? | No | Yes |
-| Why | Nuanced judgment needed | Mechanical task, cheaper model fine |
+| Why | Nuanced judgment — you want the better model catching subtle bugs | Mechanical task — haiku is faster and a fraction of the cost |
 
-The reviewer's read-only constraint isn't trust — it's enforcement. The `tools:` field in the agent definition makes it structurally impossible to write, regardless of what the prompt says.
+**Why this matters for cost:** Haiku is roughly 25× cheaper per token than Opus. For a task like "add docstrings" that requires no judgment, routing it to haiku saves real money at scale. Save your expensive models for work that actually needs them.
+
+### Tool enforcement
+
+The reviewer's read-only constraint isn't trust — it's enforcement. The `tools:` line makes it structurally impossible to write files, regardless of what the agent's prompt says or what you ask it to do mid-task.
 
 ---
 
